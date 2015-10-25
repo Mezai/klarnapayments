@@ -1,0 +1,48 @@
+#klarna_get_address p {padding:0;}
+
+#klarna_get_address p.success_pno {
+	color: #418B19;
+	text-align: left;
+	font-weight: bold;
+}
+#klarna_get_address p.warning_pno {
+	color: #DA0F00;
+	text-align: left;
+	font-weight: bold;
+}
+
+#klarna_get_address input.inputPno {
+	position: relative;
+	top: -1px;
+	padding:0 5px;
+	height:30px;
+	width:200px;
+	border:1px solid #ccc;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	-webkit-border-radius-topleft: 3px;
+	-webkit-border-radius-bottomleft: 3px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	font-size:12px;
+	color:#999;
+}
+
+#klarna_get_address label {
+	display: block;
+}
+
+#klarna_get_address {
+	padding:7px;
+	border:1px solid #ccc;
+	background: inherit;
+}
+
+#klarna_get_address input.button_small {
+	position:relative;
+	cursor:pointer;
+}
+
+#klarna_get_address h4 {
+	border-bottom: 1px solid #d6d4d4;
+}

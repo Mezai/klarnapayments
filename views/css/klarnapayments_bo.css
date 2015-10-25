@@ -1,0 +1,39 @@
+ul.klarna-list {
+	list-style-type: circle;
+	padding: 0 25px;
+}
+
+.klarna-info {
+	margin: 0 0 0 10px;
+	font-family: Open Sans, Arial, sans-serif;
+}
+
+.klarna-info img {
+	display: block;
+	margin: 0 10px 5px 20px;
+}
+
+.klarna-button-blue {
+	background: none repeat scroll 0 0 #00416A;
+	-moz-box-sizing: border-box;
+	border-radius: 3em 3em 3em 3em;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1.25em;
+	height: 2em;
+	line-height: 2em;
+	padding: 0 1em;
+}
+.klarna-button-blue {
+	color: white;
+}
+
+.bootstrap .col-sm-12 {
+	border: 1px solid #0074C8;
+	margin: 20px 0 20px 0;
+}
+
+a.klarna-button-blue, a.klarna-button-blue:hover{
+  color: white;
+}

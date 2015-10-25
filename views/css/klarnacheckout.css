@@ -1,0 +1,13 @@
+.klarnaCheckoutPaymentOption.current {
+	border: 1px solid #CCC;
+	background-color: #f5f5f5;
+}
+
+.klarnaCheckoutPaymentOption {
+	display: inline-block;
+	width: 45%;
+	padding: 0 10px 10px 10px;
+	cursor: pointer;
+	margin: 20px;
+
+}//*[@id="HOOK_SHOPPING_CART"]/div[3]

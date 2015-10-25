@@ -1,0 +1,48 @@
+#klarna_logo {
+	float: right;
+}
+
+#klarna_pno, #klarna_house_number, #klarna_house_extension, #select_klarna_method {
+	width: 300px;
+}
+
+#button_klarna {
+position: relative;
+  display: inline-block;
+  padding: 5px 7px;
+  border: 1px solid #cc9900;
+  font-weight: bold;
+  color: black;
+  background: url(../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+}
+
+#button_klarna:hover {
+	background-position: left -50px;
+}
+
+@media only screen and (max-device-width: 480px) {
+	#klarna_logo {
+		float: left;
+	}
+
+	#klarna_pno, #klarna_house_number, #klarna_house_extension, #select_klarna_method, .klarna_error {
+		width: 100%;
+	}
+
+	.klarna_payment_description {
+		display: inline-block;
+	}
+}
+
+.klarna_error {
+	background-color: #FAE2E3;
+  border: 1px solid #EC9B9B;
+  line-height: 20px;
+  margin: 15px 0 10px;
+  padding: 10px 15px;
+  font-weight: bold;
+  width: 300px;
+}

@@ -551,7 +551,11 @@ class KlarnaPayments extends PaymentModule
 			$order_state_activated = array('Klarna aktiverad', 'Klarna aktivert', 'Klarna aktiveret', 'Klarna aktivoitu', 'Klarna aktiviert', 'Klarna geactiveerd', 'Klarna activated');
 
 			$current_order_state = $order->getCurrentOrderState();
-			$current_order_state_name = $current_order_state->{'name'}[1];
+			$name_array = $current_order_state->{'name'};
+
+			$array_keys = array_keys($name_array);
+
+			$current_order_state_name = $name_array[$array_keys[0]];
 
 			if (in_array($current_order_state_name, $order_state_pending))
 			{

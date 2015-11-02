@@ -2,7 +2,7 @@
 <module>
 	<name>klarnapayments</name>
 	<displayName><![CDATA[Klarna invoice and part payment]]></displayName>
-	<version><![CDATA[1.0.1]]></version>
+	<version><![CDATA[1.0.2]]></version>
 	<description><![CDATA[Allows your customers to pay with Klarna invoice and part payment]]></description>
 	<author><![CDATA[JET]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

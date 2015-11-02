@@ -36,33 +36,30 @@
 {if $nbProducts <= 0}
 	<p class="alert alert-warning">{l s='Your shopping cart is empty.' mod='klarnapayments'}</p>
 {elseif !$checkLocale}
-	<p class="alert alert-warning">{l s='Please change your currency or language to match your country in order to shop with Klarna.' mod='klarnapayments'}</p>	
+	<p class="alert alert-warning">{l s='Please change your currency or language to match your country in order to shop with Klarna.' mod='klarnapayments'}</p>
 {else}
-<img id="klarna_logo" class="klarna_logo" src="https://cdn.klarna.com/1.0/shared/image/generic/logo/sv_se/basic/blue-black.png?width=200">
+
 
 
 <div class="container-fluid">
+	<img id="klarna_logo" class="klarna_logo" src="https://cdn.klarna.com/1.0/shared/image/generic/logo/sv_se/basic/blue-black.png?width=200">
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="page-header">
 						<h4 class="klarna_payment_description">{l s='Klarna part payment' mod='klarnapayments'}</h4>
-						
-						
 					</div>
 				</div>
 			</div>
-			
-
 			<div class="row margin-b-2">
 				<div class="col-sm-6">
-					
+
 						{if $klarna_country == 'SE'}<h4>Delbetalning</h4>{/if}{if $klarna_country == 'DK'}<h4>Afbetaling</h4>{/if}
 						{if $klarna_country == 'DE'}<h4>Ratenkauf</h4>{/if}{if $klarna_country == 'NO'}<h4>Delbetaling</h4>{/if}
 						{if $klarna_country == 'FI'}<h4>Erämaksu</h4>{/if}
 							<form action="{$link->getModuleLink('klarnapayments', 'paymentpart', [], true)|escape:'htmlall':'UTF-8'}" method="post">
   								<div class="required form-group">
   									<label for="select_klarna_method" class="required">{l s='Select a payment method' mod='klarnapayments'}</label>
-  					
+
   										<select class="form-control" id="select_klarna_method" name="select_klarna_method">
   											{if isset($klarna_account_id)}
   												{if ($klarna_account_minamount) < ($total)}
@@ -85,7 +82,7 @@
 										    	{/if}
 										    {/if}
   										</select>
-  								
+
 								</div>
 								<div class="required form-group">
 
@@ -124,17 +121,17 @@
  								<div class="required form-group">
  									<label for="klarna_accept_de" class="required">{l s='I agree to the terms and conditions.' mod='klarnapayments'}</label>
 									<input type="checkbox" id="klarna_accept_de" name="klarna_accept_de" id="klarna_accept_de" required>
-								</div>			
+								</div>
 								{/if}
 
 							<p class="cart_navigation" id="cart_navigation">
 			<button type="submit" id="button_klarna" class="button_klarna" name="submitKlarnaPayment">{l s='Submit Payment' mod='klarnapayments'}</button>
 			<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" class="button_large">{l s='Other payment methods' mod='klarnapayments'}</a>
-			</p>	
+			</p>
 
 			</form>
 
-</div>		
+</div>
 			{if isset($klarna_account_id)}
 			<div id="account_selected" class="col-sm-6 info account">
 					<div class="caption">
@@ -153,9 +150,9 @@
 							{if $klarna_country == 'SE'}
 							<tbody>
       							<tr>
-      								<td>Rörlig årsränta</td>	
+      								<td>Rörlig årsränta</td>
       								<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
-      								
+
       							</tr>
       							<tr>
 							        <td>Uppläggningsavgift</td>
@@ -246,7 +243,7 @@
 									<td>{displayPrice price=$klarna_account_monthly_cost}{l s=' /mån' mod='klarnapayments'}</td>
 								</tr>
 							</tbody>
-							{/if}	
+							{/if}
 						{if $klarna_country == 'NL'}
 						<tbody>
 							<tr>
@@ -272,7 +269,7 @@
 					<p>Verfügungsrahmen ab 199,99 € (abhängig von der Höhe Ihrer Einkäufe), effektiver Jahreszins 18,07%* und Gesamtbetrag 218, 57€* (*bei Ausnutzung des vollen Verfügungsrahmens und Rückzahlung in 12 monatlichen Raten je 18,21 €). Hier finden Sie <a href="https://cdn.klarna.com/1.0/shared/content/legal/terms/EID/de_de/account" target="_blank">weitere Informationen,</a><a href="https://cdn.klarna.com/1.0/shared/content/legal/de_de/account/terms.pdf" target="_blank"> AGB mit Widerrufsbelehrung</a> und <a href="https://cdn.klarna.com/1.0/shared/content/legal/de_de/consumer_credit.pdf" target="_blank">Standardinformationen für Verbraucherkredite.</a> Übersteigt Ihr Einkauf mit Klarna Ratenkauf erstmals einen Betrag von 199,99 € erhalten Sie von Klarna einen Ratenkaufvertrag mit der Bitte um Unterzeichnung zugesandt. Ihr Kauf gilt solange als <a href="https://cdn.klarna.com/1.0/shared/content/legal/terms/EID/de_de/invoice?fee=0" target="_blank">Rechnungskauf.</a>
 					</p>
 					<p>Mit der Übermittlung der für die Abwicklung der gewählten Klarna Zahlungsmethode und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Klarna bin ich einverstanden. Meine <span id="consentxx"></span> kann ich jederzeit mit Wirkung für die Zukunft widerrufen. Es gelten die AGB des Händlers.</p>
-					{/if}	
+					{/if}
 					{if $klarna_country == 'DK'}
 					<p>Lad os sige, at du køber for 10.000 kr. Administrativt gebyr er 39 kr./md., og rørlig årsrente er 22,70 %. Du betaler 978 kr. af hver måned 12 mdr. Den årlige effektive rente bliver da 35,41 %, total omkostning 1740 kr og totalprisen bliver 11.740 kr.</p>
 					{/if}
@@ -314,7 +311,7 @@
 								<td>285 €</td>
 								<td>12 €</td>
 
-							</tr>	
+							</tr>
 
 						</tbody>
 					</table>
@@ -337,13 +334,13 @@
 							{displayPrice price=$klarna_campaign_monthly_cost_1} / mån i {$klarna_campaign_months_1|escape:'htmlall':'UTF-8'} måneder
 							{/if}
 						</h4>
-						
+
 						<table class="table">
 							<tbody>
       							<tr>
-      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>	
+      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>
       								<td>{$klarna_campaign_interest_1|escape:'htmlall':'UTF-8'} %</td>
-      								
+
       							</tr>
       							{if $klarna_country == 'SE' || $klarna_country == 'DK' || $klarna_country == 'FI'}
       							<tr>
@@ -374,10 +371,10 @@
 							    	<td>Total omkostning</td>
 							    	<td>{displayPrice price=$klarna_campaign_credit_cost_1 - $total}</td>
 							    </tr>
-							    {/if}	
+							    {/if}
 
 							</tbody>
-							
+
 					</table>
 					{if $klarna_country == 'SE'}
 					<p>Exempel: Säg att du köper för 10 000 kr. Administrativ avgift är 29 kr/mån och rörlig årsränta är 19,9%. Du delbetalar 955 kr/mån i 12 mån. Årlig effektiv ränta blir då 29,22% och totalbeloppet för ditt köp om 10 000 kr blir 11 458 kr.</p>
@@ -386,7 +383,7 @@
 					<p>Dette kjøpet på {$total|escape:'htmlall':'UTF-8'} kr, med {$klarna_campaign_startfee_1|escape:'htmlall':'UTF-8'} kr i etableringsgebyr, {$klarna_campaign_interest_1|escape:'htmlall':'UTF-8'} % rente og nedbetaling over {$klarna_campaign_months_1|escape:'htmlall':'UTF-8'} måneder, har en effektiv rente på {$klarna_campaign_calc_apr_1|escape:'htmlall':'UTF-8'} %. Total kredittkjøpspris {$klarna_campaign_credit_cost_1|escape:'htmlall':'UTF-8'} kr.</p>
 					{/if}
 
-					
+
 
 					<span id="accountxx"></span>
 					</div>
@@ -408,9 +405,9 @@
 						<table class="table">
 							<tbody>
       							<tr>
-      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>	
+      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>
       								<td>{$klarna_campaign_interest_2|escape:'htmlall':'UTF-8'} %</td>
-      								
+
       							</tr>
       							{if $klarna_country == 'SE' || $klarna_country == 'DK' || $klarna_country == 'FI'}
       							<tr>
@@ -450,7 +447,7 @@
 					{if $klarna_country == 'NO'}
 					<p>Dette kjøpet på {$total|escape:'htmlall':'UTF-8'} kr, med {$klarna_campaign_startfee_2|escape:'htmlall':'UTF-8'} kr i etableringsgebyr, {$klarna_campaign_interest_2|escape:'htmlall':'UTF-8'} % rente og nedbetaling over {$klarna_campaign_months_2|escape:'htmlall':'UTF-8'} måneder, har en effektiv rente på {$klarna_campaign_calc_apr_2|escape:'htmlall':'UTF-8'} %. Total kredittkjøpspris {$klarna_campaign_credit_cost_2|escape:'htmlall':'UTF-8'} kr.</p>
 					{/if}
-					
+
 
 					<span id="accountxx"></span>
 					</div>
@@ -472,9 +469,9 @@
 						<table class="table">
 							<tbody>
       							<tr>
-      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>	
+      								<td>{if $klarna_country == 'SE'}Fast årsränta{elseif $klarna_country == 'DK'}Årlig rente{elseif $klarna_country == 'FI'}Vuosikorko{elseif $klarna_country == 'NO'}Årsrente{/if}</td>
       								<td>{$klarna_campaign_interest_3|escape:'htmlall':'UTF-8'} %</td>
-      								
+
       							</tr>
       							{if $klarna_country == 'SE' || $klarna_country == 'DK' || $klarna_country == 'FI'}
       							<tr>
@@ -523,7 +520,7 @@
 
 			</div>
 			<br />
-			
+
 </div>
 
 
@@ -537,7 +534,7 @@
 </script>
 {if $klarna_country == 'DE'}
 <script>
-		new Klarna.Terms.Consent({  
+		new Klarna.Terms.Consent({
     		el: 'consentxx',
     		eid: "{$klarna_merchant_eid|escape:'htmlall':'UTF-8'}",
     		locale: "{$klarna_language|escape:'htmlall':'UTF-8'}",
@@ -545,6 +542,4 @@
 });
 </script>
 {/if}
-{/if}	
-
-
+{/if}

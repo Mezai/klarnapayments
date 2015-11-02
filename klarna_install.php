@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class KlarnaInstall
+class KlarnaInstall extends KlarnaPayments
 {
 	/**
 	* Create database table
@@ -36,7 +36,7 @@ class KlarnaInstall
 	* @author Johan Tedenmark
 	*/
 
-	public function createTable()
+	protected function createTable()
 	{
 		if (!Db::getInstance()->Execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'klarna_orders` (
@@ -44,56 +44,92 @@ class KlarnaInstall
 			`id_reservation` varchar(255) NOT NULL,
       `id_invoicenumber` varchar(255) NOT NULL,
 			`payment_status` varchar(255) NOT NULL,
+			`customer_country` varchar(2) NOT NULL,
 			PRIMARY KEY(`id_order`)
 			) ENGINE ='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
 
 	}
 
-	public function deleteConfiguration()
+
+	protected function addTabs()
 	{
-			Configuration::deleteByName('KLARNA_EID_SE');
-			Configuration::deleteByName('KLARNA_SECRET_SE');
-			Configuration::deleteByName('KLARNA_EID_NO');
-			Configuration::deleteByName('KLARNA_SECRET_NO');
-			Configuration::deleteByName('KLARNA_EID_DK');
-			Configuration::deleteByName('KLARNA_SECRET_DK');
-			Configuration::deleteByName('KLARNA_EID_FI');
-			Configuration::deleteByName('KLARNA_SECRET_FI');
-			Configuration::deleteByName('KLARNA_EID_DE');
-			Configuration::deleteByName('KLARNA_SECRET_DE');
-			Configuration::deleteByName('KLARNA_EID_AT');
-			Configuration::deleteByName('KLARNA_SECRET_AT');
-			Configuration::deleteByName('KLARNA_EID_NL');
-			Configuration::deleteByName('KLARNA_SECRET_NL');
-			Configuration::deleteByName('ACTIVE_SE');
-			Configuration::deleteByName('ACTIVE_NO');
-			Configuration::deleteByName('ACTIVE_FI');
-			Configuration::deleteByName('ACTIVE_DK');
-			Configuration::deleteByName('ACTIVE_DE');
-			Configuration::deleteByName('ACTIVE_AT');
-			Configuration::deleteByName('ACTIVE_NL');
-			Configuration::deleteByName('KLARNA_PART_SE');
-			Configuration::deleteByName('KLARNA_INVOICE_SE');
-			Configuration::deleteByName('KLARNA_PART_NO');
-			Configuration::deleteByName('KLARNA_INVOICE_NO');
-			Configuration::deleteByName('KLARNA_PART_FI');
-			Configuration::deleteByName('KLARNA_INVOICE_FI');
-			Configuration::deleteByName('KLARNA_PART_DK');
-			Configuration::deleteByName('KLARNA_INVOICE_DK');
-			Configuration::deleteByName('KLARNA_PART_DE');
-			Configuration::deleteByName('KLARNA_INVOICE_DE');
-			Configuration::deleteByName('KLARNA_PART_NL');
-			Configuration::deleteByName('KLARNA_INVOICE_NL');
-			Configuration::deleteByName('KLARNA_PART_AT');
-			Configuration::deleteByName('KLARNA_INVOICE_AT');
-			Configuration::deleteByName('KLARNA_CHECKOUT_SE');
-			Configuration::deleteByName('KLARNA_CHECKOUT_NO');
-			Configuration::deleteByName('KLARNA_CHECKOUT_FI');
-			Configuration::deleteByName('KLARNA_CHECKOUT_DE');
-			Configuration::deleteByName('KLARNA_ENVIRONMENT');
-			Configuration::deleteByName('KLARNA_INVOICE_FEE_REF');
-			Configuration::deleteByName('KLARNA_INVOICE_FEE');
+		$parent_tab = new Tab();
+		
+		foreach (Language::getLanguages() as $language)
+		
+		$parent_tab->name[$language['id_lang']] = $this->l('Klarna Payments');
+				
+		$parent_tab->class_name = 'KlarnaMain';
+		$parent_tab->id_parent = 0;
+		$parent_tab->module = $this->name;
+		$parent_tab->add();
+
+		// Link payment
+
+		$tab_link = new Tab();
+
+		foreach (Language::getLanguages() as $language)
+		
+		$tab_link->name[$language['id_lang']] = $this->l('Handle klarna payments');
+
+		$tab_link->class_name = 'KlarnaOrders';
+		$tab_link->id_parent = $parent_tab->id;
+		$tab_link->module = $this->name;
+		$tab_link->add();
+	}
+
+	protected function createInvoiceFee()
+	{
+		$rulesgroup = new TaxRulesGroup(Configuration::get('KLARNA_TAX_GROUP'));
+
+		if (!$rulesgroup->id) {
+            $rulesgroup = new TaxRulesGroup();
+            $rulesgroup->active = true;
+            $rulesgroup->name = 'Klarna tax fee';
+            $rulesgroup->add();
+            Configuration::updateValue('KLARNA_TAX_GROUP', $rulesgroup->id);
+        }
+
+        if (!Configuration::get('KLARNA_INVOICE_PRODUCT')) 
+        {
+        	$invoice_fee = new Product();
+        	$invoice_fee->name = array();
+
+        foreach (Language::getLanguages() as $language) {
+			$invoice_fee->name[$language['id_lang']] = 'invoicefee';
+			$invoice_fee->link_rewrite[$language['id_lang']] = 'invoicefee';
+		}
+
+		$invoice_fee->reference = self::INVOICE_REF;	
+        $invoice_fee->active = false;
+        $invoice_fee->quantity = 10000;
+        $invoice_fee->available_for_order = true;
+        $invoice_fee->visibility = 'none';
+        $invoice_fee->id_tax_rules_group = $rulesgroup->id;
+  
+        if ($invoice_fee->add())
+        	Configuration::updateValue('KLARNA_INVOICE_PRODUCT', (int)$invoice_fee->id);
+    	}
+    	
+	}
+
+	protected function deleteConfiguration()
+	{
+		foreach ($this->input_vals as $keys => $values) {
+				
+				foreach ($values as $update_value) {
+					foreach ($this->settings as $key_iso => $country_iso) {
+						if ($keys == "MULTI_LOCALE") {
+						Configuration::deleteByName((string)$update_value.$key_iso);
+						}
+						if ($keys == "GENERAL") {
+						Configuration::deleteByName((string)$update_value);
+						}	
+					}
+				}		
+			
+			}
 
 	}
 
@@ -104,7 +140,7 @@ class KlarnaInstall
 	* @author Johan Tedenmark
 	*/
 
-	public function createStatus()
+	protected function createStatus()
 	{
 		if (!Configuration::get('KLARNA_OS_PENDING'))
 		{

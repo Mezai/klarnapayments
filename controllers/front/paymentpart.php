@@ -46,7 +46,7 @@ class KlarnaPaymentsPaymentPartModuleFrontController extends ModuleFrontControll
 				Tools::redirect('index.php?controller=order');
 
 		$klarna_account_pclass = $this->module->getKlarnaPClasses('ACCOUNT');
-
+		
 		if (!empty($klarna_account_pclass))
 		{
 
@@ -180,12 +180,12 @@ class KlarnaPaymentsPaymentPartModuleFrontController extends ModuleFrontControll
 		if (!Validate::isLoadedObject($customer))
 			Tools::redirect('index.php?controller=order&step=1');
 
-		if (Tools::isSubmit('submitKlarnaPayment')) 
+		if (Tools::isSubmit('submitKlarnaPayment'))
 		{
-		
+
 		if (preg_match($this->module->getPatternPnoPHP(), Tools::getValue('klarna_pno')) && Tools::getIsset('klarna_pno'))
-		{	
-		
+		{
+
 		$currency = new Currency((int)$cart->id_currency);
 		$address = new Address((int)$cart->id_address_invoice);
 
@@ -299,21 +299,21 @@ class KlarnaPaymentsPaymentPartModuleFrontController extends ModuleFrontControll
 				}
 
 		} catch (Exception $e){
-						
+
 			Logger::addLog('Klarna module: order failed with message: '.$e->getMessage().' and response code '.$e->getCode().' on cart id: '.$cart->id, 1);
 			Tools::redirect($error_klarna);
-			
+
 
 		}
 
-		} 
+		}
 		else
 		{
 			$this->context->smarty->assign('klarna_error', 1);
-						
+
 		}
-		
-			
+
+
 		}
 	}
 }

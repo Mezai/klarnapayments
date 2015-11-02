@@ -8,19 +8,45 @@ class KlarnaCheckoutPs
   public function __construct($merchant_eid, $merchant_secret) {
     $this->merchant_eid = $merchant_eid;
     $this->merchant_secret = $merchant_secret;
+	$this->environment = (Configuration::get('KLARNA_ENVIRONMENT') == 'beta') ? Klarna_Checkout_Connector::BASE_TEST_URL : Klarna_Checkout_Connector::BASE_URL;
 
   }
 
-  public function createNew($country, $currency, $locale, $products, $checkout_uri, $kco_shipping_amount, $carrier, $shipping_tax)
+  public function create($country, $currency, $locale, $products, $checkout_uri, $kco_shipping_amount, $carrier, $shipping_tax)
   {
     if (!is_string($country) || !is_string($currency) || !is_string($locale))
     return;
-
-
-    $connector = Klarna_Checkout_Connector::create(
+	
+	$connector = Klarna_Checkout_Connector::create(
         $this->merchant_secret,
-        Klarna_Checkout_Connector::BASE_TEST_URL
+        $this->environment
+		);
     );
+	
+	$order = null;
+	if (array_key_exists('klarna_checkout', $_SESSION))
+	{
+		$order = new Klarna_Checkout_Order(
+		$connector,
+		$_SESSION['klarna_checkout']
+		);
+		
+		try {
+			$order->fetch();
+			
+			//reset
+			
+			
+		
+		} catch (Exception $e) {	
+		
+		
+		}
+		
+	}
+
+
+    
 
     $order = new Klarna_Checkout_Order($connector);
 
@@ -84,9 +110,9 @@ class KlarnaCheckoutPs
           'type' => 'shipping_fee',
           'reference' => $carrier->id_reference,
           'name' => $carrier->name,
-          'quantity' => 1,
-          'unit_price' => $kco_shipping_amount * 100,
-          'tax_rate' => $shipping_tax * 100
+          'quantity' => (int)1,
+          'unit_price' => (int)$kco_shipping_amount * 100,
+          'tax_rate' => (int)$shipping_tax * 100
         );
 
     foreach ($checkoutcart as $item) {
@@ -100,16 +126,45 @@ class KlarnaCheckoutPs
 
         $_SESSION['klarna_order_id'] = $orderID = $order['id'];
 
-        // Display checkout
         return $snippet = $order['gui']['snippet'];
 
-        //echo sprintf('Order ID: %s', $orderID);
     } catch (Klarna_Checkout_ApiErrorException $e) {
         var_dump($e->getMessage());
         var_dump($e->getPayload());
         die;
     }
 
+  }
+  
+  public function fetch()
+  {
+	
+	$connector = Klarna_Checkout_Connector::create(
+	$this->merchant_secret,
+	$this->environment
+	);
+	
+	$order = new Klarna_Checkout_Order($connector, $orderID);
+	
+	try {
+    
+	return $order->fetch();
+	
+	} catch (Klarna_Checkout_ApiErrorException $e) {
+		
+		unset($_SESSION['klarna_checkout']);
+	}
+  }
+  
+  public function update() 
+  {
+	$connector = Klarna_Checkout_Connector::create(
+	$this->merchant_secret,
+	$this->environment
+	);
+		
+	$orderID = 
+	$order = new Klarna_Checkout_Order($connector, $orderID);
   }
 
 

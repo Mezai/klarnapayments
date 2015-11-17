@@ -1,0 +1,20 @@
+<h4>{$value.title}</h4>
+	<table class="table">
+	<tbody>
+	<tr>
+		<td>{l s='Shopping cart summary' mod='klarnapayments'}</td>
+		<td>{displayPrice price=$total}</td>
+     </tr>
+     <tr>
+	    <td>{l s='Invoice fee' mod='klarnapayments'}</td>
+	<td>{displayPrice price=$klarna_invoice_sum}</td>
+	</tr>							    
+	<tr>
+       <td>{l s='Order total' mod='klarnapayments'}</td>
+       <td>{displayPrice price=$klarna_invoice_sum + $total} </td>
+    </tr>
+	</tbody>
+</table>
+
+								
+							

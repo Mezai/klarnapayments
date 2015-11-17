@@ -25,8 +25,8 @@
 
 <div style="width:210px; height:80px" 
      class="klarna-widget klarna-part-payment"
-     data-eid="1736" 
-     data-locale="sv_se"
+     data-eid="{$eid|escape:'htmlall':'UTF-8'}" 
+     data-locale="{$lang|escape:'htmlall':'UTF-8'}"
      data-price="{$price|escape:'htmlall':'UTF-8'}"
      data-layout="pale-v2"
      data-invoice-fee="{$fee|escape:'htmlall':'UTF-8'}">

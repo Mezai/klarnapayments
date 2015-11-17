@@ -1,63 +1,66 @@
-#klarna_get_address p {padding:0;}
-
-#klarna_get_address p.success_pno {
-	color: #418B19;
-	text-align: left;
-	font-weight: bold;
-}
-#klarna_get_address p.warning_pno {
-	color: #DA0F00;
-	text-align: left;
-	font-weight: bold;
-}
-
-
 .klarnainvoicepayment, .klarnapartpayment {
-		display: block;
-		border: 1px solid #d6d4d4;
-		-webkit-border-radius: 4px;
-		-moz-border-radius: 4px;
-		border-radius: 4px;
-		line-height: 23px;
-		color: #333;
-		padding: 33px 40px 34px 99px;
-		letter-spacing: -1px;
-		position: relative;
-		margin:0 0 9px;
-	}
-
-#klarna_get_address input.inputPno {
-	position: relative;
-	top: -1px;
-	padding:0 5px;
-	height:30px;
-	width:200px;
-	border:1px solid #ccc;
-	-moz-border-radius-topleft: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	-webkit-border-radius-topleft: 3px;
-	-webkit-border-radius-bottomleft: 3px;
-	border-top-left-radius: 3px;
-	border-bottom-left-radius: 3px;
-	font-size:12px;
-	color:#999;
-}
-
-#klarna_get_address label {
 	display: block;
+	border: 1px solid #d6d4d4;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	
+	line-height: 23px;
+	color: #333;
+	
+	padding: 33px 40px 34px 99px;
+	letter-spacing: -1px;
+	position: relative;
+	margin-bottom: 10px;
 }
 
-#klarna_get_address {
-	padding:7px;
-	border:1px solid #ccc;
-	background: inherit;
+.klarna-submit-button {
+  position: relative;
+  display: inline-block;
+  padding: 5px 7px;
+  border: 1px solid #cc9900;
+  font-weight: bold;
+  color: black;
+  background: url(../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
 }
 
-#klarna_get_address input.button_small {
-	position:relative;
-	cursor:pointer;
+.klarna-submit-button:hover {
+	background-position: left -50px;
 }
 
-#klarna_get_address h4 {
-	border-bottom: 1px solid #d6d4d4;
+.klarna_pno_input {
+    width: 300px;
+    display: block;
+    display: inline; 
+    position: relative;
+    border: #CCCCCC solid 1px; 
+    margin-bottom: 15px; 
+    padding: 3px; 
+}
+
+#klarna_logo {
+	float: right;
+}
+
+@media only screen and (max-device-width: 480px) {
+  #klarna_logo {
+    float: left;
+  }
+
+  #klarna_pno, .klarna_error {
+    width: 100%;
+  }
+}
+
+.klarna_error {
+  background-color: #FAE2E3;
+  border: 1px solid #EC9B9B;
+  line-height: 20px;
+  margin: 15px 0 10px;
+  padding: 10px 15px;
+  font-weight: bold;
+  width: 300px;
 }

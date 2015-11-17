@@ -54,7 +54,9 @@ class CheckoutServiceRequest
     {
         $this->config = $config;
         $this->params = array_filter($params);
-
+        if (isset($config['mode']) && $config['mode'] === Klarna::BETA) {
+            $this->uri = 'https://api-test.klarna.com/touchpoint/checkout/';
+        }
         if (isset($config['checkout_service_uri'])) {
             $this->uri = $config['checkout_service_uri'];
         }

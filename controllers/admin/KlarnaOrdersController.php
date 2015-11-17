@@ -4,397 +4,551 @@ class KlarnaOrdersController extends ModuleAdminController
 {
 	public function __construct()
 	{
+
+        $this->table = 'klarna_orders';
+        $this->identifier = 'id_order';
+        $this->className = 'KlarnaOrders';
+        $this->lang = false;      
+        $this->bootstrap = true;
+        $this->colorOnBackground = false;
 		$this->className = 'KlarnaOrders';
 		$this->bootstrap = true;
 		$this->meta_link = array('Handle your Klarna orders');
+        $this->noLink = true;
+        $this->list_no_link = true;
+        $this->explicitSelect = true;
+        $this->_where = 'a.payment_status = OK';
+        $this->_group = 'GROUP BY a.id_order';
+        $this->_defaultOrderBy = 'a.id_order';
+        
+        $this->fields_list = array(
+            'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'customer_firstname' => array('title' => $this->l('Customer firstname'), 'filter_key' => 'customer_firstname'),
+            'customer_lastname' => array('title' => $this->l('Customer Lastname')),
+            'id_reservation' => array('title' => $this->l('Id reservation')),
+            'payment_status' => array('title' => $this->l('Payment status')),
+            'id_invoicenumber' => array('title' => $this->l('Id invoicenumber')),
+            'customer_country' => array('title' => $this->l('Customer country')),
+        );
 
+        
+        parent::__construct();
 
-		parent::__construct();
+        $resend_invoice = array(
+            array(
+            'id_option' => 1,
+            'name' => 'E-mail'
+            ),
+            array(
+            'id_option' => 0,
+            'name' => 'Post'
+            ),
+        );
+
+        $refund_qty = array(
+            array(
+            'id_option' => 1,
+            'name' => '1'       
+            ),
+            array(
+            'id_option' => 2,
+            'name' => '2'       
+            ),
+            array(
+            'id_option' => 3,
+            'name' => '3'       
+            ),
+            array(
+            'id_option' => 4,
+            'name' => '4'       
+            ),
+            array(
+            'id_option' => 5,
+            'name' => '5'       
+            ),
+            array(
+            'id_option' => 6,
+            'name' => '6'       
+            ),
+            array(
+            'id_option' => 7,
+            'name' => '7'       
+            ),
+            array(
+            'id_option' => 8,
+            'name' => '8'       
+            ),
+            array(
+            'id_option' => 9,
+            'name' => '9'       
+            ),
+            array(
+            'id_option' => 10,
+            'name' => '10'       
+            ),
+        );
+
+        $send_type = array(
+            array(
+            'id_option' => 0,
+            'name' => 'E-mail'       
+            ),
+            array(
+            'id_option' => 1,
+            'name' => 'Post'       
+            ),
+
+        );
+        
+        $this->fields_options = array(
+            'showinvoice' => array(
+                'title' => $this->l('Show invoice'),
+                'icon' => 'icon-user',
+                'fields' => array(
+                    'KLARNA_SHOW_INVOICE_ID' => array(
+                     'title' => $this->l('Invoice number'),
+                     'desc' => $this->l('Fill in the invoice number to show the invoice'),
+                     'class' => 'fixed-width-lg',
+                     'type' => 'text'   
+                        ),
+                    ),
+                'submit' => array(
+                        'title' => $this->l('Show'),
+                        'class' => 'button pull-right',
+                        'name' => 'show_invoice_klarna',
+                        ),
+
+            ),
+            'activate' => array(
+                'title' => $this->l('Activate invoice'),
+                'description' => $this->l('This function will activate the invoice'),
+                'icon' => 'icon-user',
+                'fields' =>    array(
+                    'KLARNA_ACTIVE_ID' => array(
+                        'title' => $this->l('Activate klarna order'),
+                        'desc' => $this->l('Fill in the reservation id to activate order'),
+                        'validation' => 'isUnsignedId',
+                        'class' => 'fixed-width-lg',
+                        'type' => 'text',
+
+                    ),
+                    'KLARNA_ACTIVE_TYPE' => array(
+                        'title' => $this->l('Type'),
+                        'desc' => $this->l('Select wheter to send invoice with email or post'),
+                        'type' => 'select',
+                        'list' => $send_type,
+                        'identifier' => 'name'
+                    ),
+                    
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'activate_klarna',
+                        ),
+            ),
+            'refundall' => array(
+                'title' => $this->l('Refund full invoice'),
+                'description' => $this->l('This function will credit the full invoice'),
+                'icon' => 'icon-user',
+                'fields' =>    array(
+                    'KLARNA_REFUND_ALL_ID' => array(
+                        'title' => $this->l('Invoice number'),
+                        'desc' => $this->l('Fill in invoice number to refund order'),
+                        'class' => 'fixed-width-lg',
+                        'type' => 'text',
+
+                    ),
+
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'refundall_klarna',
+                        ),
+            ),
+            'refundpartial' => array(
+                'title' => $this->l('Refund partial'),
+                'icon' => 'icon-user',      
+                'fields' =>    array(
+                    'KLARNA_REFUND_PARTIAL_ID' => array(
+                    'title' => $this->l('Invoice number'),
+                    'desc' => $this->l('Fill in the invoice number for the refund'),
+                    'type' => 'text',
+                    'class' => 'fixed-width-lg',
+                    ),
+                    'KLARNA_REFUND_PARTIAL_QTY' => array(
+                    'title' => $this->l('Quantity'),
+                    'desc' => $this->l('Fill in the quantity for the product to be refunded'),
+                    'type' => 'select',
+                    'list' => $refund_qty,
+                    'identifier' => 'id_option'     
+                    ),
+                    'KLARNA_REFUND_PARTIAL_PRODUCT' => array(
+                    'title' => $this->l('Product'),
+                    'type' => 'select',
+                    'desc' => $this->l('Select product to refund'),
+                    'list' => Product::getProducts($this->context->language->id, 0, 0, 'name', 'ASC'),
+                    'identifier' => 'reference' 
+
+                    ),
+
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'refundpartial_klarna',
+                        ),
+                      
+            ),
+            'refundgoodwill' => array(
+                'title' => $this->l('Goodwill refund'),
+                'icon' => 'icon-user',
+                'fields' => array(
+                    'KLARNA_REFUND_GOODWILL_ID' => array(
+                    'title' => $this->l('Invoice number'),
+                    'desc' => $this->l('Fill in the invoice number'),
+                    'class' => 'fixed-width-lg',
+                    'type' => 'text',
+                    ),
+                    'KLARNA_REFUND_GOODWILL_AMOUNT' => array(
+                    'title' => $this->l('Amount'),
+                    'desc' => $this->l('Fill in the amount to be discounted'),
+                    'type' => 'text',
+                    'class' => 'fixed-width-lg'    
+                    ),
+                    'KLARNA_REFUND_GOODWILL_TAX' => array(
+                    'title' => $this->l('Tax'),
+                    'desc' => $this->l('Fill in the tax for the discount'),
+                    'type' => 'select',
+                    'list' => Tax::getTaxes($this->context->language->id, true),
+                    'identifier' => 'id_tax'   
+                    ),
+                    'KLARNA_REFUND_GOODWILL_VAT' => array(
+                    'title' => $this->l('Include tax'),
+                    'desc' => $this->l('Select if you wish to include tax in the discount'),
+                    'type' => 'bool',
+                    'cast' => 'intval'
+                    ),
+                    'KLARNA_REFUND_GOODWILL_DESC' => array(
+                    'title' => $this->l('Description'),
+                    'desc' => $this->l('Fill in the description for the discount'),
+                    'type' => 'text',
+                    'class' => 'fixed-width-lg'      
+                    ),
+
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'refundgoodwill_klarna',
+                        ),
+
+            ),
+            'resendinvoice' => array(
+                'title' => $this->l('Resend invoice'),
+                'description' => $this->l('This function will resend the invoice'),
+                'icon' => 'icon-user',
+                'fields' =>    array(
+                'KLARNA_RESEND_ID' => array(
+                    'title' =>  $this->l('Resend klarna invoice'),
+                        'desc' => $this->l('Fill in the id invoicenumber to resend invoice'),
+                        'type' => 'text',
+                        'class' => 'fixed-width-lg',
+                ),
+                'KLARNA_RESEND_TYPE' => array(
+                        'title' =>  $this->l('Resend klarna invoice'),
+                        'desc' => $this->l('Choose resend type'),
+                        'type' => 'select',
+                        'identifier' => 'name',
+                        'list' => $resend_invoice
+                    ),
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'resendinvoice_klarna',
+                        ),
+            ),
+            'cancelinvoice' => array(
+                'title' => $this->l('Cancel invoice'),
+                'description' => $this->l('This will cancel the existing reservation'),
+                'icon' => 'icon-user',      
+                'fields' =>  array(
+                'KLARNA_CANCEL_ID' => array(
+                'title' => $this->l('Reservation number'),
+                'desc' => $this->l('Fill in the reservation id to cancel the invoice'),
+                'type' => 'text',
+                'class' => 'fixed-width-lg',
+                    ),    
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'cancelinvoice_klarna',
+                        ),
+            ),
+            'updateinvoice' => array(
+                'title' => $this->l('Update invoice'),
+                'description' => $this->l('This will replace the existing reservation'),
+                'icon' => 'icon-user',
+                'fields' =>    array(
+            'KLARNA_UPDATE_ID' => array(        
+                'title' => $this->l('Update reservation'),
+                'desc' => $this->l('Fill in the reservation id to update order'),
+                'type' => 'text',
+                'class' => 'fixed-width-lg',
+                ),
+            'KLARNA_UPDATE_PRODUCT' => array(
+                'title' => $this->l('Choose product to add'),
+                'desc' => $this->l('The product will be added to the invoice'),
+                'type' => 'select',
+                'cast' => 'intval',
+                'list' => Product::getProducts($this->context->language->id, 0, 0, 'name', 'ASC'),
+                'identifier' => 'id_product'
+                ),
+            'KLARNA_UPDATE_ORDERID1' => array(
+                'title' => $this->l('Order id 1:'),
+                'desc' => $this->l('Set a new order id optional'),
+                'type' => 'text',
+                'class' => 'fixed-width-lg'
+                ),
+            'KLARNA_UPDATE_ORDERID2' => array(
+                'title' => $this->l('Order id 2:'),
+                'desc' => $this->l('Set a new order id optional'),
+                'type' => 'text',
+                'class' => 'fixed-width-lg'
+                ),
+            'KLARNA_UPDATE_QTY' => array(
+                'title' => $this->l('Qty'),
+                'desc' => $this->l('Quantity for the product to update'),
+                'type' => 'select',
+                'cast' => 'intval',
+                'list' => $refund_qty,
+                'identifier' => 'id_option'  
+                ),
+            
+            ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'updateinvoice_klarna',
+                        ),
+           ),
+        );
+
 
 		if (!$this->module->active)
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminHome'));
 	}
 
-
-	public function renderForm()
+    public function renderOptions()
     {
-        $this->fields_value = array(
-            'type_text' => 'with value',
-            'type_text_readonly' => 'with value that you can\'t edit',
-            'type_switch' => 1,
-            'days' => 17,
-            'months' => 3,
-            'years' => 2014,
-            'groupBox_1' => false,
-            'groupBox_2' => true,
-            'groupBox_3' => false,
-            'groupBox_4' => true,
-            'groupBox_5' => true,
-            'groupBox_6' => false,
-            'type_color' => '#8BC954',
-            'tab_note' => 'The tabs are always pushed to the top of the form, wherever they are in the fields_form array.',
-            'type_free' => '<p class="form-control-static">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue fermentum leo et porta. Pellentesque a quam dui. Pellentesque sed augue id sem aliquet faucibus eu vel odio. Nullam non libero volutpat, pulvinar turpis non, gravida mauris. Nullam tincidunt id est at euismod. Quisque euismod quam in pellentesque mollis. Nulla suscipit porttitor massa, nec eleifend risus egestas in. Aenean luctus porttitor tempus. Morbi dolor leo, dictum id interdum vel, semper ac est. Maecenas justo augue, accumsan in velit nec, consectetur fringilla orci. Nunc ut ante erat. Curabitur dolor augue, eleifend a luctus non, aliquet a mi. Curabitur ultricies lectus in rhoncus sodales. Maecenas quis dictum erat. Suspendisse blandit lacus sed felis facilisis, in interdum quam congue.<p>'
-        );
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => 'patterns of helper form.tpl',
-                'icon' => 'icon-edit'
-            ),
-            'tabs' => array(
-                'small' => 'Small Inputs',
-                'large' => 'Large Inputs',
-            ),
-            'description' => 'You can use image instead of icon for the title.',
-            'input' => array(
-                array(
-                    'type' => 'text',
-                    'label' => 'simple input text',
-                    'name' => 'type_text'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with desc',
-                    'name' => 'type_text_desc',
-                    'desc' => 'desc input text'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'required input text',
-                    'name' => 'type_text_required',
-                    'required' => true
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with hint',
-                    'name' => 'type_text_hint',
-                    'hint' => 'hint input text'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with prefix',
-                    'name' => 'type_text_prefix',
-                    'prefix' => 'prefix'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with suffix',
-                    'name' => 'type_text_suffix',
-                    'suffix' => 'suffix'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with placeholder',
-                    'name' => 'type_text_placeholder',
-                    'placeholder' => 'placeholder'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input text with character counter',
-                    'name' => 'type_text_maxchar',
-                    'maxchar' => 30
-                ),
-                array(
-                    'type' => 'text',
-                    'lang' => true,
-                    'label' => 'input text multilang',
-                    'name' => 'type_text_multilang'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input readonly',
-                    'readonly' => true,
-                    'name' => 'type_text_readonly'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-xs',
-                    'name' => 'type_text_xs',
-                    'class' => 'input fixed-width-xs'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-sm',
-                    'name' => 'type_text_sm',
-                    'class' => 'input fixed-width-sm'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-md',
-                    'name' => 'type_text_md',
-                    'class' => 'input fixed-width-md'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-lg',
-                    'name' => 'type_text_lg',
-                    'class' => 'input fixed-width-lg'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-xl',
-                    'name' => 'type_text_xl',
-                    'class' => 'input fixed-width-xl'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-xxl',
-                    'name' => 'type_text_xxl',
-                    'class' => 'fixed-width-xxl'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-sm',
-                    'name' => 'type_text_sm',
-                    'class' => 'input fixed-width-sm',
-                    'tab' => 'small',
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-md',
-                    'name' => 'type_text_md',
-                    'class' => 'input fixed-width-md',
-                    'tab' => 'small',
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-lg',
-                    'name' => 'type_text_lg',
-                    'class' => 'input fixed-width-lg',
-                    'tab' => 'large',
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-xl',
-                    'name' => 'type_text_xl',
-                    'class' => 'input fixed-width-xl',
-                    'tab' => 'large',
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-xxl',
-                    'name' => 'type_text_xxl',
-                    'class' => 'fixed-width-xxl',
-                    'tab' => 'large',
-                ),
-                array(
-                    'type' => 'free',
-                    'label' => 'About tabs',
-                    'name' => 'tab_note',
-                    'tab' => 'small',
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-md with prefix',
-                    'name' => 'type_text_md',
-                    'class' => 'input fixed-width-md',
-                    'prefix' => 'prefix'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => 'input fixed-width-md with sufix',
-                    'name' => 'type_text_md',
-                    'class' => 'input fixed-width-md',
-                    'suffix' => 'suffix'
-                ),
-                array(
-                    'type' => 'tags',
-                    'label' => 'input tags',
-                    'name' => 'type_text_tags'
-                ),
-                array(
-                    'type' => 'textbutton',
-                    'label' => 'input with button',
-                    'name' => 'type_textbutton',
-                    'button' => array(
-                        'label' => 'do something',
-                        'attributes' => array(
-                            'onclick' => 'alert(\'something done\');'
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => 'select',
-                    'name' => 'type_select',
-                    'options' => array(
-                        'query' => Zone::getZones(),
-                        'id' => 'id_zone',
-                        'name' => 'name'
-                    ),
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => 'select with chosen',
-                    'name' => 'type_select_chosen',
-                    'class' => 'chosen',
-                    'options' => array(
-                        'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
-                        'id' => 'id_zone',
-                        'name' => 'name'
-                    ),
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => 'select multiple with chosen',
-                    'name' => 'type_select_multiple_chosen',
-                    'class' => 'chosen',
-                    'multiple' => true,
-                    'options' => array(
-                        'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
-                        'id' => 'id_zone',
-                        'name' => 'name'
-                    ),
-                ),
-                array(
-                    'type' => 'radio',
-                    'label' => 'radios',
-                    'name' => 'type_radio',
-                    'values' => array(
-                        array(
-                            'id' => 'type_male',
-                            'value' => 0,
-                            'label' => 'first'
-                        ),
-                        array(
-                            'id' => 'type_female',
-                            'value' => 1,
-                            'label' => 'second'
-                        ),
-                        array(
-                            'id' => 'type_neutral',
-                            'value' => 2,
-                            'label' => 'third'
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'checkbox',
-                    'label' => 'checkbox',
-                    'name' => 'type_checkbox',
-                    'values' => array(
-                        'query' => Zone::getZones(),
-                        'id' => 'id_zone',
-                        'name' => 'name'
-                    )
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => 'switch',
-                    'name' => 'type_switch',
-                    'values' => array(
-                        array(
-                            'id' => 'type_switch_on',
-                            'value' => 1
-                        ),
-                        array(
-                            'id' => 'type_switch_off',
-                            'value' => 0
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => 'switch disabled',
-                    'name' => 'type_switch_disabled',
-                    'disabled' => 'true',
-                    'values' => array(
-                        array(
-                            'id' => 'type_switch_disabled_on',
-                            'value' => 1
-                        ),
-                        array(
-                            'id' => 'type_switch_disabled_off',
-                            'value' => 0
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'textarea',
-                    'label' => 'text area (with autoresize)',
-                    'name' => 'type_textarea'
-                ),
-                array(
-                    'type' => 'textarea',
-                    'label' => 'text area with rich text editor',
-                    'name' => 'type_textarea_rte',
-                    'autoload_rte' => true
-                ),
-                array(
-                    'type' => 'password',
-                    'label' => 'input password',
-                    'name' => 'type_password'
-                ),
-                array(
-                    'type' => 'birthday',
-                    'label' => 'input birthday',
-                    'name' => 'type_birthday',
-                    'options' => array(
-                        'days' => Tools::dateDays(),
-                        'months' => Tools::dateMonths(),
-                        'years' => Tools::dateYears()
-                    )
-                ),
-                array(
-                    'type' => 'group',
-                    'label' => 'group',
-                    'name' => 'type_group',
-                    'values' => Group::getGroups(Context::getContext()->language->id)
-                ),
-                array(
-                    'type' => 'categories',
-                    'label' => 'tree categories',
-                    'name' => 'type_categories',
-                    'tree' => array(
-                        'root_category' => 1,
-                        'id' => 'id_category',
-                        'name' => 'name_category',
-                        'selected_categories' => array(3),
-                    )
-                ),
-                array(
-                    'type' => 'file',
-                    'label' => 'input file',
-                    'name' => 'type_file'
-                ),
-                array(
-                    'type' => 'color',
-                    'label' => 'input color',
-                    'name' => 'type_color'
-                ),
-                array(
-                    'type' => 'date',
-                    'label' => 'input date',
-                    'name' => 'type_date'
-                ),
-                array(
-                    'type' => 'datetime',
-                    'label' => 'input date and time',
-                    'name' => 'type_datetime'
-                ),
-                array(
-                    'type' => 'html',
-                    'name' => 'html_data',
-                    'html_content' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
-                ),
-                array(
-                    'type' => 'free',
-                    'label' => 'input free',
-                    'name' => 'type_free'
-                ),
-                //...
-            ),
-            'submit' => array(
-                'title' => 'Save',
-            ),
-            'buttons' => array(),
-        );
-        return parent::renderForm();
+        // Set toolbar options
+       if ($this->fields_options && is_array($this->fields_options)) {
+            $helper = new HelperOptions($this);
+            $this->setHelperDisplay($helper);
+            $helper->toolbar_scroll = true;
+            $helper->toolbar_btn = array(
+                'save' => array(
+                    'href' => '#',
+                    'desc' => $this->l('Save')
+                )
+            );
+            $helper->id = $this->id;
+            $helper->tpl_vars = $this->tpl_option_vars;
+            $options = $helper->generateOptions($this->fields_options);
+            return $options;
+        }
     }
 
-    public function renderList()
-	{
-		return $this->renderForm();
-	}
+	          
+   
 
+    public function renderList()
+    {
+        // Set toolbar options
+        $this->display = null;
+        $this->initToolbar();
+        $this->addRowAction('view');
+  
+
+        return parent::renderList();
+    }
+
+    private function postValidation($reservation = false, $reservation_id = null, $invoicenumber = false, $id_invoicenumber = null)
+    {
+        if ($reservation === true) {
+            $reservations = KlarnaInvoiceFeeHandler::getAllReservationIds();
+            
+            foreach ($reservations as $key => $value) {
+                if ($reservation_id === $value['id_reservation']) {
+                return true;
+                }
+
+            }
+            return false;
+        }
+
+        if ($invoicenumber === true) {
+            $invoicenumbers = KlarnaInvoiceFeeHandler::getAllInvoiceIds();
+            
+            foreach ($invoicenumbers as $key => $value) {
+                if ($id_invoicenumber === $value['id_invoicenumber']) {
+                return true;
+                }
+
+            }
+            return false;
+        }
+    }
+
+
+    public function postProcess()
+    {
+        if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway')) {
+            $this->filter = true;
+        }
+        if (Tools::isSubmit('activate_klarna')) 
+        {
+
+            $reservation_id = Tools::getValue('KLARNA_ACTIVE_ID');
+            $send_type = Tools::getValue('KLARNA_ACTIVE_TYPE');
+            if (!$this->postValidation(true, $reservation_id, false, null))
+            {
+                $this->displayWarning('Invalid input please check your reservation id');
+                return;
+            }    
+            $klarna_order = new KlarnaOrderManagement();
+           
+            if ($klarna_order->activatePayment($reservation_id, $send_type)) {
+                $this->displayInformation('Successfully activated reservation id:'.$reservation_id);
+            } else {
+                $this->displayWarning('Activation failed: see log for more information');
+            }
+        }
+
+        if (Tools::isSubmit('refundall_klarna'))
+        {
+
+            $id_invoicenumber = Tools::getValue('KLARNA_REFUND_ALL_ID');
+            if (!$this->postValidation(false, null, true, $id_invoicenumber))
+            {
+                $this->displayWarning('Invalid input please check your invoice id');
+                return;
+            }
+            $klarna_order = new KlarnaOrderManagement();
+            
+            if ($klarna_order->refundAll($id_invoicenumber)) 
+            {
+                $this->displayInformation('Successfully refunded invoice id:'.$id_invoicenumber);
+            } else {
+                $this->displayWarning('Refund failed: see log for more information');
+            }
+
+        }
+
+        if (Tools::isSubmit('refundpartial_klarna'))
+        {
+            $id_invoicenumber = Tools::getValue('KLARNA_REFUND_PARTIAL_ID');
+            $quantity = (int)Tools::getValue('KLARNA_REFUND_PARTIAL_QTY');
+            $product = Tools::getValue('KLARNA_REFUND_PARTIAL_PRODUCT');
+           
+            if (!$this->postValidation(false, null, true, $id_invoicenumber))
+            {
+                $this->displayWarning('Invalid input please check your invoice id');
+                return;
+            }
+
+            $klarna_order = new KlarnaOrderManagement();
+            
+            if ($klarna_order->refundPart($id_invoicenumber, $quantity, $product)) 
+            {
+                $this->displayInformation('Successfully refunded invoice id:'.$id_invoicenumber);
+            } else {
+                $this->displayWarning('Refund failed: see log for more information');
+            }
+        }
+
+        if (Tools::isSubmit('resendinvoice_klarna'))
+        {
+            $id_invoicenumber = Tools::getValue('KLARNA_RESEND_ID');
+            $type = Tools::getValue('KLARNA_RESEND_TYPE');
+            if (!$this->postValidation(false, null, true, $id_invoicenumber))
+            {
+                $this->displayWarning('Invalid input please check your invoice id');
+                return;
+            }
+
+            $klarna_order = new KlarnaOrderManagement();
+            
+            if ($klarna_order->resendKlarnaInvoice($id_invoicenumber, $type)) 
+            {
+                $this->displayInformation('Successfully resent invoice id:'.$id_invoicenumber);
+            } else {
+                $this->displayWarning('Failed resending invoice: see log for more information');
+            }
+        }
+
+        if (Tools::isSubmit('cancelinvoice_klarna'))
+        {
+            $reservation_id = Tools::getValue('KLARNA_CANCEL_ID');
+            if (!$this->postValidation(true, $reservation_id, false, null))
+            {
+                $this->displayWarning('Invalid input please check your reservation id');
+                return;
+            }
+
+            $klarna_order = new KlarnaOrderManagement();
+            
+            if ($klarna_order->cancelPayment($reservation_id)) 
+            {
+                $this->displayInformation('Successfully canceled reservation id:'.$reservation_id);
+            } else {
+                $this->displayWarning('Failed canceling reservation: see log for more information');
+            } 
+
+        }
+
+        if (Tools::isSubmit('show_invoice_klarna'))
+        {
+            $id_invoicenumber = Tools::getValue('KLARNA_SHOW_INVOICE_ID');
+            if (!$this->postValidation(false, null, true, $id_invoicenumber))
+            {
+                $this->displayWarning('Invalid input please check your invoice id');
+                return;
+            }
+            $klarna_order = new KlarnaOrderManagement();
+            $invoice_uri = $klarna_order->getInvoiceURI($id_invoicenumber);
+
+            Tools::redirect($invoice_uri);
+
+        }
+
+        if (Tools::isSubmit('updateinvoice_klarna')) 
+        {
+            $id_reservation = Tools::getValue('KLARNA_UPDATE_ID');
+            $product = (int)Tools::getValue('KLARNA_UPDATE_PRODUCT');
+            $quantity = (int)Tools::getValue('KLARNA_UPDATE_QTY');
+            $order_id1 = Tools::getValue('KLARNA_UPDATE_ORDERID1');
+            $order_id2 = Tools::getValue('KLARNA_UPDATE_ORDERID2');
+     
+            if (!$this->postValidation(true, $reservation_id, false, null))
+            {
+                $this->displayWarning('Invalid input please check your invoice id');
+                return;
+            }
+
+            $klarna_order = new KlarnaOrderManagement();
+            
+            if ($klarna_order->updateKlarnaInvoice($id_reservation, $product, $quantity, $order_id1, $order_id2)) 
+            {
+                $this->displayInformation('Successfully canceled reservation id:'.$reservation_id);
+            } else {
+                $this->displayWarning('Failed canceling reservation: see log for more information');
+            } 
+        } 
+
+    }    
 
 }

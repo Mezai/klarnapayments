@@ -1,38 +1,108 @@
 <?php
 
-class KlarnapaymentsPaymentModuleFrontController extends ModuleFrontController
+class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 {
+
+  public function __construct()
+  {
+    parent::__construct();
+    $this->context = Context::getContext();
+    require_once(dirname(__FILE__).'/../../klarnapayments.php');
+  }
   public function initContent()
   {
+     
 
-    require_once(dirname(__FILE__).'/../../libs/Klarna.php');
-    require_once(dirname(__FILE__).'/../../libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc');
-		require_once(dirname(__FILE__).'/../../libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc');
-    require_once(dirname(__FILE__).'/../../classes/KlarnaConfigHandler.php');
+     $this->display_column_left = false;
+     $this->display_column_right = false;
+     parent::initContent();
+     $klarna_locale = KlarnaEncoding::get(Country::getIsoById($this->context->country->id));
+     $error_url = $this->context->link->getModuleLink('klarnapayments', 'error');
+     $enc = KlarnaEncoding::getRegexp($klarna_locale);
+    if (!preg_match($enc, Tools::getValue('klarna_pno'))) {
+      $location = $this->context->link->getModuleLink('klarnapayments', 'error');
+      Tools::redirect($location);
+      
+      } else {
+        $this->validation();
 
-    if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active)
-			Tools::redirect('index.php?controller=order&step=1');
+    }
+  }
 
-      if (!Validate::isLoadedObject($customer))
-  			Tools::redirect('index.php?controller=order&step=1');
+
+
+  public function validation()
+  {
 
       $cart = $this->context->cart;
       $currency = new Currency((int)$cart->id_currency);
-  		$address = new Address((int)$cart->id_address_invoice);
-  		$carrier = new Carrier((int)$cart->id_carrier);
-  		$amount = $cart->getOrderTotal(true, Cart::BOTH);
-  		$goods = $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-  		$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
-      $error_url = Context::getContext()->link->getModuleLink('klarnapayments', 'error');
+      $klarna = new KlarnaPrestaConfig();
+      $country_iso = Country::getIsoById($this->context->country->id);
 
-      $payment_type = Tools::getValue('select_klarna_method');
+      $klarna->setKlarnaConfig($country_iso, true);
+
+      $buildgoods_list = new KlarnaGoodsList();
+      $buildgoods_list->buildGoodsList(Country::getIsoById($this->context->country->id), $cart, $klarna);
+
+     
+
+      $address = new Address(intval($cart->id_address_delivery));
+      $customer = new Customer($cart->id_customer);
+      $address_klarna = KlarnaAdressPresta::buildKlarnaAddr($address, $customer);
+      $klarna->klarna->setAddress(KlarnaFlags::IS_BILLING, $address_klarna);
+      $klarna->klarna->setAddress(KlarnaFlags::IS_SHIPPING, $address_klarna);
 
 
-        $k = KlarnaConfigHandler::setConfigurationByLocale(Country::getIsoById($this->context->country->id), $this->module->settings);
+      try {
 
-        var_dump($k);
-        exit;
+      $pclassid = (int)Tools::getValue('klarna_payment_type');
+      $result = $klarna->klarna->reserveAmount(
+        (String)Tools::getValue('klarna_pno'), 
+        null, // KlarnaFlags::MALE, KlarnaFlags::FEMALE (AT/DE/NL only)
+        -1,   // Automatically calculate and reserve the cart total amount
+        KlarnaFlags::NO_FLAG,
+        $pclassid
+        );
+
+      $reservation_number = $result[0];
+      $klarna_order_status = $result[1];
+      $type = (Tools::getValue('klarna_payment_type') === -1) ? 'Invoice' : 'Part payment';
+      if ((int)$klarna_order_status == 1)
+      {
+        $status = 'OK';
+
+      $this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_AUTHORIZED'), $amount, $this->module->displayName, 'Status:'.
+          $status.'; Reservation id:'.$reservation_number.'; Type:'.$type, array(), (int)$currency->id, false, $customer->secure_key);
+          Db::getInstance()->Execute('
+          INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
+          VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\', \''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
+          Tools::redirect('index.php?controller=order-confirmation&id_cart='.
+              $cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+       
+       } elseif ((int)$klarna_order_status == 2) {
+
+        $status = 'Pending';
+
+        $this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_PENDING'), $amount, $this->module->displayName, 'Status:'.
+          $status.'; Reservation id:'.$reservation_number.'; Type:'.$type, array(), (int)$currency->id, false, $customer->secure_key);
+        Db::getInstance()->Execute('
+          INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
+          VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\', \''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
+        Tools::redirect('index.php?controller=order-confirmation&id_cart='.
+          $cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+
+
+       }  
+    } catch (Exception $e) {
+      Logger::addLog('Klarna module: transaction failed with message: '.$e->getMessage().' and code :'.$e->getCode());
+      var_dump($e->getMessage());
+      exit;
+      Tools::redirect($this->context->link->getModuleLink('klarnapayments', 'error'));
+
     }
+
+
+  }
 
 }

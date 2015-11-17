@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__).'/classes/payment/KlarnaPrestashopCore.php');
+require_once(dirname(__FILE__).'/classes/KlarnaPrestashopCore.php');
 
 
 
@@ -35,19 +35,16 @@ class KlarnaPayments extends PaymentModule
 {
 	private $html = '';
 	private $post_errors = array();
-	public $settings;
 
 	public $input_vals = array(
 		"MULTI_LOCALE" => array(
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		"GENERAL" => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
-			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK', 'KLARNA_INVOICE_FEE_TAX',
-			'KLARNA_INVOICE_FEE', 'KLARNA_INVOICE_PRICE', 'KLARNA_INVOICE_METHOD', 'KLARNA_INVOICE_PRODUCT'),
+			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
+			'KLARNA_INVOICE_FEE', 'KLARNA_INVOICE_PRICE', 'KLARNA_INVOICE_METHOD'),
 		);
 
-	const INVOICE_REF = 'Invoice fee';
-	public $klarna;
-	public $country;
+	const INVOICE_REF = 'invoicefee';
 
 	public function __construct()
 	{
@@ -58,130 +55,14 @@ class KlarnaPayments extends PaymentModule
 		$this->version = '1.0.2';
 		$this->author = 'JET';
 		$this->need_instance = 1;
-		$this->controllers = array('payment', 'verification');
 		$this->bootstrap = true;
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
 
-		$this->settings = array(
-
-	                  "SE"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_SE'),
-
-	                                       "klarna_eid" => Configuration::get('KLARNA_EID_SE'),
-
-	                                       "klarna_secret" => Configuration::get('KLARNA_SECRET_SE'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_SE'),
-
-											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_SE'),
-
-											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_SE')
-
-	                                       ),
-
-	                  "NO"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_NO'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_NO'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NO'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_NO'),
-
-											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NO'),
-
-											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_NO')
-
-	                                       ),
-
-	                  "FI"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_FI'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_FI'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_FI'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_FI'),
-
-											 "klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_FI'),
-
-																				 "klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_FI')
-
-	                                       ),
-
-	                  "DK"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_DK'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_DK'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DK'),
-
-																				 "klarna_part" => (int)Configuration::get('KLARNA_PART_DK'),
-
-																				 "klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DK')
-
-	                                       ),
-
-	                  "NL"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_NL'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_NL'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NL'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_NL'),
-
-											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NL')
-
-
-
-	                                       ),
-
-	                  "DE"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_DE'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_DE'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DE'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_DE'),
-	
-											 "klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DE'),
-
-											 "klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_DE')
-
-
-
-	                                       ),
-
-	                  "AT"  => array(
-
-	                                       "active" => (int)Configuration::get('ACTIVE_AT'),
-
-	                                       "klarna_eid" => (String)Configuration::get('KLARNA_EID_AT'),
-
-	                                       "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_AT'),
-
-											"klarna_part" => (int)Configuration::get('KLARNA_PART_AT'),
-
-											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_AT')
-
-
-
-	                                       ),
-
-	                  );
+		
 
 		parent::__construct();
-		$this->klarna = null;
-        $this->country = null;
+		
 
 		$this->displayName = $this->l('Klarna invoice and part payment');
 		$this->description = $this->l('Allows your customers to pay with Klarna invoice and part payment');
@@ -221,7 +102,7 @@ class KlarnaPayments extends PaymentModule
 
 	$klarna_install->createStatus();
 
-	
+
 
 	return parent::install()
 	&& $this->registerHook('payment')
@@ -237,66 +118,13 @@ class KlarnaPayments extends PaymentModule
 
 	}
 
-	 public function requireApi($country = null)
-    {
-        if (($this->klarna === null)
-            || (($country != null) && ($this->country != $country))
-        ) {
-            if ($country == null || KlarnaCountry::fromCode($country) === null) {
-                $eid = 1;
-                $secret = 'invalid';
-            } else {
-                $eid = Configuration::get('KLARNA_EID_' . $country);
-                $secret = Configuration::get('KLARNA_SECRET_' . $country);
-            }
-
-            $this->kconfig = new KlarnaConfig(null);
-            $this->kconfig['eid'] = $eid;
-            $this->kconfig['secret'] = $secret;
-            $this->kconfig['mode'] = (Configuration::get('KLARNA_ENVIRONMENT') === 'live') ? KLARNA::LIVE : KLARNA::BETA;
-            $this->kconfig['pcStorage'] = 'json';
-            $this->kconfig['pcURI'] = dirname(__FILE__).'/pclasses/pclasses.json';
-
-            Klarna::printDebug("config", $this->kconfig);
-
-            $klarna = new KlarnaPrestaApi();
-            $klarna->setConfig($this->kconfig);
-            if (KlarnaCountry::fromCode($country) !== null) {
-                $klarna->setCountry($country);
-            }
-
-            $this->country = $country;
-            $this->klarna = $klarna;
-        }
-    }
-
-    public function updatePClasses()
-    {
-        $countries = KlarnaConfigHandler::returnActiveCountries($this->settings);
-        $this->requireApi();
-        $this->klarna->clearPClasses();
-
-        foreach ($countries as $country) {
-            try {
-                $this->requireApi($country);
-            } catch(KlarnaException $e) {
-                $this->_postErrors[] = "$country not fully configured";
-                continue;
-            }
-            try {
-                $this->klarna->fetchPClasses();
-            } catch(Exception $e) {
-                $this->_postErrors[] = "Failed to get pclasses for $country: " .
-                    strval($e);
-            }
-        }
-    }
-
-
 	public function hookDisplayShoppingCart()
 	{
-
+		if (!KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
+			return;
+		
 	}
+
 	/**
 	 * Uninstall the module and delete configuration
 	 *
@@ -311,7 +139,7 @@ class KlarnaPayments extends PaymentModule
 		$tab_main = new Tab(Tab::getIdFromClassName('KlarnaMain'));
 		$tab_pay = new Tab(Tab::getIdFromClassName('KlarnaOrders'));
 
-		$invoice_product = new Product(Configuration::get('KLARNA_INVOICE_PRODUCT'));
+		$invoice_product = new Product((int)Configuration::get('KLARNA_INVOICE_PRODUCT'));
 
 		$klarna_uninstall = new KlarnaInstall();
 		$klarna_uninstall->deleteConfiguration();
@@ -322,10 +150,7 @@ class KlarnaPayments extends PaymentModule
 		&& $invoice_product->delete();
 	}
 
-	public function getJsonUri()
-	{
-		return dirname(__FILE__).'/pclasses/pclasses.json';
-	}
+
 
 	/**
 	* Validate merchant configuration
@@ -338,9 +163,9 @@ class KlarnaPayments extends PaymentModule
 	{
 		if (Tools::isSubmit('saveBtn'))
 		{
-			
+				$configuration = new KlarnaConfigHandler();
 
-				foreach ($this->settings as $key => $value) {
+				foreach ($configuration->settings as $key => $value) {
 					if ((int)$value['active'] == 1) {
 						if (!Tools::getValue('KLARNA_EID_'.$key))
 								$this->post_errors[] = $this->l('You need to set the Klarna EID for country: '.$key);
@@ -356,31 +181,26 @@ class KlarnaPayments extends PaymentModule
 		if (Tools::isSubmit('saveBtn'))
 		{
 
-			// better looop cause we have alot of values 
+			// better looop cause we have alot of values
 
 			foreach ($this->input_vals as $keys => $values) {
-				
+				$configuration = new KlarnaConfigHandler();
+
 				foreach ($values as $update_value) {
-					foreach ($this->settings as $key_iso => $country_iso) {
+					foreach ($configuration->settings as $key_iso => $country_iso) {
 						if ($keys == "MULTI_LOCALE") {
-						Configuration::updateValue((string)$update_value.$key_iso, Tools::getValue((string)$update_value.$key_iso));
+						Configuration::updateValue($update_value.$key_iso, Tools::getValue($update_value.$key_iso));
 						}
 						if ($keys == "GENERAL") {
-						Configuration::updateValue((string)$update_value, Tools::getValue((string)$update_value));
-						}	
+						Configuration::updateValue($update_value, Tools::getValue($update_value));
+						}
 					}
-				}		
-			
+				}
+
 			}
 
-			if (Tools::getValue('KLARNA_INVOICE_PRICE') || Tools::getValue('KLARNA_INVOICE_FEE_TAX')) {
-				$tax = new TaxRulesGroup(Configuration::get('KLARNA_INVOICE_FEE_TAX'));
-				$prod = new Product(Configuration::get('KLARNA_INVOICE_PRODUCT'));
-				$prod->price = floatval(Tools::getValue('KLARNA_INVOICE_PRICE'));
-				$prod->id_tax_rules_group = $tax->id;
-				$prod->update();
-			}
-			
+
+
 		}
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 
@@ -401,7 +221,7 @@ class KlarnaPayments extends PaymentModule
 				<script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>';
 	}
 
-	
+
 	/**
 	* Hook backoffice header
 	*
@@ -423,6 +243,27 @@ class KlarnaPayments extends PaymentModule
 	* @author Johan Tedenmark
 	*/
 
+	public function showPaymentPart($type)
+	{
+		global $smarty;
+		$this->hookPayment();
+		if ($type == 'klarna_payment_part_flexible') {
+		$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_flexible.tpl');
+		} elseif ($type == 'klarna_payment_part_fixed_1') {
+			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_1.tpl');
+		} elseif ($type == 'klarna_payment_part_fixed_2') {
+			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_2.tpl');
+		} elseif ($type == 'klarna_payment_part_fixed_3') {
+			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_3.tpl');
+		} elseif ($type == 'klarna_payment_invoice') {
+			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice.tpl');
+		} elseif ($type == 'klarna_payment_invoice_payinx') {
+			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice_payinx.tpl');
+		}
+
+		return Tools::jsonEncode($vars);
+	}
+
 	public function hookPaymentReturn()
 	{
 		if (!$this->active)
@@ -431,6 +272,28 @@ class KlarnaPayments extends PaymentModule
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 
+	private function checkLocale($country, $currency, $language)
+	{
+		if ($country == 'SE' && $currency == 'SEK' && $language == 'sv')
+			return true;
+		elseif ($country == 'DE' && $currency == 'EUR' && $language == 'de')
+			return true;
+		elseif ($country == 'DK' && $currency == 'DKK' && $language == 'da')
+			return true;
+		elseif ($country == 'NL' && $currency == 'EUR' && $language == 'nl') 
+			return true;
+		elseif ($country == 'NO' && $currency == 'NOK' && $language == 'no')
+			return true;
+		elseif ($country == 'FI' && $currency == 'EUR' && $language == 'fi')
+			return true;
+		elseif ($country == 'AT' && $currency == 'EUR' && $language == 'at')
+			return true;
+		else 
+			return false;
+		
+	}
+
+
 	/**
 	* Hook payment
 	*
@@ -438,20 +301,78 @@ class KlarnaPayments extends PaymentModule
 	* @author Johan Tedenmark
 	*/
 
-	public function hookPayment($params)
+	public function hookPayment()
 	{
+
 		// Check if module is active and that the country set, check for valid currency, country aswell
-		if (!$this->active || !KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id), $this->settings))
+		if (!$this->active || !KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
 			return;
+			$cart = $this->context->cart;
+			$currency = $this->context->currency;		
+				$checkout_data = new KlarnaCheckoutService();
+				$data_klarna = $checkout_data->newCheckout(Country::getIsoById($this->context->country->id), $cart->getOrderTotal(true, Cart::BOTH),
+				KlarnaLocalization::getPrestaLanguage($this->context->language->iso_code), Tools::strtoupper($currency->iso_code));
+			
+		if (!$data_klarna) {
+			return;
+		}
 
 
 
-			//$this->smarty->assign('validation_url', (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php?fc=module&module=klarnapayments&controller=payment');
+
+		$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
+		
+
+		$array_data = $data_klarna['payment_methods'];
+		
+		$this->context->smarty->assign('klarna_data', $array_data);
+		$this->context->smarty->assignByRef('KlarnaPClass', $get_pclasses);
+		
+		$pclasses = new KlarnaPrestaPclasses();
+		$get_pclasses = $pclasses->getKlarnaPClasses(Country::getIsoById($this->context->country->id));
 
 
+		foreach ($get_pclasses as $key => $value) {
+			if ($key === 1 || $key === 2 || $key ===  3) {	
+			$this->context->smarty->assign(array(
+			'klarna_pclass_id'.$key.'' => $value->getId(),
+		 	'klarna_calc_monthly'.$key.'' => KlarnaCalc::calc_monthly_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
+		 	'klarna_calc_apr'.$key.'' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
+		 	'klarna_calc_total_credit'.$key.'' => KlarnaCalc::total_credit_purchase_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),	
+			
+		 	));
+		 	}
+		}
+
+		foreach ($get_pclasses as $key => $value) {
+			if ($value->getType() == (int)2) {
+				$this->context->smarty->assign(array(
+				'klarna_special_description' => $value->getDescription(),
+				'klarna_special_id' => $value->getId(),	
+				'klarna_special_invoicefee' => $value->getInvoiceFee(),
+				'klarna_special_interest' => $value->getInterestRate(),
+				));	
+			}
+		}
+		
+		$this->context->smarty->assign(array(
+			'merchant_id' => KlarnaConfigHandler::getMerchantID(Country::getIsoById($this->context->country->id)),
+			'locale' => KlarnaLocalization::getPrestaLanguage(Language::getIsoById($this->context->language->id)),
+			'type' => $this->checkMobile(),
+			'total' => $cart->getOrderTotal(true, Cart::BOTH),
+			'klarna_invoice_sum' => KlarnaInvoiceFeeHandler::getInvoiceFeePrice(self::INVOICE_REF),
+			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
+			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),
+			'checkLocale' => $this->checkLocale(Country::getIsoById($this->context->country->id), Tools::strtoupper($currency->iso_code), $this->context->language->iso_code),
+			));
+
+		$this->smarty->assign('validation_url', (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php?process=validation&fc=module&module=klarnapayments&controller=payment');
 
 
-		//return $this->display(__FILE__, 'payment.tpl');
+		return $this->display(__FILE__, 'payment.tpl');
+
+
+		
 	}
 	/**
 	* Hook left column
@@ -462,9 +383,13 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookLeftColumn()
 	{
+		if (!KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
+			return;
+
+
 		$this->context->smarty->assign(array(
-			'klarna_merchant' => Configuration::get('klarna_eid'),
-			'klarna_lang' => Tools::strtolower($this->getLocale())
+			'klarna_merchant' => KlarnaConfigHandler::getMerchantID(Country::getIsoById($this->context->country->id)),
+			'klarna_lang' => Tools::strtolower(KlarnaLocalization::getPrestaLanguage(Language::getIsoById($this->context->language->id)))
 			));
 
 		return $this->display(__FILE__, 'klarnapaymentinfo.tpl');
@@ -490,16 +415,134 @@ class KlarnaPayments extends PaymentModule
 	* @author Johan Tedenmark
 	*/
 
-	
+
 	public function getContent()
 	{
-		if (Tools::isSubmit('pclass_se'))
+		if (Tools::isSubmit('PCLASS_SE') || Tools::isSubmit('DELETE_PCLASS_SE'))
 		{
-			$this->updatePClasses();
-		}
+			if (Tools::isSubmit('PCLASS_SE')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('SE');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Sweden');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Sweden');
+			}
+			} elseif (Tools::isSubmit('DELETE_PCLASS_SE')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('SE');
 
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Sweden');
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for country Sweden');
+				}
+			}	
+		} elseif (Tools::isSubmit('PCLASS_NO') || Tools::isSubmit('DELETE_PCLASS_NO')) {
+			
+			if (Tools::isSubmit('PCLASS_NO')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('NO');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Norway');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Norway');
+			}	
+			} elseif (Tools::isSubmit('DELETE_PCLASS_NO')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('NO');
 
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Norway');
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for Norway');
+				}
+			}
+		} elseif (Tools::isSubmit('PCLASS_DK') || Tools::isSubmit('DELETE_PCLASS_DK')) {
+			if (Tools::isSubmit('PCLASS_DK')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('DK');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Denmark');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Denmark');
+			}
+			} elseif (Tools::isSubmit('DELETE_PCLASS_DK')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('DK');
 
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Denmark');
+
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for Denmark');
+				}
+			}	
+		} elseif (Tools::isSubmit('PCLASS_NL') || Tools::isSubmit('DELETE_PCLASS_NL')) {
+			if (Tools::isSubmit('PCLASS_NL')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('NL');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Netherlands');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Netherlands');
+			}	
+			} elseif (Tools::isSubmit('DELETE_PCLASS_NL')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('NL');
+
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Netherlands');
+
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for Netherlands');
+				}	 
+			}
+		} elseif (Tools::isSubmit('PCLASS_DE') || Tools::isSubmit('DELETE_PCLASS_DE')) {
+			if (Tools::isSubmit('PCLASS_DE')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('DE');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Germany');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Germany');
+			}	
+			} elseif(Tools::isSubmit('DELETE_PCLASS_DE')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('DE');
+
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Germany');
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for Germany');
+				}
+			}
+		} elseif (Tools::isSubmit('PCLASS_FI') || Tools::isSubmit('DELETE_PCLASS_FI')) {
+			if (Tools::isSubmit('PCLASS_FI')) {
+			$fetch = new KlarnaPrestaPclasses();
+			$fetch->updatePClasses('FI');
+			if ($fetch)
+			{
+				$this->html .= $this->displayConfirmation('Pclasses update for Finland');
+			} else {
+				$this->html .= $this->displayError('Failed updating pclasses for country Finland');
+			}
+			} elseif (Tools::isSubmit('DELETE_PCLASS_FI')) {
+				$delete = new KlarnaPrestaPclasses();
+				$delete->deletePClasses('FI');
+
+				if ($delete) {
+					$this->html .= $this->displayConfirmation('Pclasses deleted for Finland');
+				} else {
+					$this->html .= $this->displayError('Failed deleting pclasses for Finland');
+				}
+			}	
+		} 
 		if (Tools::isSubmit('saveBtn'))
 		{
 			$this->postValidation();
@@ -510,8 +553,20 @@ class KlarnaPayments extends PaymentModule
 					$this->html .= $this->displayError($err);
 			}
 
-		}
+			$prod_id = (int)Configuration::get('KLARNA_INVOICE_PRODUCT');
 
+			$prod = new Product($prod_id);
+
+			$tax = new TaxRulesGroup((int)Tools::getValue('KLARNA_INVOICE_FEE_TAX'));
+
+			$prod->price = (float)Tools::getValue('KLARNA_INVOICE_PRICE');
+
+			$prod->id_tax_rules_group = (int)Tools::getValue('KLARNA_INVOICE_FEE_TAX');
+
+			$prod->update();
+
+
+		}
 
 
 
@@ -576,8 +631,8 @@ class KlarnaPayments extends PaymentModule
 			),
 		);
 
-	
-		
+
+
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -636,9 +691,15 @@ class KlarnaPayments extends PaymentModule
 				array(
                     'type' => 'html',
                     'name' => 'html_data',
-										'tab' => 'sweden',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_se">Update PClasses</button>'
+					'tab' => 'sweden',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_SE">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+					'tab' => 'sweden',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_SE">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -737,9 +798,15 @@ class KlarnaPayments extends PaymentModule
 				array(
                     'type' => 'html',
                     'name' => 'html_data',
-										'tab' => 'norway',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_no">Update PClasses</button>'
+					'tab' => 'norway',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_NO">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+					'tab' => 'norway',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_NO">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -839,8 +906,14 @@ class KlarnaPayments extends PaymentModule
                     'type' => 'html',
                     'name' => 'html_data',
 										'tab' => 'denmark',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_dk">Update PClasses</button>'
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_DK">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+										'tab' => 'denmark',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_DK">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -920,9 +993,15 @@ class KlarnaPayments extends PaymentModule
 				array(
                     'type' => 'html',
                     'name' => 'html_data',
-										'tab' => 'germany',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_de">Update PClasses</button>'
+					'tab' => 'germany',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_DE">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+                    'tab' => 'germany',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_DE">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -1097,9 +1176,15 @@ class KlarnaPayments extends PaymentModule
 				array(
                     'type' => 'html',
                     'name' => 'html_data',
-										'tab' => 'finland',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_fi">Update PClasses</button>'
+					'tab' => 'finland',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_FI">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+					'tab' => 'finland',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_FI">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -1199,8 +1284,14 @@ class KlarnaPayments extends PaymentModule
                     'type' => 'html',
                     'name' => 'html_data',
 										'tab' => 'netherlands',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="pclass_nl">Update PClasses</button>'
+                    'html_content' => '<button type="submit" class="btn btn-default" name="PCLASS_NL">Update PClasses</button>'
                 ),
+                array(
+                    'type' => 'html',
+                    'name' => 'html_data',
+					'tab' => 'netherlands',
+                    'html_content' => '<button type="submit" class="btn btn-default" name="DELETE_PCLASS_NL">Delete PClasses</button>'
+              	),
 				array(
 				'type' => 'radio',
 				'label' => $this->l('Activate invoice payments?'),
@@ -1257,7 +1348,7 @@ class KlarnaPayments extends PaymentModule
 					'query' => Tax::getTaxes(),
 					'id' => 'id_tax',
 					'name' => 'rate',
-						),	
+						),
 					),
 				array(
 				'type' => 'select',
@@ -1345,12 +1436,7 @@ class KlarnaPayments extends PaymentModule
 					'name' => 'name'
 					)
 				),
-				array(
-                    'type' => 'html',
-                    'name' => 'html_data',
-										'tab' => 'general',
-                    'html_content' => '<button type="submit" class="btn btn-default" name="delete_pclasses">Delete PClasses</button>'
-              ),
+
 				),
 				'submit' => array(
 						'title' => $this->l('Save'),
@@ -1370,7 +1456,7 @@ class KlarnaPayments extends PaymentModule
 		$helper->id = (int)Tools::getValue('id_carrier');
 		$helper->identifier = $this->identifier;
 		$helper->submit_action = 'saveBtn';
-		
+
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).
 		'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
@@ -1379,25 +1465,31 @@ class KlarnaPayments extends PaymentModule
 		'languages' => $this->context->controller->getLanguages(),
 		'id_language' => $this->context->language->id
 		);
-	
-			$helper->tpl_vars['fields_value']['KLARNA_INVOICE_PRICE'] = '0';
-		return $helper->generateForm(array($fields_form));
+
+			return $helper->generateForm(array($fields_form));
 	}
 
 
 	public function renderList()
 	{
-		$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses.json';
-		$fetch_json = Tools::file_get_contents($pclasses_uri);
-		$json_assoc = Tools::jsonDecode($fetch_json, true);
-		//return active countries 
 
-		$active_countries = KlarnaConfigHandler::returnActiveCountries($this->settings);
+		
+
+		$active_countries = KlarnaConfigHandler::returnActiveCountries();
+
+		
 
 		foreach ($active_countries as $countries) {
-			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries, $this->settings);
+			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries);
+			
+			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
+			if (file_exists($pclasses_uri)) {	
 
+			$fetch_json = Tools::file_get_contents($pclasses_uri);
+			$json_assoc = Tools::jsonDecode($fetch_json, true);
+			}
 
+		}	
 			$helper_array = $json_assoc[$klarna_merchant_id];
 
 			$this->fields_list = array(
@@ -1457,9 +1549,6 @@ class KlarnaPayments extends PaymentModule
 		        return $helper->generateList((array)$helper_array, $this->fields_list);
 
 
-		}
-		
-
 	}
 	/**
 	* Get config values
@@ -1471,21 +1560,21 @@ class KlarnaPayments extends PaymentModule
 	public function getConfigFieldsValues()
 	{
 		$return_array = array();
-
+		$configuration = new KlarnaConfigHandler();
 		foreach ($this->input_vals as $key_input => $value_input) {
 			foreach ($value_input as $update_value) {
-			foreach ($this->settings as $key => $value) {
+			foreach ($configuration->settings as $key => $value) {
 				if ($key_input == "MULTI_LOCALE") {
-				$return_array[$update_value.$key] = Tools::getValue((string)$update_value.$key, Configuration::get((string)$update_value.$key));
-					
+				$return_array[$update_value.$key] = Tools::getValue($update_value.$key, Configuration::get($update_value.$key));
+
 					}
 					if ($key_input == "GENERAL") {
-						$return_array[$update_value] = Tools::getValue((string)$update_value, Configuration::get((string)$update_value));
+						$return_array[$update_value] = Tools::getValue($update_value, Configuration::get($update_value));
 					}
 
 				}
 			}
-		
+
 		}
 		return $return_array;
 	}
@@ -1511,9 +1600,12 @@ class KlarnaPayments extends PaymentModule
 
 	}
 
-	
 	public function hookDisplayRightColumnProduct()
 	{
+
+		if (!KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
+			return;
+
 		if ($id_product = (int)Tools::getValue('id_product'))
 			$product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
 
@@ -1523,21 +1615,16 @@ class KlarnaPayments extends PaymentModule
     	$product_price = $product::getPriceStatic($id_product);
 
     	$this->smarty->assign(array(
-    		'eid' => Configuration::get('klarna_eid'),
+    		'eid' => KlarnaConfigHandler::getMerchantID(Country::getIsoById($this->context->country->id)),
     		'price' => $product_price,
-    		'lang' => Tools::strtolower($this->getLocale()),
-    		'fee' => $this->getInvoiceFee()
+    		'lang' => Tools::strtolower(KlarnaLocalization::getPrestaLanguage(Language::getIsoById($this->context->language->id))),
+    		'fee' => KlarnaInvoiceFeeHandler::getInvoiceFeePrice(self::INVOICE_REF)
     		));
 
 		return $this->display(__FILE__, 'klarnapartinfo.tpl');
 	}
 
-	private function updateDatabase($invoice_number, $id_order)
-	{
-		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'klarna_orders` SET `id_invoicenumber` = '.$invoice_number.' WHERE `id_order` = '.(int)$id_order))
-		die(Tools::displayError('Error when updating Klarna database'));
-
-	}
+	
 
 
 }

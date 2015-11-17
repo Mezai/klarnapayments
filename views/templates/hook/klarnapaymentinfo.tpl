@@ -26,8 +26,8 @@
 
 
 <div class="klarna-widget klarna-logo-tooltip"
-data-eid="665"
-    data-locale="sv"
+data-eid="{$klarna_merchant|escape:'htmlall':'UTF-8'}"
+    data-locale="{$klarna_lang|escape:'htmlall':'UTF-8'}"
     data-logo-name="blue-black"
     data-logo-width="200"
     data-layout="white">

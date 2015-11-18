@@ -106,11 +106,17 @@
 						<div class="container">
 							<div class="row">
 								<form action="{$validation_url|escape:'htmlall':'UTF-8'}" method="POST" id="klarna_part_payment">
-  								<h4 class="klarna_payment_description">{if isset($partpayment_description)}{$partpayment_description|escape:'htmlall':'UTF-8'}{/if}</h4>
+  								<h4 class="klarna_payment_description">{if isset($partpayment_description)}{$partpayment_description|escape:'htmlall':'UTF-8'}{/if}
+  								{if $klarna_locale == 'DK'}Afbetaling{/if}
+								{if $klarna_locale == 'DE'}Ratenkauf{/if}
+								{if $klarna_locale == 'FI'}Erämaksu{/if}	
+  								</h4>
   								<div class="btn-group">
   									{if isset($klarna_account_id)}
           								<input type="radio" class="klarna_payment_part_flexible" id="klarna_payment_part_1" name="klarna_payment_type" value="{if isset($partpayment_pclass_id)}{$partpayment_pclass_id|escape:'htmlall':'UTF-8'}{/if}" required/>
-        								<label for="klarna_payment_part_1">{if isset($partpayment_title)}{$partpayment_title|escape:'htmlall':'UTF-8'}{/if}</label><br>
+        								<label for="klarna_payment_part_1">{if isset($partpayment_title)}{$partpayment_title|escape:'htmlall':'UTF-8'}{/if}
+        								{if $klarna_locale == 'FI'}Joustava erämaksu – Maksa omassa tahdissasi{/if}		
+        								</label><br>
         							{/if}
         							{if isset($KlarnaPClass[1])}
         							

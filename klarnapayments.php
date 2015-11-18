@@ -392,7 +392,7 @@ class KlarnaPayments extends PaymentModule
 				$this->context->smarty->assign(array(
 				'klarna_account_description' => $value->getDescription(),
 				'klarna_account_id' => $value->getId(),
-				'klarna_account_start_fee' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),	
+				'klarna_account_start_fee' => $value->getStartFee(),
 				'klarna_account_invoicefee' => $value->getInvoiceFee(),
 				'klarna_account_interest' => $value->getInterestRate(),
 				'klarna_account_monthly' => KlarnaCalc::calc_monthly_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),

@@ -132,6 +132,38 @@ omkostning 1740 kr og totalprisen bliver
 <p><input type="checkbox" required/>Mit der Übermittlung der für die Abwicklung der gewählten Klarna Zahlungsmethode und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Klarna bin ich einverstanden. Meine <span id="consentxx"></span> kann ich jederzeit mit Wirkung für die Zukunft widerrufen. Es gelten die AGB des Händlers.</p>
 {/if}
 
+{if $klarna_locale == 'FI'}
+<h4>Joustava erämaksu – Maksa omassa tahdissasi</h4>
+<table class="table">
+<tbody>
+	<tr>
+		<td>Vuosikorko</td>
+		<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Aloitusmaksu</td>
+		<td>{displayPrice price=$klarna_account_start_fee}</td>
+	</tr>
+	<tr>
+		<td>Hallinnointimaksu</td>
+		<td>{displayPrice price=$klarna_account_invoicefee}{l s=' /kk' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Maksa erissä alkaen</td>
+		<td>{displayPrice price=$klarna_account_monthly}{l s=' /kk' mod='klarnapayments'}</td>
+	</tr>
+</tbody>
+</table>
+<p>Esimerkki: Sanotaan, että teet 1 000 €
+ostoksen. Hallinnointimaksu on 0 €/kk ja
+tämänhetkinen vuosikorko 19,90%. Maksat
+erissä 92 €/kk 12 kuukauden ajan.
+Todelliseksi vuosikoroksi tulee silloin
+21,82% ja 1 000 € ostoksesi
+kokonaissummaksi 1 111 €.</p>
+
+{/if}
+
 {if $klarna_locale == 'NL'}
 <h4><img src="{$this_path|escape:'htmlall':'UTF-8'}/views/img/amfbanner.jpg" style="width:100%;"></h4>			
 <table class="table">

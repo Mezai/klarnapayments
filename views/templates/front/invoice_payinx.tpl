@@ -23,20 +23,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{foreach from=$klarna_data item=value}
-	{if $value.group.code == 'invoice'}
 
-<h4>{$klarna_special_description|escape:'htmlall':'UTF-8'}</h4>
+
+
 {if $klarna_locale == 'SE'}
+<h4>{$klarna_special_description|escape:'htmlall':'UTF-8'}</h4>
 	<table class="table">
 		<tbody>
       	<tr>
-			<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
-			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
+			<td>{$partpayment_interest_label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$partpayment_interest_symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
       	<tr>
-		    <td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
-		    <td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$partpayment_invoicefee_label|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{$partpayment_invoicefee_symbol|escape:'htmlall':'UTF-8'}</td>
 		  </tr>
 		</tbody>
 </table>
@@ -45,21 +45,53 @@
 <table class="table">
 		<tbody>
       	<tr>
-			<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
-			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
+			<td>{$partpayment_interest_label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$partpayment_interest_symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
 		<tr>
-			<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
-			<td>{$value.details.start_fee.value|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+			<td>{$partpayment_startfee_label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$partpayment_startfee_value|escape:'htmlall':'UTF-8'}{$partpayment_startfee_symbol|escape:'htmlall':'UTF-8'}</td>
 
 		</tr>
       	<tr>
-		    <td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
-		    <td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$partpayment_invoicefee_label|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$partpayment_invoicefee_value|escape:'htmlall':'UTF-8'}{$partpayment_invoicefee_symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
 
 		</tbody>
 </table>
+{/if}
+{if $klarna_locale == 'DK'}
+<h4>Betal i {$klarna_special_description|escape:'htmlall':'UTF-8'}</h4>
+<table class="table">
+<tbody>
+	<tr>
+		<td>Købesum</td>
+		<td>{displayPrice price=$total}</td>
+	</tr>
+	<tr>
+		<td>Årlig rente</td>
+		<td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{l s='%' mod=klarnapayments}</td>
+	</tr>
+	<tr>
+		<td>Oprettelsesgebyr</td>
+		<td>{displayPrice price=$klarna_special_start_fee}</td>
+	</tr>
+	<tr>
+		<td>Effektiv rente</td>
+		<td>{$klarna_special_apr|escape:'htmlall':'UTF-8'}{l s='%' mod=klarnapayments}</td>
+	</tr>
+	<tr>
+		<td>Total omkostning</td>
+		<td>{displayPrice price=$klarna_special_credit - $total}</td>
+	</tr>
+	<tr>
+		<td>Kreditkøbspris</td>
+		<td>{displayPrice price=$klarna_special_credit}</td>
+	</tr>
+</tbody>
+</table>
+
 {/if}
 <script type="text/javascript">
 new Klarna.Terms.Special({
@@ -69,5 +101,3 @@ new Klarna.Terms.Special({
     type: "{$type|escape:'htmlall':'UTF-8'}"
 });
 </script>
-	{/if}
-{/foreach}

@@ -95,6 +95,41 @@
 </table>
 <p><span>{$partpayment_use_case|escape:'htmlall':'UTF-8'}</span></p>
 {/if}
+{if $klarna_locale == 'DK'}
+<h4>{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</h4>
+<table class="table">
+<tbody>
+<tr>
+	<td>Årlig rente</td>
+	<td>{$KlarnaPClass[1]->getInterestRate()|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Oprettelsesgebyr</td>
+	<td>{$KlarnaPClass[1]->getStartFee()|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Administrationsgebyr</td>
+	<td>{$KlarnaPClass[1]->getInvoiceFee()}{l s='kr/.md' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Månedlig omkostning</td>
+	<td>{$klarna_calc_monthly1|escape:'htmlall':'UTF-8'}{l s='kr/.md' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Effektiv rente</td>
+	<td>{$klarna_calc_apr1|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Total omkostning</td>
+	<td>{displayPrice price=$klarna_calc_total_credit1 - $total}</td>
+</tr>
+<tr>
+	<td>Kreditkøbspris</td>
+	<td>{displayPrice price=$klarna_calc_total_credit1}</td>
+</tr>
+</tbody>	
+{/if}
+
 
 <p><span id="accountxx"></span></p>
 <script type="text/javascript">

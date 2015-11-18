@@ -73,9 +73,41 @@
 	<td>{$klarna_account_monthly|escape:'htmlall':'UTF-8'}{l s='SEK/mån' mod='klarnapayments'}</td>
 </tr>
 
-	</tbody>
+</tbody>
 </table>
 <p>{$partpayment_use_case|escape:'htmlall':'UTF-8'}</p>
+{/if}
+
+{if $klarna_locale == 'DK'}
+<h4>{$partpayment_title|escape:'htmlall':'UTF-8'}</h4>
+<table class="table">
+<tbody>
+<tr>
+	<td>Årlig rente</td>
+	<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Oprettelsesgebyr</td>
+	<td>{displayPrice price=$klarna_account_start_fee}</td>
+</tr>
+<tr>
+	<td>Administrationsgebyr</td>
+	<td>{$klarna_account_invoicefee|escape:'htmlall':'UTF-8'}{l s='kr./md' mod='klarnapayments'}</td>
+</tr>
+<tr>
+	<td>Delbetala fra</td>
+	<td>{$klarna_account_monthly|escape:'htmlall':'UTF-8'}{l s='kr./md' mod='klarnapayments'}</td>
+</tr>
+
+</tbody>
+</table>
+<p>Lad os sige, at du køber for 10.000 kr.
+Administrativt gebyr er 39 kr./md., og
+rørlig årsrente er 22,70 %. Du betaler 978
+kr. af hver måned i 12 mdr. Den årlige
+effektive rente bliver da 35,41 %, total
+omkostning 1740 kr og totalprisen bliver
+11.740 kr.</p>
 {/if}
 
 {if $klarna_locale == 'DE'}
@@ -98,6 +130,66 @@
 <p>Verfügungsrahmen ab 199,99 € (abhängig von der Höhe Ihrer Einkäufe), effektiver Jahreszins 18,07%* und Gesamtbetrag 218, 57€* (*bei Ausnutzung des vollen Verfügungsrahmens und Rückzahlung in 12 monatlichen Raten je 18,21 €). Hier finden Sie <a href="https://cdn.klarna.com/1.0/shared/content/legal/terms/EID/de_de/account" target="_blank">weitere Informationen,</a><a href="https://cdn.klarna.com/1.0/shared/content/legal/de_de/account/terms.pdf" target="_blank"> AGB mit Widerrufsbelehrung</a> und <a href="https://cdn.klarna.com/1.0/shared/content/legal/de_de/consumer_credit.pdf" target="_blank">Standardinformationen für Verbraucherkredite.</a> Übersteigt Ihr Einkauf mit Klarna Ratenkauf erstmals einen Betrag von 199,99 € erhalten Sie von Klarna einen Ratenkaufvertrag mit der Bitte um Unterzeichnung zugesandt. Ihr Kauf gilt solange als <a href="https://cdn.klarna.com/1.0/shared/content/legal/terms/EID/de_de/invoice?fee=0" target="_blank">Rechnungskauf.</a>
 					</p>
 <p><input type="checkbox" required/>Mit der Übermittlung der für die Abwicklung der gewählten Klarna Zahlungsmethode und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Klarna bin ich einverstanden. Meine <span id="consentxx"></span> kann ich jederzeit mit Wirkung für die Zukunft widerrufen. Es gelten die AGB des Händlers.</p>
+{/if}
+
+{if $klarna_locale == 'NL'}
+<h4><img src="{$this_path|escape:'htmlall':'UTF-8'}/views/img/amfbanner.jpg" style="width:100%;"></h4>			
+<table class="table">
+<tbody>
+	<tr>
+		<td>Jarlikse rente</td>
+		<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Factuurkosten</td>
+		<td>{displayPrice price=$klarna_account_invoicefee}</td>
+	</tr>
+	<tr>
+		<td>Maandelijkse kosten</td>
+		<td>{displayPrice price=$klarna_account_monthly}</td>
+	</tr>
+								
+</tbody>
+</table>
+<table class="table klarnatable">
+<tbody>
+	<tr>
+		<td>Total kredietbedrag</td>
+		<td>Duur van de kredietovereenkomst*</td>
+		<td>Variabele debetrentevoet</td>
+		<td>Jaarlijks kosten-percentage(JKP)</td>
+		<td>Total te betalen bedrag*</td>
+		<td>Termijnbedrag*</td>
+	</tr>
+	<tr>
+		<td>50 €</td>
+		<td>6 mnd</td>
+		<td>13 %</td>
+		<td>13.8 %</td>
+		<td>52 €</td>
+		<td>9 €</td>
+	</tr>
+	<tr>
+		<td>100 €</td>
+		<td>12 mnd</td>
+		<td>13.0 %</td>
+		<td>13.8 %</td>
+		<td>107 €</td>
+		<td>9 €</td>
+	</tr>
+	<tr>
+		<td>250 €</td>
+		<td>24 mnd</td>
+		<td>13.0 %</td>
+		<td>13.8 %</td>
+		<td>285 €</td>
+		<td>12 €</td>
+	</tr>	
+
+</tbody>
+</table>
+<p>*Het gaat hier om een indicatie, werkelijke looptijd of bedrag kan varieren.</p>
+
 {/if}
 <p><span id="accountxx"></span></p>
 <script type="text/javascript">

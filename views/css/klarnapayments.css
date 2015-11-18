@@ -64,3 +64,9 @@
   font-weight: bold;
   width: 300px;
 }
+.klarnatable {
+        color: black;
+        display: block;
+        max-width: 100%;
+        overflow: auto;
+}

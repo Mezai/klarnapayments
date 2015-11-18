@@ -379,7 +379,10 @@ class KlarnaPayments extends PaymentModule
 				'klarna_special_description' => $value->getDescription(),
 				'klarna_special_id' => $value->getId(),	
 				'klarna_special_invoicefee' => $value->getInvoiceFee(),
+				'klarna_special_start_fee' => $value->getStartFee(),
 				'klarna_special_interest' => $value->getInterestRate(),
+				'klarna_special_apr' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
+				'klarna_special_credit' => KlarnaCalc::total_credit_purchase_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
 				));	
 			}
 		}
@@ -407,6 +410,7 @@ class KlarnaPayments extends PaymentModule
 			'total' => $cart->getOrderTotal(true, Cart::BOTH),
 			'payment_part' => $part,
 			'payment_invoice' => $invoice,
+			'this_path' => $this->_path,
 			'klarna_invoice_sum' => KlarnaInvoiceFeeHandler::getInvoiceFeePrice(self::INVOICE_REF),
 			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),

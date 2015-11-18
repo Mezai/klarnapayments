@@ -110,7 +110,8 @@ class KlarnaInstall extends KlarnaPayments
        	 	$invoice_fee->reference = KlarnaPayments::INVOICE_REF;
             $invoice_fee->out_of_stock = 1; 
             $invoice_fee->active = 0;
-            $invoice_fee->available_for_order = 1;
+            $invoice_fee->quantity = 10000; 
+            $invoice_fee->available_for_order = true;
             $invoice_fee->id_tax_rules_group = $rulesgroup->id;
             
             $invoice_fee->add();

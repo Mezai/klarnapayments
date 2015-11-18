@@ -4,6 +4,7 @@
 class KlarnaOrderManagement extends KlarnaPrestaConfig
 {
 
+
   public function activatePayment($reservation_id, $send_type)
 	{
 
@@ -115,9 +116,64 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 
 
-	public function checkStatus($id_reservation, $id_order)
+	public function checkStatus($id_reservation)
 	{
-		
+
+		if (!is_string($id_reservation))
+		{
+			return;
+		}	
+
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($id_reservation);	 	
+		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
+		$config = new KlarnaPrestaConfig();
+		$config->setKlarnaConfig($country, true);
+
+		try {
+			$status = $config->klarna->checkOrderStatus($id_reservation);
+
+			if ($status == KlarnaFlags::ACCEPTED)
+			{
+				$history = new OrderHistory();
+				$history->id_order = (int)$order_number;
+				$history->changeIdOrderState((int)Configuration::get('KLARNA_OS_AUTHORIZED'), $history->id_order);
+				$history->addWithemail();
+				$history->save();
+
+				$msg = new Message();
+				$msg->message = 'Invoice is ok you may now activate it';
+				$msg->id_order = (int)$order_number;
+				$msg->private = 1;
+				$msg->add();
+
+			} elseif ($status == KlarnaFlags::DENIED) {
+				$history = new OrderHistory();
+				$history->id_order = (int)$order_number;
+				$history->changeIdOrderState((int)Configuration::get('KLARNA_OS_DENIED'), $history->id_order);
+				$history->addWithemail();
+				$history->save();
+
+				$msg = new Message();
+				$msg->message = 'Invoice is denied please abort it';
+				$msg->id_order = (int)$order_number;
+				$msg->private = 1;
+				$msg->add();
+
+			} else
+			{
+				$msg = new Message();
+				$msg->message = 'Invoice is still pending try again later';
+				$msg->id_order = (int)$order_number;
+				$msg->private = 1;
+				$msg->add();
+			}
+
+			return true;
+		} catch (Exception $e) {
+			Logger::addLog('Order status check failed with message: '.$e->getMessage().' and response code: '.$e->getCode());
+			return false;
+		}
+
 	}
 
 	public function updateKlarnaInvoice($reservation_id, $id_product, $quantity, $id1, $id2)
@@ -219,29 +275,6 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		elseif (Configuration::get('KLARNA_ENVIRONMENT') == 'live')
 			return 'https://online.klarna.com/invoices/'.$invoicenumber.'.pdf';
 
-	}
-
-	
-	private function addNewKlarnaOrderMessage($id_order, $message)
-	{
-				$msg = new Message();
-
-				$msg->message = $message;
-
-				$msg->id_order = (int)$id_order;
-
-				$msg->private = 1;
-
-				$msg->add();
-	}
-	
-	private function changeKlarnaOrderState($id_order, $klarna_state)
-	{
-		$history = new OrderHistory();
-		$history->id_order = (int)$id_order;
-		$history->changeIdOrderState((int)Configuration::get($klarna_state), $history->id_order);
-		$history->addWithemail();
-		$history->save();
 	}
 }
 

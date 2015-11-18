@@ -16,7 +16,9 @@ class KlarnaOrdersController extends ModuleAdminController
 		$this->meta_link = array('Handle your Klarna orders');
         $this->noLink = true;
         $this->list_no_link = true;        
-        $this->_select = '`id_order`'; 
+        $this->_select = '`id_order`';
+        $this->_pagination = array(10, 50, 100, 300, 1000);
+        $this->_default_pagination = 10; 
 
         $this->fields_list = array(
             'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
@@ -469,6 +471,24 @@ class KlarnaOrdersController extends ModuleAdminController
             } else {
                 $this->displayWarning('Activation failed: see log for more information');
             }
+        }
+
+        if (Tools::isSubmit('checkstatus_klarna')) 
+        {
+            $reservation_id = Tools::getValue('KLARNA_CHECK_STATUS_ID');
+            if (!$this->postValidation(true, $reservation_id, false, null))
+            {
+                $this->displayWarning('Invalid input please check your reservation id');
+                return;
+            }
+            $klarna_order = new KlarnaOrderManagement();
+           
+            if ($klarna_order->checkStatus($reservation_id)) {
+                $this->displayInformation('Successfully checked status on invoice please see order page for more information');
+            } else {
+                $this->displayWarning('Check status failed: see log for more information');
+            }
+
         }
 
         if (Tools::isSubmit('refundall_klarna'))

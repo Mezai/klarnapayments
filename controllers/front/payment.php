@@ -60,6 +60,14 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 
       $cart = $this->context->cart;
       $currency = new Currency((int)$cart->id_currency);
+      $invoicefee = KlarnaInvoiceFeeHandler::getProductId(KlarnaPayments::INVOICE_REF);
+      $invoiceprod = new Product((int)$invoicefee);
+      if ($invoiceprod->price > 0) {
+          $cart->updateQty(1, $invoicefee);
+          $cart->update(true);
+          $cart->getPackageList(true);
+          $invoiceadd = true;
+      } 
 
       $klarna = new KlarnaPrestaConfig();
       $country_iso = Country::getIsoById($this->context->country->id);
@@ -124,6 +132,9 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 
        }  
     } catch (Exception $e) {
+      if ($invoiceadd) {
+        $cart->deleteProduct($invoicefee);
+      }
       Logger::addLog('Klarna module: transaction failed with message: '.$e->getMessage().' and code :'.$e->getCode());
       Tools::redirect($this->context->link->getModuleLink('klarnapayments', 'error'));
 

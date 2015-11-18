@@ -46,6 +46,7 @@ class KlarnaInstall extends KlarnaPayments
 			`customer_lastname` varchar(255) NOT NULL,
       		`id_invoicenumber` varchar(255) NOT NULL,
 			`payment_status` varchar(255) NOT NULL,
+			`risk_status` varchar(7) NOT NULL,
 			`customer_country` varchar(2) NOT NULL,
 			PRIMARY KEY(`id_order`)
 			) ENGINE ='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))

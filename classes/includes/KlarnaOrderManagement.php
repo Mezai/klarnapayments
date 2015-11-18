@@ -33,7 +33,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 			$risk = $result[0];
 			$invoice_number = $result[1];
 			
-			KlarnaInvoiceFeeHandler::updateInvoiceNumber($invoice_number, $order_number);
+			KlarnaInvoiceFeeHandler::updateInvoiceNumber($invoice_number, $risk, $order_number);
 			return true;
 		} catch (Exception $e) {
 			Logger::addLog('Klarna module: failed activating resevation id '.$reservation_id.' with code: '.$e->getCode().' and message: '.$e->getMessage());
@@ -178,7 +178,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	public function updateKlarnaInvoice($reservation_id, $id_product, $quantity, $id1, $id2)
 	{
-		if (!is_string($reservation_id) || !is_int($id_product) || !is_int($quantity) || !is_string($id_1) || !is_string($id_2))
+		if (!is_string($reservation_id) || !is_int($id_product) || !is_int($quantity) || !is_string($id1) || !is_string($id2))
 			return;
 
 		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($reservation_id);	 	
@@ -198,9 +198,9 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 			}
 
 			if (empty($addproduct['rate'])) {
-				$price_wt = floatval($addproduct['price_wt']);
-				$price = floatval($addproduct['price']);
-				$rate = round((($priceWT / $price) - 1.0) * 100);
+				$price_wt = (float)$addproduct['price_wt'];
+				$price = (float)$addproduct['price'];
+				$rate = round((($price_wt / $price) - 1.0) * 100);
 			} else {
 				$rate = $addproduct['rate'];
 

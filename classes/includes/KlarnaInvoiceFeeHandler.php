@@ -74,9 +74,10 @@ class KlarnaInvoiceFeeHandler
 	}
 
 
-	public static function updateInvoiceNumber($invoice_number, $id_order)
+	public static function updateInvoiceNumber($invoice_number, $risk_status, $id_order)
 	{
-		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'klarna_orders` SET `id_invoicenumber` = '.$invoice_number.' WHERE `id_order` = '.(int)$id_order))
+		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'klarna_orders` SET `id_invoicenumber` = '.$invoice_number.' WHERE `id_order` = '.(int)$id_order)
+			|| !Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'klarna_orders` SET `risk_status` = '.$risk_status.' WHERE `id_order` = '.(int)$id_order))
 		die(Tools::displayError('Error when updating Klarna database'));
 
 	}

@@ -31,12 +31,12 @@
 	<table class="table">
 		<tbody>
       	<tr>
-			<td>{$value.details.interest_rate.label}</td>
-			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol}</td>
+			<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
       	<tr>
-		    <td>{$value.details.monthly_invoice_fee.label}</td>
-		    <td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol}</td>
+		    <td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 		  </tr>
 		</tbody>
 </table>
@@ -45,17 +45,17 @@
 <table class="table">
 		<tbody>
       	<tr>
-			<td>{$value.details.interest_rate.label}</td>
-			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol}</td>
+			<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$klarna_special_invoicefee|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
 		<tr>
-			<td>{$value.details.start_fee.label}</td>
-			<td>{$value.details.start_fee.value|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol}</td>
+			<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
+			<td>{$value.details.start_fee.value|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 
 		</tr>
       	<tr>
-		    <td>{$value.details.monthly_invoice_fee.label}</td>
-		    <td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol}</td>
+		    <td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
+		    <td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 		</tr>
 
 		</tbody>

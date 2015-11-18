@@ -44,7 +44,7 @@
 							<div class="row">
 
 						<form action="{$validation_url|escape:'htmlall':'UTF-8'}" method="POST" id="klarna_invoice_payment">
-						<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title}{/if}{if $klarna_locale == 'AT'}Klarna Rechnung{/if}
+						<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title|escape:'htmlall':'UTF-8'}{/if}{if $klarna_locale == 'AT'}Klarna Rechnung{/if}
 							{if $klarna_locale == 'DE'}Klarna Rechnung{/if}{if $klarna_locale == 'DK'}Klarna Faktura{/if}
 							{if $klarna_locale == 'FI'}Klarna Lasku{/if}
 							{if $klarna_locale == 'NL'}Klarna Achteraf betalen{/if}</h4>
@@ -52,7 +52,7 @@
 							
           					<input type="radio" class="klarna_payment_invoice" id="klarna_payment_invoice_1" name="klarna_payment_type"
           					value="{if !empty($value.pclass_id)}{$value.pclass_id}{else}-1{/if}"/>
-        					<label for="klarna_payment_invoice_1">{if isset($value.title)}{$value.title}{/if}
+        					<label for="klarna_payment_invoice_1">{if isset($value.title)}{$value.title|escape:'htmlall':'UTF-8'}{/if}
         					{if $klarna_locale == 'AT'}Rechnung: In 14 Tagen bezahlen{/if}	
 							{if $klarna_locale == 'DE'}Rechnung: In 14 Tagen bezahlen{/if}
 							{if $klarna_locale == 'DK'}Faktura: Betal om 14 dage{/if}
@@ -61,8 +61,8 @@
         					</label><br>
         				{if isset($klarna_special_id)}
   							
-          					<input type="radio" class="klarna_payment_invoice_payinx" id="klarna_payment_invoice_2" name="klarna_payment_type" value="{$klarna_special_id}"/>
-        					<label for="klarna_payment_invoice_2">{if isset($klarna_special_description)}{$klarna_special_description}{/if}</label><br>
+          					<input type="radio" class="klarna_payment_invoice_payinx" id="klarna_payment_invoice_2" name="klarna_payment_type" value="{$klarna_special_id|escape:'htmlall':'UTF-8'}"/>
+        					<label for="klarna_payment_invoice_2">{if isset($klarna_special_description)}{$klarna_special_description|escape:'htmlall':'UTF-8'}{/if}</label><br>
         				{/if}
         				</div>	
 						<div class="required form-group">
@@ -87,7 +87,7 @@
 					<div class="col-sm-6 klarna_description_inv">
 					
 
-					<p>{if isset($value.use_case)}{$value.use_case}{/if}</p><p><span id="invoicexx"></span></p>
+					<p>{if isset($value.use_case)}{$value.use_case|escape:'htmlall':'UTF-8'}{/if}</p><p><span id="invoicexx"></span></p>
 					</div>
 
 				 </div>
@@ -120,26 +120,26 @@
 						<div class="container">
 							<div class="row">
 								<form action="{$validation_url|escape:'htmlall':'UTF-8'}" method="POST" id="klarna_part_payment">
-  								<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title}{/if}</h4>
+  								<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title|escape:'htmlall':'UTF-8'}{/if}</h4>
   								<div class="btn-group">
   									{if isset($klarna_account_id)}
-          								<input type="radio" class="klarna_payment_part_flexible" id="klarna_payment_part_1" name="klarna_payment_type" value="{if isset($value.pclass_id)}{$value.pclass_id}{/if}"/>
-        								<label for="klarna_payment_part_1">{if isset($value.title)}{$value.title}{/if}</label><br>
+          								<input type="radio" class="klarna_payment_part_flexible" id="klarna_payment_part_1" name="klarna_payment_type" value="{if isset($value.pclass_id)}{$value.pclass_id|escape:'htmlall':'UTF-8'}{/if}"/>
+        								<label for="klarna_payment_part_1">{if isset($value.title)}{$value.title|escape:'htmlall':'UTF-8'}{/if}</label><br>
         							{/if}
         							{if isset($KlarnaPClass[1])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_1" id="klarna_payment_part_2" name="klarna_payment_type" value="{$KlarnaPClass[1]->getId()}"/><label for="klarna_payment_part_2">{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_1" id="klarna_payment_part_2" name="klarna_payment_type" value="{$KlarnaPClass[1]->getId()|escape:'htmlall':'UTF-8'}"/><label for="klarna_payment_part_2">{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
         							
         							{/if}
         							{if isset($KlarnaPClass[2])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_2" id="klarna_payment_part_3" name="klarna_payment_type" value="{$KlarnaPClass[2]->getId()}"/>
-        								<label for="klarna_payment_part_3">{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_2" id="klarna_payment_part_3" name="klarna_payment_type" value="{$KlarnaPClass[2]->getId()|escape:'htmlall':'UTF-8'}"/>
+        								<label for="klarna_payment_part_3">{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
         							{/if}
         							{if isset($KlarnaPClass[3])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_3" id="klarna_payment_part_4" name="klarna_payment_type" value="{$KlarnaPClass[3]->getId()}"/>
-        								<label for="klarna_payment_part_4">{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_3" id="klarna_payment_part_4" name="klarna_payment_type" value="{$KlarnaPClass[3]->getId()|escape:'htmlall':'UTF-8'}"/>
+        								<label for="klarna_payment_part_4">{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
         							{/if}
         						</div>
         							<div class="required form-group">

@@ -26,13 +26,13 @@
 <!--part pay fixed 1-->
 {foreach from=$klarna_data item=value}
 	{if $value.group.code == 'part_payment'}
-<h4>{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()}</h4>
+<h4>{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()|escape:'htmlall':'UTF-8'}</h4>
 {if $klarna_locale == 'SE'}
 <table class="table">
 <tbody>
 <tr>
 	<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
-	<td>{$KlarnaPClass[3]->getInterestRate()}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
+	<td>{$KlarnaPClass[3]->getInterestRate()|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
 
 </tr>
 
@@ -44,7 +44,7 @@
 
 <tr>
 	<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
-	<td>{$KlarnaPClass[3]->getStartFee()}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+	<td>{$KlarnaPClass[3]->getStartFee()|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 
 </tr>
 

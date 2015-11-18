@@ -52,7 +52,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
       $address_klarna = KlarnaAdressPresta::buildKlarnaAddr($address, $customer);
       $klarna->klarna->setAddress(KlarnaFlags::IS_BILLING, $address_klarna);
       $klarna->klarna->setAddress(KlarnaFlags::IS_SHIPPING, $address_klarna);
-
+      $amount = $cart->getOrderTotal(true, Cart::BOTH);
 
       try {
 

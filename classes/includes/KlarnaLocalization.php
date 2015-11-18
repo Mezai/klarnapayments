@@ -102,7 +102,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 
     public function setlocale()
     {
-        switch(strtoupper($this->_country)) {
+        switch(Tools::strtoupper($this->_country)) {
         case 'AT':
         case 'DE':
             return 'DE';

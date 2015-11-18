@@ -49,7 +49,7 @@ class KlarnaAdressPresta
         $address = str_replace($match[0], "", $address);
         $street = trim($match[0]);
 
-        if (strlen($address == 0)) {
+        if (Tools::strlen($address == 0)) {
             return array($street, "", "");
         }
         $addrArray = explode(" ", $address);

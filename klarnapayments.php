@@ -246,20 +246,20 @@ class KlarnaPayments extends PaymentModule
 
 	public function showPaymentPart($type)
 	{
-		global $smarty;
+		
 		$this->hookPayment();
 		if ($type == 'klarna_payment_part_flexible') {
-		$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_flexible.tpl');
+		$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_flexible.tpl');
 		} elseif ($type == 'klarna_payment_part_fixed_1') {
-			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_1.tpl');
+			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_1.tpl');
 		} elseif ($type == 'klarna_payment_part_fixed_2') {
-			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_2.tpl');
+			$vars = $$this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_2.tpl');
 		} elseif ($type == 'klarna_payment_part_fixed_3') {
-			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_3.tpl');
+			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_3.tpl');
 		} elseif ($type == 'klarna_payment_invoice') {
-			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice.tpl');
+			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice.tpl');
 		} elseif ($type == 'klarna_payment_invoice_payinx') {
-			$vars = $smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice_payinx.tpl');
+			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/invoice_payinx.tpl');
 		}
 
 		return Tools::jsonEncode($vars);

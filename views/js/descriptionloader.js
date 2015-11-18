@@ -2,7 +2,7 @@ $(document).ready(function(e) {
 	$("input[type='radio'][name='klarna_payment_type']").click(function() {
     var $klarna_description_part = $('.klarna_description_part');
     var $klarna_description_inv = $('.klarna_description_inv');
-    var loadImage = baseDir + "modules/klarnapayments/views/images/loading_spinner" + ".gif";
+    var loadImage = baseDir + "modules/klarnapayments/views/img/loading_spinner" + ".gif";
     var image = '<img src="' + loadImage + '" />';
 
       if ($(this).attr('checked')) {

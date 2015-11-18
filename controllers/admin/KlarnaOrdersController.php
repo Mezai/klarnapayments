@@ -417,7 +417,6 @@ class KlarnaOrdersController extends ModuleAdminController
         $this->display = null;
         $this->initToolbar(); 
         
-        $this->addRowAction('view');
         return parent::renderList();
     }
 

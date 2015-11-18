@@ -46,7 +46,7 @@
   <div class="snippet">
     <div id="klarna-checkout-container" style="overflow-x: hidden;">
       <noscript> Please &lt;a href="http://enable-javascript.com"&gt;enable JavaScript&lt;/a&gt;.</noscript>
-      {$snippet}
+      {$snippet|escape:'htmlall':'UTF-8'}
     </div>
   </div>
 </div>

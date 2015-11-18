@@ -51,7 +51,7 @@
 						<div class="btn-group">
 							
           					<input type="radio" class="klarna_payment_invoice" id="klarna_payment_invoice_1" name="klarna_payment_type"
-          					value="{if !empty($value.pclass_id)}{$value.pclass_id}{else}-1{/if}"/>
+          					value="{if !empty($value.pclass_id)}{$value.pclass_id|escape:'htmlall':'UTF-8'}{else}-1{/if}"/>
         					<label for="klarna_payment_invoice_1">{if isset($value.title)}{$value.title|escape:'htmlall':'UTF-8'}{/if}
         					{if $klarna_locale == 'AT'}Rechnung: In 14 Tagen bezahlen{/if}	
 							{if $klarna_locale == 'DE'}Rechnung: In 14 Tagen bezahlen{/if}

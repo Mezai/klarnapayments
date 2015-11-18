@@ -196,15 +196,15 @@ class KlarnaConfigHandler
         }
 
     	foreach (KlarnaConfigHandler::getSettings() as $key => $value) {
-    		if ($key == $country)
+        $country = Tools::strtoupper($country);
+    		if ($country === $key)
     		{
     			if ((int)$value['active'] == 1){
     				return $value['klarna_eid'];
     			}
-    			return null;
     		}
-    		return null;
     	}
+      return null;
     }
 
 
@@ -223,16 +223,16 @@ class KlarnaConfigHandler
     	}
 
     	foreach (KlarnaConfigHandler::getSettings() as $key => $value) {
-    		if ($country == $key) 
+        $country = Tools::strtoupper($country);
+    		if ($key === $country) 
     		{
     			if ((int)$value['active'] == 1) {
     				return $value['klarna_secret'];
           
     			}
-    			return null;
     		}
-    		return null;
     	}
+      return null;
     }
 
 

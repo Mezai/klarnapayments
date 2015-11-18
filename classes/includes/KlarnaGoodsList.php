@@ -16,7 +16,7 @@ class KlarnaGoodsList
 			if (empty($product['rate'])) {
 				$price_wt = floatval($product['price_wt']);
 				$price = floatval($product['price']);
-				$rate = round((($priceWT / $price) - 1.0) * 100);
+				$rate = round((($price_wt / $price) - 1.0) * 100);
 			} else {
 				$rate = $product['rate'];
 

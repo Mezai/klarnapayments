@@ -6,21 +6,18 @@ class KlarnaOrdersController extends ModuleAdminController
 	{
 
         $this->table = 'klarna_orders';
-        $this->identifier = 'id_order';
-        $this->className = 'KlarnaOrders';
-        $this->lang = false;      
+        $this->className = 'KlarnaOrder';
+        $this->lang = false;
+        $this->identifier = 'id_order';      
         $this->bootstrap = true;
         $this->colorOnBackground = false;
 		$this->className = 'KlarnaOrders';
 		$this->bootstrap = true;
 		$this->meta_link = array('Handle your Klarna orders');
         $this->noLink = true;
-        $this->list_no_link = true;
-        $this->explicitSelect = true;
-        $this->_where = 'a.payment_status = OK';
-        $this->_group = 'GROUP BY a.id_order';
-        $this->_defaultOrderBy = 'a.id_order';
-        
+        $this->list_no_link = true;        
+        $this->_select = '`id_order`'; 
+
         $this->fields_list = array(
             'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'customer_firstname' => array('title' => $this->l('Customer firstname'), 'filter_key' => 'customer_firstname'),
@@ -33,6 +30,8 @@ class KlarnaOrdersController extends ModuleAdminController
 
         
         parent::__construct();
+        
+       
 
         $resend_invoice = array(
             array(
@@ -146,6 +145,27 @@ class KlarnaOrdersController extends ModuleAdminController
                         'class' => 'button pull-right',
                         'name' => 'activate_klarna',
                         ),
+            ),
+            'checkstatus' => array(
+                'title' => $this->l('Check status on invoice'),
+                'description' => $this->l('This function will check status on a pending invoice'),
+                'icon' => 'icon-user',
+                'fields' =>    array(
+                    'KLARNA_CHECK_STATUS_ID' => array(
+                        'title' => $this->l('Reservation id'),
+                        'desc' => $this->l('Fill in reservation number to check status'),
+                        'class' => 'fixed-width-lg',
+                        'type' => 'text',
+
+                    ),
+
+                ),
+                'submit' => array(
+                        'title' => $this->l('Process'),
+                        'class' => 'button pull-right',
+                        'name' => 'checkstatus_klarna',
+                        ),
+            
             ),
             'refundall' => array(
                 'title' => $this->l('Refund full invoice'),
@@ -362,6 +382,30 @@ class KlarnaOrdersController extends ModuleAdminController
         }
     }
 
+    public function renderForm()
+    {
+        $this->fields_form = array(
+            'legend' => array(
+                'title' => $this->l('Taxes'),
+                'icon' => 'icon-money'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Name'),
+                    'name' => 'customer_firstname',
+                    'required' => true,
+                    'lang' => true,
+                    'hint' => $this->l('Tax name to display in carts and on invoices (e.g. "VAT").').' - '.$this->l('Invalid characters').' <>;=#{}'
+                    ),
+            ),
+            'submit' => array(
+                'title' => $this->l('Save')
+            )
+        );
+        return parent::renderForm();
+    }
+
 	          
    
 
@@ -369,10 +413,9 @@ class KlarnaOrdersController extends ModuleAdminController
     {
         // Set toolbar options
         $this->display = null;
-        $this->initToolbar();
+        $this->initToolbar(); 
+        
         $this->addRowAction('view');
-  
-
         return parent::renderList();
     }
 
@@ -547,8 +590,7 @@ class KlarnaOrdersController extends ModuleAdminController
             } else {
                 $this->displayWarning('Failed canceling reservation: see log for more information');
             } 
-        } 
-
+         }
     }    
 
 }

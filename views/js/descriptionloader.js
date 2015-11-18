@@ -27,6 +27,9 @@ $(document).ready(function(e) {
             } else if(this.typeOfPayment === 'klarna_payment_invoice_payinx' || this.typeOfPayment === 'klarna_payment_invoice') {
               $('.klarna_description_inv').html(data);
             }
+          },
+          error: function (request, status, error) {
+                alert(request.responseText);
           }
       });
 

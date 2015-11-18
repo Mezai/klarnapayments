@@ -216,6 +216,7 @@ class KlarnaPayments extends PaymentModule
 	public function hookDisplayHeader()
 	{
 		$this->context->controller->addCSS($this->_path.'/views/css/klarnapayments.css', 'all');
+		$this->context->controller->addJS($this->_path.'views/js/klarnapayments.js');
 
 		return '<script src="https://cdn.klarna.com/public/kitt/core/v1.0/js/klarna.min.js"></script>
 				<script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>';
@@ -308,24 +309,19 @@ class KlarnaPayments extends PaymentModule
 		if (!$this->active || !KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
 			return;
 			$cart = $this->context->cart;
-			$currency = $this->context->currency;		
+			$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
+			$currency = $this->context->currency;
+			if (Country::getIsoById($this->context->country->id) === 'SE' || Country::getIsoById($this->context->country->id) === 'NO') {
 				$checkout_data = new KlarnaCheckoutService();
 				$data_klarna = $checkout_data->newCheckout(Country::getIsoById($this->context->country->id), $cart->getOrderTotal(true, Cart::BOTH),
 				KlarnaLocalization::getPrestaLanguage($this->context->language->iso_code), Tools::strtoupper($currency->iso_code));
-			
-		if (!$data_klarna) {
-			return;
-		}
-
-
-
-
-		$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
+				$array_data = $data_klarna['payment_methods'];
+				$this->context->smarty->assign('klarna_data', $array_data);
+			}
+		
 		
 
-		$array_data = $data_klarna['payment_methods'];
 		
-		$this->context->smarty->assign('klarna_data', $array_data);
 		$this->context->smarty->assignByRef('KlarnaPClass', $get_pclasses);
 		
 		$pclasses = new KlarnaPrestaPclasses();
@@ -354,6 +350,19 @@ class KlarnaPayments extends PaymentModule
 				));	
 			}
 		}
+
+		foreach ($get_pclasses as $key => $value) {
+			if ($value->getType() == (int)1) {
+				$this->context->smarty->assign(array(
+				'klarna_account_description' => $value->getDescription(),
+				'klarna_account_id' => $value->getId(),
+				'klarna_account_start_fee' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),	
+				'klarna_account_invoicefee' => $value->getInvoiceFee(),
+				'klarna_account_interest' => $value->getInterestRate(),
+				'klarna_account_monthly' => KlarnaCalc::calc_monthly_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
+				));	
+			}
+		}
 		
 		$this->context->smarty->assign(array(
 			'merchant_id' => KlarnaConfigHandler::getMerchantID(Country::getIsoById($this->context->country->id)),
@@ -363,6 +372,7 @@ class KlarnaPayments extends PaymentModule
 			'klarna_invoice_sum' => KlarnaInvoiceFeeHandler::getInvoiceFeePrice(self::INVOICE_REF),
 			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),
+			'klarna_locale' => Country::getIsoById($this->context->country->id),
 			'checkLocale' => $this->checkLocale(Country::getIsoById($this->context->country->id), Tools::strtoupper($currency->iso_code), $this->context->language->iso_code),
 			));
 
@@ -422,8 +432,7 @@ class KlarnaPayments extends PaymentModule
 		{
 			if (Tools::isSubmit('PCLASS_SE')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('SE');
-			if ($fetch)
+			if ($fetch->updatePClasses('SE'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Sweden');
 			} else {
@@ -431,9 +440,8 @@ class KlarnaPayments extends PaymentModule
 			}
 			} elseif (Tools::isSubmit('DELETE_PCLASS_SE')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('SE');
 
-				if ($delete) {
+				if ($delete->deletePClasses('SE')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Sweden');
 				} else {
 					$this->html .= $this->displayError('Failed deleting pclasses for country Sweden');
@@ -443,8 +451,8 @@ class KlarnaPayments extends PaymentModule
 			
 			if (Tools::isSubmit('PCLASS_NO')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('NO');
-			if ($fetch)
+			
+			if ($fetch->updatePClasses('NO'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Norway');
 			} else {
@@ -452,9 +460,9 @@ class KlarnaPayments extends PaymentModule
 			}	
 			} elseif (Tools::isSubmit('DELETE_PCLASS_NO')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('NO');
+				
 
-				if ($delete) {
+				if ($delete->deletePClasses('NO')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Norway');
 				} else {
 					$this->html .= $this->displayError('Failed deleting pclasses for Norway');
@@ -463,8 +471,8 @@ class KlarnaPayments extends PaymentModule
 		} elseif (Tools::isSubmit('PCLASS_DK') || Tools::isSubmit('DELETE_PCLASS_DK')) {
 			if (Tools::isSubmit('PCLASS_DK')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('DK');
-			if ($fetch)
+			
+			if ($fetch->updatePClasses('DK'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Denmark');
 			} else {
@@ -472,9 +480,9 @@ class KlarnaPayments extends PaymentModule
 			}
 			} elseif (Tools::isSubmit('DELETE_PCLASS_DK')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('DK');
+				
 
-				if ($delete) {
+				if ($delete->deletePClasses('DK')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Denmark');
 
 				} else {
@@ -484,8 +492,8 @@ class KlarnaPayments extends PaymentModule
 		} elseif (Tools::isSubmit('PCLASS_NL') || Tools::isSubmit('DELETE_PCLASS_NL')) {
 			if (Tools::isSubmit('PCLASS_NL')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('NL');
-			if ($fetch)
+			
+			if ($fetch->updatePClasses('NL'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Netherlands');
 			} else {
@@ -493,9 +501,9 @@ class KlarnaPayments extends PaymentModule
 			}	
 			} elseif (Tools::isSubmit('DELETE_PCLASS_NL')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('NL');
+				
 
-				if ($delete) {
+				if ($delete->deletePClasses('NL')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Netherlands');
 
 				} else {
@@ -505,8 +513,8 @@ class KlarnaPayments extends PaymentModule
 		} elseif (Tools::isSubmit('PCLASS_DE') || Tools::isSubmit('DELETE_PCLASS_DE')) {
 			if (Tools::isSubmit('PCLASS_DE')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('DE');
-			if ($fetch)
+			
+			if ($fetch->updatePClasses('DE'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Germany');
 			} else {
@@ -514,9 +522,8 @@ class KlarnaPayments extends PaymentModule
 			}	
 			} elseif(Tools::isSubmit('DELETE_PCLASS_DE')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('DE');
 
-				if ($delete) {
+				if ($delete->deletePClasses('DE')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Germany');
 				} else {
 					$this->html .= $this->displayError('Failed deleting pclasses for Germany');
@@ -525,8 +532,8 @@ class KlarnaPayments extends PaymentModule
 		} elseif (Tools::isSubmit('PCLASS_FI') || Tools::isSubmit('DELETE_PCLASS_FI')) {
 			if (Tools::isSubmit('PCLASS_FI')) {
 			$fetch = new KlarnaPrestaPclasses();
-			$fetch->updatePClasses('FI');
-			if ($fetch)
+			
+			if ($fetch->updatePClasses('FI'))
 			{
 				$this->html .= $this->displayConfirmation('Pclasses update for Finland');
 			} else {
@@ -534,9 +541,8 @@ class KlarnaPayments extends PaymentModule
 			}
 			} elseif (Tools::isSubmit('DELETE_PCLASS_FI')) {
 				$delete = new KlarnaPrestaPclasses();
-				$delete->deletePClasses('FI');
 
-				if ($delete) {
+				if ($delete->deletePClasses('FI')) {
 					$this->html .= $this->displayConfirmation('Pclasses deleted for Finland');
 				} else {
 					$this->html .= $this->displayError('Failed deleting pclasses for Finland');

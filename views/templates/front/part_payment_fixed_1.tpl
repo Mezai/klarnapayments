@@ -2,6 +2,7 @@
 {foreach from=$klarna_data item=value}
 	{if $value.group.code == 'part_payment'}
 <h4>{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()}</h4>
+{if $klarna_locale == 'SE'}
 <table class="table">
 <tbody>
 <tr>
@@ -43,6 +44,34 @@
 </tr>
 </tbody>
 </table>
+{/if}
+{if $klarna_locale == 'NO'}
+<table class="table">
+<tbody>
+<tr>
+	<td>{l s='Bel&oslash;p per m&aring;ned' mod='klarnapayments'}</td>
+	<td>{displayPrice price=$klarna_calc_monthly1}</td>
+</tr>
+<tr>
+	<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.interest_rate.value|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
+
+</tr>
+<tr>
+	<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.start_fee.value|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+
+</tr>
+<tr>
+	<td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+</tr>
+
+</tbody>
+</table>
+<p><span>{$value.use_case|escape:'htmlall':'UTF-8'}</span></p>
+{/if}
+
 <p><span id="accountxx"></span></p>
 <script type="text/javascript">
 new Klarna.Terms.Account({

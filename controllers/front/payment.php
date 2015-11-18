@@ -24,6 +24,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
       Tools::redirect($location);
       
       } else {
+        
         $this->validation();
 
     }
@@ -57,9 +58,14 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
       try {
 
       $pclassid = (int)Tools::getValue('klarna_payment_type');
+      if (!Tools::getIsset('klarna_payment_gender')) {
+        $gender = null;
+      } elseif (Tools::getIsset('klarna_payment_gender')) {
+        $gender = ((int)Tools::getValue('klarna_payment_gender') === 1) ? KlarnaFlags::MALE : KlarnaFlags::FEMALE;
+      }
       $result = $klarna->klarna->reserveAmount(
         (String)Tools::getValue('klarna_pno'), 
-        null, // KlarnaFlags::MALE, KlarnaFlags::FEMALE (AT/DE/NL only)
+        $gender, 
         -1,   // Automatically calculate and reserve the cart total amount
         KlarnaFlags::NO_FLAG,
         $pclassid

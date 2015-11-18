@@ -14,6 +14,7 @@ class KlarnaPrestaPclasses extends KlarnaPrestaConfig
 
         try {
              $config->klarna->fetchPClasses($country);
+             return true;
         } catch(Exception $e) {
         	Logger::addLog('Klarna module: failed fetching pclasses for country '.$country);
         	return false;
@@ -45,11 +46,11 @@ class KlarnaPrestaPclasses extends KlarnaPrestaConfig
 		try
 		{
 			$pclasses = $config->klarna->getPClasses();
-			
+			return $pclasses;
 		} catch (Exception $e) {
 			Logger::addLog('Failed retreiving pclasses for country '.$country);
 			return false;
 		}
-		return $pclasses;
+		
 	}
 }

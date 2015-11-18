@@ -44,7 +44,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
       $klarna->setKlarnaConfig($country_iso, true);
 
       $buildgoods_list = new KlarnaGoodsList();
-      $buildgoods_list->buildGoodsList(Country::getIsoById($this->context->country->id), $cart, $klarna);
+      $buildgoods_list->buildGoodsList($cart, $klarna);
 
      
 

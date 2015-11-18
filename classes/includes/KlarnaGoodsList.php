@@ -2,7 +2,7 @@
 
 class KlarnaGoodsList
 {
-	public function buildGoodsList($country, $cart, $klarna)
+	public function buildGoodsList($cart, $klarna)
 	{
 		$products = $cart->getProducts();
 
@@ -14,8 +14,8 @@ class KlarnaGoodsList
 			}
 
 			if (empty($product['rate'])) {
-				$price_wt = floatval($product['price_wt']);
-				$price = floatval($product['price']);
+				$price_wt = (float)$product['price_wt'];
+				$price = (float)$product['price'];
 				$rate = round((($price_wt / $price) - 1.0) * 100);
 			} else {
 				$rate = $product['rate'];
@@ -77,7 +77,7 @@ class KlarnaGoodsList
         $shipmentfee = $cart->getOrderShippingCost();
         if ($shipmentfee > 0.0) {
             if (isset($cart->id_carrier) && !empty($cart->id_carrier)) {
-                $cid = intval($cart->id_carrier);
+                $cid = (int)$cart->id_carrier;
             } else {
                 $cid = Configuration::get('PS_CARRIER_DEFAULT');
             }

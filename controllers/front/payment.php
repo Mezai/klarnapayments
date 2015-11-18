@@ -102,8 +102,6 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
        }  
     } catch (Exception $e) {
       Logger::addLog('Klarna module: transaction failed with message: '.$e->getMessage().' and code :'.$e->getCode());
-      var_dump($e->getMessage());
-      exit;
       Tools::redirect($this->context->link->getModuleLink('klarnapayments', 'error'));
 
     }

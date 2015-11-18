@@ -44,7 +44,7 @@
 
 <tr>
 	<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
-	<td>{$KlarnaPClass[1]->getStartFee()}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
+	<td>{$KlarnaPClass[1]->getStartFee()|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 
 </tr>
 

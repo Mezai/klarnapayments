@@ -26,44 +26,44 @@
 <!--account-->
 {foreach from=$klarna_data item=value}
 	{if $value.group.code == 'part_payment'}
-<h4>{$value.title}</h4>
+<h4>{$value.title|escape:'htmlall':'UTF-8'}</h4>
 {if $klarna_locale == 'NO'}						
 <table class="table">
 <tbody>
 <tr>
-	<td>{$value.details.interest_rate.label}</td>
-	<td>{$value.details.interest_rate.value}{$value.details.interest_rate.symbol}</td>
+	<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.interest_rate.value|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 <tr>
-	<td>{$value.details.start_fee.label}</td>
-	<td>{$value.details.start_fee.value}{$value.details.start_fee.symbol}</td>
+	<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.start_fee.value|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 <tr>
-	<td>{$value.details.monthly_invoice_fee.label}</td>
-	<td>{$value.details.monthly_invoice_fee.value}{$value.details.monthly_invoice_fee.symbol}</td>
+	<td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 <tr>
-	<td>{$value.details.monthly_invoice_fee.label}</td>
-	<td>{$value.details.monthly_invoice_fee.value}{$value.details.monthly_invoice_fee.symbol}</td>
+	<td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$value.details.monthly_invoice_fee.value|escape:'htmlall':'UTF-8'}{$value.details.monthly_invoice_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 
 	</tbody>
 </table>
-<p>{$value.use_case}</p>
+<p>{$value.use_case|escape:'htmlall':'UTF-8'}</p>
 {/if}
 {if $klarna_locale == 'SE'}
 <table class="table">
 <tbody>
 <tr>
-	<td>{$value.details.interest_rate.label}</td>
-	<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol}</td>
+	<td>{$value.details.interest_rate.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$klarna_account_interest|escape:'htmlall':'UTF-8'}{$value.details.interest_rate.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 <tr>
-	<td>{$value.details.start_fee.label}</td>
-	<td>{$klarna_account_start_fee|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol}</td>
+	<td>{$value.details.start_fee.label|escape:'htmlall':'UTF-8'}</td>
+	<td>{$klarna_account_start_fee|escape:'htmlall':'UTF-8'}{$value.details.start_fee.symbol|escape:'htmlall':'UTF-8'}</td>
 </tr>
 <tr>
-	<td>{$value.details.monthly_invoice_fee.label}</td>
+	<td>{$value.details.monthly_invoice_fee.label|escape:'htmlall':'UTF-8'}</td>
 	<td>{$klarna_account_invoicefee|escape:'htmlall':'UTF-8'}{l s='SEK/m&aring;n' mod='klarnapayments'}</td>
 </tr>
 <tr>
@@ -73,7 +73,7 @@
 
 	</tbody>
 </table>
-<p>{$value.use_case}</p>
+<p>{$value.use_case|escape:'htmlall':'UTF-8'}</p>
 {/if}
 
 {if $klarna_locale == 'DE'}

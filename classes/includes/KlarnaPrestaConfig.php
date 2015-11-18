@@ -2,7 +2,7 @@
 
 class KlarnaPrestaConfig
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->klarna = null;
         $this->country = null;

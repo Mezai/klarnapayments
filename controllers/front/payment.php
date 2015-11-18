@@ -17,7 +17,6 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
      $this->display_column_right = false;
      parent::initContent();
      $klarna_locale = KlarnaEncoding::get(Country::getIsoById($this->context->country->id));
-     $error_url = $this->context->link->getModuleLink('klarnapayments', 'error');
      $enc = KlarnaEncoding::getRegexp($klarna_locale);
     if (!preg_match($enc, Tools::getValue('klarna_pno'))) {
       $location = $this->context->link->getModuleLink('klarnapayments', 'error');
@@ -48,7 +47,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 
      
 
-      $address = new Address(intval($cart->id_address_delivery));
+      $address = new Address((int)$cart->id_address_delivery);
       $customer = new Customer($cart->id_customer);
       $address_klarna = KlarnaAdressPresta::buildKlarnaAddr($address, $customer);
       $klarna->klarna->setAddress(KlarnaFlags::IS_BILLING, $address_klarna);

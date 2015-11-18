@@ -187,7 +187,7 @@ class KlarnaPayments extends PaymentModule
 				$configuration = new KlarnaConfigHandler();
 
 				foreach ($values as $update_value) {
-					foreach ($configuration->settings as $key_iso => $country_iso) {
+					foreach ($configuration->settings as $key_iso) {
 						if ($keys == "MULTI_LOCALE") {
 						Configuration::updateValue($update_value.$key_iso, Tools::getValue($update_value.$key_iso));
 						}
@@ -322,11 +322,11 @@ class KlarnaPayments extends PaymentModule
 		
 
 		
-		$this->context->smarty->assignByRef('KlarnaPClass', $get_pclasses);
+		
 		
 		$pclasses = new KlarnaPrestaPclasses();
 		$get_pclasses = $pclasses->getKlarnaPClasses(Country::getIsoById($this->context->country->id));
-
+		$this->context->smarty->assignByRef('KlarnaPClass', $get_pclasses);
 
 		foreach ($get_pclasses as $key => $value) {
 			if ($key === 1 || $key === 2 || $key ===  3) {	
@@ -567,8 +567,6 @@ class KlarnaPayments extends PaymentModule
 			$prod_id = (int)Configuration::get('KLARNA_INVOICE_PRODUCT');
 
 			$prod = new Product($prod_id);
-
-			$tax = new TaxRulesGroup((int)Tools::getValue('KLARNA_INVOICE_FEE_TAX'));
 
 			$prod->price = (float)Tools::getValue('KLARNA_INVOICE_PRICE');
 
@@ -1574,7 +1572,7 @@ class KlarnaPayments extends PaymentModule
 		$configuration = new KlarnaConfigHandler();
 		foreach ($this->input_vals as $key_input => $value_input) {
 			foreach ($value_input as $update_value) {
-			foreach ($configuration->settings as $key => $value) {
+			foreach ($configuration->settings as $key) {
 				if ($key_input == "MULTI_LOCALE") {
 				$return_array[$update_value.$key] = Tools::getValue($update_value.$key, Configuration::get($update_value.$key));
 

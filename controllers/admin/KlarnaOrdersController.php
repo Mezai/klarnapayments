@@ -425,7 +425,7 @@ class KlarnaOrdersController extends ModuleAdminController
         if ($reservation === true) {
             $reservations = KlarnaInvoiceFeeHandler::getAllReservationIds();
             
-            foreach ($reservations as $key => $value) {
+            foreach ($reservations as $value) {
                 if ($reservation_id === $value['id_reservation']) {
                 return true;
                 }
@@ -437,7 +437,7 @@ class KlarnaOrdersController extends ModuleAdminController
         if ($invoicenumber === true) {
             $invoicenumbers = KlarnaInvoiceFeeHandler::getAllInvoiceIds();
             
-            foreach ($invoicenumbers as $key => $value) {
+            foreach ($invoicenumbers as $value) {
                 if ($id_invoicenumber === $value['id_invoicenumber']) {
                 return true;
                 }

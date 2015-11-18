@@ -40,7 +40,7 @@
 		</tr>
 		</tbody>
 </table>
-<p><span id="invoicexx"></span></p>
+<p>{if isset($invoice_use_case)}{$invoice_use_case|escape:'htmlall':'UTF-8'}{/if}</p><p><span id="invoicexx"></span></p>
 <script type="text/javascript">
 new Klarna.Terms.Invoice({
 el: 'invoicexx',

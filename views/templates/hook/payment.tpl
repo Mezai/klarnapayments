@@ -27,12 +27,6 @@
 	<p class="alert alert-warning">{l s='Please change your currency or language to match your country in order to shop with Klarna.' mod='klarnapayments'}</p>	
 {else}
 
-{if !empty($klarna_data)}
-{foreach from=$klarna_data item=value}
-{/foreach}
-{/if}
-
-	{if empty($value.group.code) || $value.group.code == 'invoice'}
 	{if $payment_invoice}
 	<div class="container-fluid klarnainvoicepayment">
 		<img id="klarna_logo" class="klarna_logo" src="https://cdn.klarna.com/1.0/shared/image/generic/logo/sv_se/basic/blue-black.png?width=200" style="width:200px">
@@ -44,15 +38,15 @@
 							<div class="row">
 
 						<form action="{$validation_url|escape:'htmlall':'UTF-8'}" method="POST" id="klarna_invoice_payment">
-						<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title|escape:'htmlall':'UTF-8'}{/if}{if $klarna_locale == 'AT'}Klarna Rechnung{/if}
+						<h4 class="klarna_payment_description">{if isset($invoice_description)}{$invoice_description|escape:'htmlall':'UTF-8'}{/if}{if $klarna_locale == 'AT'}Klarna Rechnung{/if}
 							{if $klarna_locale == 'DE'}Klarna Rechnung{/if}{if $klarna_locale == 'DK'}Klarna Faktura{/if}
 							{if $klarna_locale == 'FI'}Klarna Lasku{/if}
 							{if $klarna_locale == 'NL'}Klarna Achteraf betalen{/if}</h4>
 						<div class="btn-group">
 							
           					<input type="radio" class="klarna_payment_invoice" id="klarna_payment_invoice_1" name="klarna_payment_type"
-          					value="{if !empty($value.pclass_id)}{$value.pclass_id|escape:'htmlall':'UTF-8'}{else}-1{/if}"/>
-        					<label for="klarna_payment_invoice_1">{if isset($value.title)}{$value.title|escape:'htmlall':'UTF-8'}{/if}
+          					value="{if isset($invoice_pclass_id)}{$invoice_pclass_id|escape:'htmlall':'UTF-8'}{else}-1{/if}" required/>
+        					<label for="klarna_payment_invoice_1">{if isset($invoice_title)}{$invoice_title|escape:'htmlall':'UTF-8'}{/if}
         					{if $klarna_locale == 'AT'}Rechnung: In 14 Tagen bezahlen{/if}	
 							{if $klarna_locale == 'DE'}Rechnung: In 14 Tagen bezahlen{/if}
 							{if $klarna_locale == 'DK'}Faktura: Betal om 14 dage{/if}
@@ -61,7 +55,7 @@
         					</label><br>
         				{if isset($klarna_special_id)}
   							
-          					<input type="radio" class="klarna_payment_invoice_payinx" id="klarna_payment_invoice_2" name="klarna_payment_type" value="{$klarna_special_id|escape:'htmlall':'UTF-8'}"/>
+          					<input type="radio" class="klarna_payment_invoice_payinx" id="klarna_payment_invoice_2" name="klarna_payment_type" value="{$klarna_special_id|escape:'htmlall':'UTF-8'}" required/>
         					<label for="klarna_payment_invoice_2">{if isset($klarna_special_description)}{$klarna_special_description|escape:'htmlall':'UTF-8'}{/if}</label><br>
         				{/if}
         				</div>	
@@ -86,8 +80,6 @@
 			<div class="row margin-b-2">
 					<div class="col-sm-6 klarna_description_inv">
 					
-
-					<p>{if isset($value.use_case)}{$value.use_case|escape:'htmlall':'UTF-8'}{/if}</p><p><span id="invoicexx"></span></p>
 					</div>
 
 				 </div>
@@ -96,16 +88,10 @@
 	</div>
 </div>
 
-		{/if}
      {/if}
 
 
-{if !empty($klarna_data)}
-{foreach from=$klarna_data item=value}
-{/foreach}
-{/if}
 
-	{if empty($value.group.code) || $value.group.code == 'part_payment'}
 	{if $payment_part}
 
 	<div class="container-fluid klarnapartpayment">
@@ -120,26 +106,26 @@
 						<div class="container">
 							<div class="row">
 								<form action="{$validation_url|escape:'htmlall':'UTF-8'}" method="POST" id="klarna_part_payment">
-  								<h4 class="klarna_payment_description">{if isset($value.group.title)}{$value.group.title|escape:'htmlall':'UTF-8'}{/if}</h4>
+  								<h4 class="klarna_payment_description">{if isset($partpayment_description)}{$partpayment_description|escape:'htmlall':'UTF-8'}{/if}</h4>
   								<div class="btn-group">
   									{if isset($klarna_account_id)}
-          								<input type="radio" class="klarna_payment_part_flexible" id="klarna_payment_part_1" name="klarna_payment_type" value="{if isset($value.pclass_id)}{$value.pclass_id|escape:'htmlall':'UTF-8'}{/if}"/>
-        								<label for="klarna_payment_part_1">{if isset($value.title)}{$value.title|escape:'htmlall':'UTF-8'}{/if}</label><br>
+          								<input type="radio" class="klarna_payment_part_flexible" id="klarna_payment_part_1" name="klarna_payment_type" value="{if isset($partpayment_pclass_id)}{$partpayment_pclass_id|escape:'htmlall':'UTF-8'}{/if}" required/>
+        								<label for="klarna_payment_part_1">{if isset($partpayment_title)}{$partpayment_title|escape:'htmlall':'UTF-8'}{/if}</label><br>
         							{/if}
         							{if isset($KlarnaPClass[1])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_1" id="klarna_payment_part_2" name="klarna_payment_type" value="{$KlarnaPClass[1]->getId()|escape:'htmlall':'UTF-8'}"/><label for="klarna_payment_part_2">{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_1" id="klarna_payment_part_2" name="klarna_payment_type" value="{$KlarnaPClass[1]->getId()|escape:'htmlall':'UTF-8'}" required/><label for="klarna_payment_part_2">{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</label><br>
         							
         							{/if}
         							{if isset($KlarnaPClass[2])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_2" id="klarna_payment_part_3" name="klarna_payment_type" value="{$KlarnaPClass[2]->getId()|escape:'htmlall':'UTF-8'}"/>
-        								<label for="klarna_payment_part_3">{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_2" id="klarna_payment_part_3" name="klarna_payment_type" value="{$KlarnaPClass[2]->getId()|escape:'htmlall':'UTF-8'}" required/>
+        								<label for="klarna_payment_part_3">{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</label><br>
         							{/if}
         							{if isset($KlarnaPClass[3])}
         							
-          								<input type="radio" class="klarna_payment_part_fixed_3" id="klarna_payment_part_4" name="klarna_payment_type" value="{$KlarnaPClass[3]->getId()|escape:'htmlall':'UTF-8'}"/>
-        								<label for="klarna_payment_part_4">{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()|escape:'htmlall':'UTF-8'}</label><br>
+          								<input type="radio" class="klarna_payment_part_fixed_3" id="klarna_payment_part_4" name="klarna_payment_type" value="{$KlarnaPClass[3]->getId()|escape:'htmlall':'UTF-8'}" required/>
+        								<label for="klarna_payment_part_4">{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()|strip_tags:'UTF-8'}</label><br>
         							{/if}
         						</div>
         							<div class="required form-group">
@@ -173,7 +159,7 @@
 		</div>
 </div>
 
-		{/if}
+	
      {/if}
 
 

@@ -187,7 +187,7 @@ class KlarnaPayments extends PaymentModule
 				$configuration = new KlarnaConfigHandler();
 
 				foreach ($values as $update_value) {
-					foreach ($configuration->settings as $key_iso) {
+					foreach ($configuration->settings as $key_iso => $value) {
 						if ($keys == "MULTI_LOCALE") {
 						Configuration::updateValue($update_value.$key_iso, Tools::getValue($update_value.$key_iso));
 						}
@@ -253,7 +253,7 @@ class KlarnaPayments extends PaymentModule
 		} elseif ($type == 'klarna_payment_part_fixed_1') {
 			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_1.tpl');
 		} elseif ($type == 'klarna_payment_part_fixed_2') {
-			$vars = $$this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_2.tpl');
+			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_2.tpl');
 		} elseif ($type == 'klarna_payment_part_fixed_3') {
 			$vars = $this->context->smarty->fetch(_PS_MODULE_DIR_.'/klarnapayments/views/templates/front/part_payment_fixed_3.tpl');
 		} elseif ($type == 'klarna_payment_invoice') {
@@ -315,14 +315,47 @@ class KlarnaPayments extends PaymentModule
 				$checkout_data = new KlarnaCheckoutService();
 				$data_klarna = $checkout_data->newCheckout(Country::getIsoById($this->context->country->id), $cart->getOrderTotal(true, Cart::BOTH),
 				KlarnaLocalization::getPrestaLanguage($this->context->language->iso_code), Tools::strtoupper($currency->iso_code));
-				$array_data = $data_klarna['payment_methods'];
-				$this->context->smarty->assign('klarna_data', $array_data);
+				
 			}
 		
+	
 		
+		if (!empty($data_klarna['payment_methods'])) {
+			foreach ($data_klarna['payment_methods'] as $key => $value) {
+				if ((String)$value['group']['code'] == 'invoice')
+				{
+					$this->context->smarty->assign(array(
+					'invoice_description' => $value['group']['title'],
+					'invoice_pclass_id' => $value['pclass_id'],
+					'invoice_title' => $value['title'],
+					'invoice_use_case' => $value['use_case'],
+					));
+				}
 
-		
-		
+				if ((String)$value['group']['code'] == 'part_payment') {
+					$this->context->smarty->assign(array(
+					'partpayment_description' => $value['group']['title'],
+					'partpayment_pclass_id' => $value['pclass_id'],
+					'partpayment_title' => $value['title'],
+					'partpayment_use_case' => $value['use_case'],
+					'partpayment_interest_label' => $value['details']['interest_rate']['label'],
+					'partpayment_interest_symbol' => $value['details']['interest_rate']['symbol'],
+					'partpayment_interest_value' => $value['details']['interest_rate']['value'],
+					'partpayment_startfee_label' => $value['details']['start_fee']['label'],
+					'partpayment_startfee_symbol' => $value['details']['start_fee']['symbol'],
+					'partpayment_startfee_value' => $value['details']['start_fee']['value'],
+					'partpayment_invoicefee_label' => $value['details']['monthly_invoice_fee']['label'],
+					'partpayment_invoicefee_symbol' => $value['details']['monthly_invoice_fee']['symbol'],
+					'partpayment_invoicefee_value' => $value['details']['monthly_invoice_fee']['value'],
+					'partpayment_monthlypay_label' => $value['details']['monthly_pay']['label'],
+					'partpayment_monthlypay_symbol' => $value['details']['monthly_pay']['symbol'],
+					'partpayment_monthlypay_value' => $value['details']['monthly_pay']['value'],
+					));
+				}	
+			}
+		}
+
+
 		
 		$pclasses = new KlarnaPrestaPclasses();
 		$get_pclasses = $pclasses->getKlarnaPClasses(Country::getIsoById($this->context->country->id));
@@ -1572,7 +1605,7 @@ class KlarnaPayments extends PaymentModule
 		$configuration = new KlarnaConfigHandler();
 		foreach ($this->input_vals as $key_input => $value_input) {
 			foreach ($value_input as $update_value) {
-			foreach ($configuration->settings as $key) {
+			foreach ($configuration->settings as $key => $value) {
 				if ($key_input == "MULTI_LOCALE") {
 				$return_array[$update_value.$key] = Tools::getValue($update_value.$key, Configuration::get($update_value.$key));
 

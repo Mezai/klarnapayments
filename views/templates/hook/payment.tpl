@@ -32,6 +32,7 @@
 {/if}
 
 	{if empty($value.group.code) || $value.group.code == 'invoice'}
+	{if $payment_invoice}
 	<div class="container-fluid klarnainvoicepayment">
 		<img id="klarna_logo" class="klarna_logo" src="https://cdn.klarna.com/1.0/shared/image/generic/logo/sv_se/basic/blue-black.png?width=200" style="width:200px">
 			<div class="row">
@@ -65,9 +66,9 @@
         				</div>	
 						<div class="required form-group">
 							{if $klarna_locale == 'DE' || $klarna_locale == 'AT' || $klarna_locale == 'NL'}
-        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="1"/>
+        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="1" required/>
         								<label for="klarna_payment_gender">{l s='Male' mod='klarnapayments'}</label><br>
-        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="0"/>
+        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="0" required/>
         								<label for="klarna_payment_gender">{l s='Female' mod='klarnapayments'}</label><br>
         					{/if}	
 									<label for="klarna_pno" class="required" style="display:block">{l s='Social security number:' mod='klarnapayments'}</label>
@@ -94,7 +95,7 @@
 	</div>
 </div>
 
-
+		{/if}
      {/if}
 
 
@@ -104,6 +105,7 @@
 {/if}
 
 	{if empty($value.group.code) || $value.group.code == 'part_payment'}
+	{if $payment_part}
 
 	<div class="container-fluid klarnapartpayment">
 		<img id="klarna_logo" class="klarna_logo" src="https://cdn.klarna.com/1.0/shared/image/generic/logo/sv_se/basic/blue-black.png?width=200" style="width:200px">
@@ -141,9 +143,9 @@
         						</div>
         							<div class="required form-group">
         							{if $klarna_locale == 'DE' || $klarna_locale == 'AT' || $klarna_locale == 'NL'}
-        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="1"/>
+        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="1" required/>
         								<label for="klarna_payment_gender">{l s='Male' mod='klarnapayments'}</label><br>
-        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="0"/>
+        								<input type="radio" class="klarna_gender" id="klarna_payment_gender" name="klarna_payment_gender" value="0" required/>
         								<label for="klarna_payment_gender">{l s='Female' mod='klarnapayments'}</label><br>
         							{/if}	
 									<label for="klarna_pno" class="required" style="display:block">{l s='Social security number:' mod='klarnapayments'}</label>
@@ -170,7 +172,7 @@
 		</div>
 </div>
 
-
+		{/if}
      {/if}
 
 

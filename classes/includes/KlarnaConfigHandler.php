@@ -235,6 +235,44 @@ class KlarnaConfigHandler
       return null;
     }
 
+    public static function isKlarnaInvoiceActive($country)
+    { 
+      if (!is_string($country)) {
+        return;
+      }
+
+      foreach (KlarnaConfigHandler::getSettings() as $key => $value) {
+        $country = Tools::strtoupper($country);
+        if ($key === $country) 
+        {
+          if ((int)$value['active'] == 1 && (int)$value['klarna_invoice'] == 1) {
+            return true;
+          
+          }
+        }
+      }
+      return false;
+    }
+
+    public static function isKlarnaPartActive($country)
+    { 
+      if (!is_string($country)) {
+        return;
+      }
+
+      foreach (KlarnaConfigHandler::getSettings() as $key => $value) {
+        $country = Tools::strtoupper($country);
+        if ($key === $country) 
+        {
+          if ((int)$value['active'] == 1 && (int)$value['klarna_part'] == 1) {
+            return true;
+          
+          }
+        }
+      }
+      return false;
+    }
+
 
     /**
     *

@@ -363,12 +363,17 @@ class KlarnaPayments extends PaymentModule
 				));	
 			}
 		}
-		
+
+		$invoice = KlarnaConfigHandler::isKlarnaInvoiceActive(Country::getIsoById($this->context->country->id));
+		$part = KlarnaConfigHandler::isKlarnaPartActive(Country::getIsoById($this->context->country->id));
+
 		$this->context->smarty->assign(array(
 			'merchant_id' => KlarnaConfigHandler::getMerchantID(Country::getIsoById($this->context->country->id)),
 			'locale' => KlarnaLocalization::getPrestaLanguage(Language::getIsoById($this->context->language->id)),
 			'type' => $this->checkMobile(),
 			'total' => $cart->getOrderTotal(true, Cart::BOTH),
+			'payment_part' => $part,
+			'payment_invoice' => $invoice,
 			'klarna_invoice_sum' => KlarnaInvoiceFeeHandler::getInvoiceFeePrice(self::INVOICE_REF),
 			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),

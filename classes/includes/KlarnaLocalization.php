@@ -15,7 +15,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 
         // Set country
         if (is_numeric($country)) {
-            $this->_country = intval($country);
+            $this->_country = (int)$country;
         } else {
             $this->_country = KlarnaCountry::fromCode($country);
         }
@@ -24,7 +24,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
         if ($language === null) {
             $this->_language = self::$_api->getLanguageForCountry($this->_country);
         } else if (is_numeric($language)) {
-            $this->_language = intval($language);
+            $this->_language = (int)$language;
         } else {
             $this->_language = KlarnaLanguage::fromCode($language);
         }
@@ -33,7 +33,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
         if ($currency === null) {
             $this->_currency = self::$_api->getCurrencyForCountry($this->_country);
         } else if (is_numeric($currency)) {
-            $this->_currency = intval($currency);
+            $this->_currency = (int)$currency;
         } else {
             $this->_currency = KlarnaCurrency::fromCode($currency);
         }
@@ -87,16 +87,12 @@ class KlarnaLocalization extends KlarnaPrestaConfig
         switch ($this->_currency) {
             case 0:
                return 'SEK'; 
-               break;
             case 1:
                 return 'NOK';
-                break;
             case 2:
                 return 'EUR';
-                break;
             case 3:
                 return 'DKK';
-                break;
         }
     }
 

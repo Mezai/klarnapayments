@@ -122,9 +122,9 @@ class KlarnaInstall extends KlarnaPayments
 	public function deleteConfiguration()
 	{
 		foreach ($this->input_vals as $keys => $values) {
-				
+				$configuration = new KlarnaConfigHandler();
 				foreach ($values as $update_value) {
-					foreach ($this->settings as $key_iso => $country_iso) {
+					foreach ($configuration->settings as $key_iso => $country_iso) {
 						if ($keys == "MULTI_LOCALE") {
 						Configuration::deleteByName((string)$update_value.$key_iso);
 						}

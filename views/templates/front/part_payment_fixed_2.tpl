@@ -130,6 +130,38 @@
 </tr>
 </tbody>
 {/if}
+{if $klarna_locale == 'FI'}
+<h4>{displayPrice price=$klarna_calc_monthly2}{l s='/kk' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|escape:'htmlall':'UTF-8'}</h4>
+<table class="table">
+<tbody>
+	<tr>
+		<td>Vousikorko</td>
+		<td>{$KlarnaPClass[2]->getInterestRate()|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Alouitusmaksu</td>
+		<td>{displayPrice price=$KlarnaPClass[2]->getStartFee()}</td>
+	</tr>
+	<tr>
+		<td>Hallinnointimaksu</td>
+		<td>{$KlarnaPClass[2]->getInvoiceFee()}{l s='€/kk' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Kuukausikustannus</td>
+		<td>{$klarna_calc_monthly2|escape:'htmlall':'UTF-8'}{l s='€/kk' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Todellinen vousikorko</td>
+		<td>{$klarna_calc_apr2|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Loppusumma</td>
+		<td>{displayPrice price=$klarna_calc_total_credit2}</td>
+	</tr>			
+</tbody>
+</table>
+
+{/if}
 
 <p><span id="accountxx"></span></p>
 <script type="text/javascript">

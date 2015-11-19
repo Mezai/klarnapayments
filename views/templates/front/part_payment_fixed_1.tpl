@@ -26,7 +26,7 @@
 <!--part pay fixed 1-->
 
 {if $klarna_locale == 'SE'}
-<h4>{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</h4>
+<h4>{displayPrice price=$klarna_calc_monthly1}{l s=' i ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</h4>
 <table class="table">
 <tbody>
 <tr>
@@ -96,7 +96,7 @@
 <p><span>{$partpayment_use_case|escape:'htmlall':'UTF-8'}</span></p>
 {/if}
 {if $klarna_locale == 'DK'}
-<h4>{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</h4>
+<h4>{displayPrice price=$klarna_calc_monthly1}{l s=' i ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</h4>
 <table class="table">
 <tbody>
 <tr>
@@ -128,6 +128,38 @@
 	<td>{displayPrice price=$klarna_calc_total_credit1}</td>
 </tr>
 </tbody>	
+{/if}
+
+{if $klarna_locale == 'FI'}
+<h4>{displayPrice price=$klarna_calc_monthly1}{l s='/kk' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|escape:'htmlall':'UTF-8'}</h4>
+<table class="table">
+<tbody>
+	<tr>
+		<td>Vousikorko</td>
+		<td>{$KlarnaPClass[1]->getInterestRate()|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Alouitusmaksu</td>
+		<td>{displayPrice price=$KlarnaPClass[1]->getStartFee()}</td>
+	</tr>
+	<tr>
+		<td>Hallinnointimaksu</td>
+		<td>{$KlarnaPClass[1]->getInvoiceFee()}{l s='€/kk' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Kuukausikustannus</td>
+		<td>{$klarna_calc_monthly1|escape:'htmlall':'UTF-8'}{l s='€/kk' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Todellinen vousikorko</td>
+		<td>{$klarna_calc_apr1|escape:'htmlall':'UTF-8'}{l s='%' mod='klarnapayments'}</td>
+	</tr>
+	<tr>
+		<td>Loppusumma</td>
+		<td>{displayPrice price=$klarna_calc_total_credit1}</td>
+	</tr>			
+</tbody>
+</table>
 {/if}
 
 

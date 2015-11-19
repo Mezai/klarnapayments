@@ -366,7 +366,7 @@ class KlarnaPayments extends PaymentModule
 			'klarna_pclass_id'.$key.'' => $value->getId(),
 		 	'klarna_calc_monthly'.$key.'' => KlarnaCalc::calc_monthly_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
 		 	'klarna_calc_apr'.$key.'' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
-		 	'klarna_calc_total_credit'.$key.'' => KlarnaCalc::total_credit_purchase_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),	
+		 	'klarna_calc_total_credit'.$key.'' => KlarnaCalc::total_credit_purchase_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
 			
 		 	));
 		 	}

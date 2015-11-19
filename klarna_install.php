@@ -58,11 +58,11 @@ class KlarnaInstall extends KlarnaPayments
 	public function addTabs()
 	{
 		$parent_tab = new Tab();
-		
+
 		foreach (Language::getLanguages() as $language)
-		
+
 		$parent_tab->name[$language['id_lang']] = 'Klarna Payments';
-				
+
 		$parent_tab->class_name = 'KlarnaMain';
 		$parent_tab->id_parent = 0;
 		$parent_tab->module = $this->name;
@@ -73,7 +73,7 @@ class KlarnaInstall extends KlarnaPayments
 		$tab_link = new Tab();
 
 		foreach (Language::getLanguages() as $language)
-		
+
 		$tab_link->name[$language['id_lang']] = 'Handle klarna payments';
 
 		$tab_link->class_name = 'KlarnaOrders';
@@ -86,57 +86,62 @@ class KlarnaInstall extends KlarnaPayments
 	{
 		$rulesgroup = new TaxRulesGroup(Configuration::get('KLARNA_TAX_GROUP'));
 
-		if (!$rulesgroup->id) {
-            $rulesgroup = new TaxRulesGroup();
-            $rulesgroup->active = true;
-            $rulesgroup->name = 'Klarna tax fee';
-            $rulesgroup->add();
-            Configuration::updateValue('KLARNA_TAX_GROUP', $rulesgroup->id);
-        }
+		if (!$rulesgroup->id)
+		{
+			$rulesgroup = new TaxRulesGroup();
+			$rulesgroup->active = true;
+			$rulesgroup->name = 'Klarna tax fee';
+			$rulesgroup->add();
+			Configuration::updateValue('KLARNA_TAX_GROUP', $rulesgroup->id);
+		}
 
+		$invoice_fee = new Product(Configuration::get('KLARNA_INVOICE_PRODUCT'));
 
-        $invoice_fee = new Product(Configuration::get('KLARNA_INVOICE_PRODUCT'));
+		if (!$invoice_fee->id)
+		{
+			$invoice_fee = new Product();
+			//$invoice_fee->name = array();
+			foreach (Language::getLanguages() as $language)
+			{
 
-        if (!$invoice_fee->id) 
-        {
-        	$invoice_fee = new Product();
-        	//$invoice_fee->name = array();
-        	foreach (Language::getLanguages() as $language) {
-                        
-            $invoice_fee->name[$language['id_lang']] = KlarnaPrestaEncoding::decode('Invoicefee', "UTF-8");
-            $invoice_fee->link_rewrite[$language['id_lang']] = 'invoicefee';
-            
-            }
-       	 	$invoice_fee->reference = KlarnaPayments::INVOICE_REF;
-            $invoice_fee->out_of_stock = 1; 
-            $invoice_fee->active = 0;
-            $invoice_fee->quantity = 10000; 
-            $invoice_fee->available_for_order = true;
-            $invoice_fee->id_tax_rules_group = $rulesgroup->id;
-            
-            $invoice_fee->add();
-        
-        	Configuration::updateValue('KLARNA_INVOICE_PRODUCT', (int)$invoice_fee->id);
-    	}
-    	
+			$invoice_fee->name[$language['id_lang']] = KlarnaPrestaEncoding::decode('Invoicefee', 'UTF-8');
+			$invoice_fee->link_rewrite[$language['id_lang']] = 'invoicefee';
+
+			}
+			$invoice_fee->reference = KlarnaPayments::INVOICE_REF;
+			$invoice_fee->out_of_stock = 1;
+			$invoice_fee->active = 0;
+			$invoice_fee->quantity = 10000;
+			$invoice_fee->available_for_order = true;
+			$invoice_fee->id_tax_rules_group = $rulesgroup->id;
+
+			$invoice_fee->add();
+
+			Configuration::updateValue('KLARNA_INVOICE_PRODUCT', (int)$invoice_fee->id);
+		}
 	}
 
 	public function deleteConfiguration()
 	{
-		foreach ($this->input_vals as $keys => $values) {
+		foreach ($this->input_vals as $keys => $values)
+		{
 				$configuration = new KlarnaConfigHandler();
-				foreach ($values as $update_value) {
-					foreach ($configuration->settings as $key_iso) {
-						if ($keys == "MULTI_LOCALE") {
+				foreach ($values as $update_value)
+				{
+					foreach ($configuration->settings as $key_iso)
+					{
+						if ($keys == 'MULTI_LOCALE')
+
 						Configuration::deleteByName((string)$update_value.$key_iso);
-						}
-						if ($keys == "GENERAL") {
+
+						if ($keys == 'GENERAL')
+
 						Configuration::deleteByName((string)$update_value);
-						}	
+
 					}
-				}		
-			
-			}
+				}
+
+		}
 
 	}
 
@@ -195,7 +200,6 @@ class KlarnaInstall extends KlarnaPayments
 			$order_state_pending->invoice = false;
 			$order_state_pending->paid = false;
 			$order_state_pending->add();
-			
 
 				$source = _PS_MODULE_DIR_.'klarnapayments/views/img/klarnastate.gif';
 				$destination = _PS_IMG_DIR_.'os/'.(int)$order_state_pending->id.'.gif';
@@ -204,8 +208,6 @@ class KlarnaInstall extends KlarnaPayments
 					copy($source, $destination);
 				else
 					Tools::copy($source, $destination);
-
-
 
 			Configuration::updateValue('KLARNA_OS_PENDING', (int)$order_state_pending->id);
 
@@ -266,8 +268,6 @@ class KlarnaInstall extends KlarnaPayments
 			else
 					Tools::copy($source, $destination);
 
-
-
 			Configuration::updateValue('KLARNA_OS_AUTHORIZED', (int)$order_state_authorized->id);
 
 		}
@@ -326,8 +326,6 @@ class KlarnaInstall extends KlarnaPayments
 					copy($source, $destination);
 			else
 					Tools::copy($source, $destination);
-
-
 
 		Configuration::updateValue('KLARNA_OS_DENIED', (int)$order_state_denied->id);
 
@@ -389,7 +387,6 @@ class KlarnaInstall extends KlarnaPayments
 			else
 					Tools::copy($source, $destination);
 
-
 		Configuration::updateValue('KLARNA_OS_ACTIVATED', (int)$order_state_activated->id);
 		}
 
@@ -450,9 +447,6 @@ class KlarnaInstall extends KlarnaPayments
 					copy($source, $destination);
 				else
 					Tools::copy($source, $destination);
-
-
-
 
 			Configuration::updateValue('KLARNA_OS_REFUNDED', (int)$order_state_refunded->id);
 		}

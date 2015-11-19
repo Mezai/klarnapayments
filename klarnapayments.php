@@ -343,13 +343,15 @@ class KlarnaPayments extends PaymentModule
 					'partpayment_monthlypay_value' => $value['details']['minimum_monthly_pay']['value'],
 					));
 				}
-				if (Country::getIsoById($this->context->country->id) == 'NO' && (String)$value['group']['code'] == 'part_payment') {
+				if (Country::getIsoById($this->context->country->id) == 'NO' && (String)$value['group']['code'] == 'part_payment')
+				{
 					$this->context->smarty->assign(array(
 					'partpayment_monthlypay_label' => $value['details']['minimum_monthly_pay']['label'],
 					'partpayment_monthlypay_symbol' => $value['details']['minimum_monthly_pay']['symbol'],
 					'partpayment_monthlypay_value' => $value['details']['minimum_monthly_pay']['value'],
 					));
-				} elseif (Country::getIsoById($this->context->country->id) == 'SE' && (String)$value['group']['code'] == 'part_payment') {
+				} elseif (Country::getIsoById($this->context->country->id) == 'SE' && (String)$value['group']['code'] == 'part_payment')
+				{
 					$this->context->smarty->assign(array(
 					'partpayment_monthlypay_label' => $value['details']['monthly_pay']['label'],
 					'partpayment_monthlypay_symbol' => $value['details']['monthly_pay']['symbol'],

@@ -102,7 +102,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 
 			$reservation_number = $result[0];
 			$klarna_order_status = $result[1];
-			$type = (Tools::getValue('klarna_payment_type') === -1) ? 'Invoice' : 'Part payment';
+			$type = ((int)Tools::getValue('klarna_payment_type') === -1) ? 'Invoice' : 'Part payment';
 			if ((int)$klarna_order_status == 1)
 			{
 			$status = 'OK';

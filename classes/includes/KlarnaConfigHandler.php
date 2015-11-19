@@ -199,7 +199,7 @@ class KlarnaConfigHandler
 
 									return true;
 							}
-							 return false;
+					return false;
 				}
 			}
 		}

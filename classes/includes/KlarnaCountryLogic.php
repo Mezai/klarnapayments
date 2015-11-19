@@ -102,7 +102,6 @@ class KlarnaCountryLogic
 
 			return true;
 
-
 		if ($method === KiTT::INVOICE)
 
 			return true;
@@ -110,7 +109,6 @@ class KlarnaCountryLogic
 		if (((double)$sum) <= 250.0)
 
 			return true;
-
 
 		return false;
 	}

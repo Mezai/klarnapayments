@@ -104,7 +104,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 	*/
 	public function getLanguageCode()
 	{
-	   return KlarnaLanguage::getCode($this->_language);
+		return KlarnaLanguage::getCode($this->_language);
 	}
 
 	/**
@@ -122,7 +122,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 		switch ($this->_currency)
 		{
 			case 0:
-			   return 'SEK';
+				return 'SEK';
 			case 1:
 				return 'NOK';
 			case 2:

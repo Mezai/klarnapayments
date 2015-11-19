@@ -52,7 +52,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 			$risk = $result[0];
 			$invoice_number = $result[1];
-			
+
 			KlarnaInvoiceFeeHandler::updateInvoiceNumber($invoice_number, $risk, $order_number);
 			return true;
 		} catch (Exception $e) {
@@ -62,7 +62,6 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		}
 	}
 
-	
 	public function cancelPayment($reservation_id)
 	{
 		if (!is_string($reservation_id))
@@ -90,7 +89,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		if (!is_string($invoicenumber))
 			return;
 
-		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);	 	
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
 
 		$config = new KlarnaPrestaConfig();
@@ -108,12 +107,12 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	}
 
-	public function refundPart($invoicenumber, $quantity, $article_number)	
+	public function refundPart($invoicenumber, $quantity, $article_number)
 	{	
 		if (!is_string($invoicenumber) || !is_int($quantity) || !is_string($article_number))
 			return;
 
-		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);	 	
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
 
 		$config = new KlarnaPrestaConfig();

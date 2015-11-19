@@ -34,16 +34,15 @@ class KlarnaAdressPresta
 		$house_nr = '';
 		$house_ext = '';
 
-		 if (($country->iso_code == 'NL') || ($country->iso_code == 'DE'))
-		 {
+		if (($country->iso_code == 'NL') || ($country->iso_code == 'DE'))
+		{
 			$split = self::splitAddress($address);
 			$address = @$split[0];
 			$house_nr = @$split[1];
 			$house_ext = @$split[2];
-		 }
+		}
 
-		$addr = new KlarnaAddr(KlarnaPrestaEncoding::encode(
-			$customer->email),
+		$addr = new KlarnaAddr(KlarnaPrestaEncoding::encode($customer->email),
 			KlarnaPrestaEncoding::encode($presta->phone),
 			KlarnaPrestaEncoding::encode($presta->phone_mobile),
 			KlarnaPrestaEncoding::encode($presta->firstname),

@@ -42,7 +42,6 @@ class KlarnaInvoiceFeeHandler
 	{
 		$id_invoicenumber = Db::getInstance()->getRow('SELECT `id_invoicenumber` FROM `'._DB_PREFIX_.'klarna_orders` WHERE `id_order` = '.(int)$id_order);
 
-
 		if ($id_invoicenumber != false)
 			return (int)$id_invoicenumber['id_order'];
 		return 0;
@@ -68,18 +67,19 @@ class KlarnaInvoiceFeeHandler
 
 	public static function getProductId($invoicereference)
 	{
-		
 		$result = Db::getInstance()->getRow('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'product`
 			WHERE `reference` = \''.pSQL($invoicereference).'\'');
 		
-
-		if (isset($result['id_product']) && (int)$result['id_product'] > 0) {
+		if (isset($result['id_product']) && (int)$result['id_product'] > 0)
+		{
 
 			return (int)$result['id_product'];
 
-		} else {
+		}
+		else
+		{
 
 			return null;
 		}
@@ -87,14 +87,11 @@ class KlarnaInvoiceFeeHandler
 
 	public static function getInvoiceFeePrice($reference)
 	{
-	
-
 		$invoice_product_id = self::getProductId($reference);
 
 		$price = Product::getPriceStatic((int)$invoice_product_id);
 
 		return $price;
-
 	}
 
 
@@ -120,7 +117,6 @@ class KlarnaInvoiceFeeHandler
 
 	public static function getOrderNumberByReservation($id_reservation)
 	{
-
 		$reservation_id = Db::getInstance()->getRow('SELECT `id_order` FROM `'._DB_PREFIX_.'klarna_orders` WHERE `id_reservation` = '.(String)$id_reservation);
 
 		if ($reservation_id != false)

@@ -41,7 +41,7 @@ class KlarnaPayments extends PaymentModule
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
-			'KLARNA_INVOICE_FEE', 'KLARNA_INVOICE_PRICE', 'KLARNA_INVOICE_METHOD'),
+			'KLARNA_INVOICE_PRICE'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -304,7 +304,7 @@ class KlarnaPayments extends PaymentModule
 			$locale = new KlarnaLocalization(Country::getIsoById($this->context->country->id));
 			$country_logic = new KlarnaCountryLogic($locale);
 			$address = new Address((int)$cart->id_address_invoice);
-			
+
 		if (!$country_logic->isBusinessAllowed() && Tools::strlen($address->company) > 0)
 			return;
 			
@@ -695,17 +695,6 @@ class KlarnaPayments extends PaymentModule
 				'name' => 'Both'
 				),
 			);
-
-		$klarna_invoice_method = array(
-			array(
-			'id_option' => 1,
-			'name' => 'E-mail'
-			),
-			array(
-			'id_option' => 0,
-			'name' => 'Post'
-			),
-		);
 
 		$fields_form = array(
 			'form' => array(
@@ -1436,19 +1425,6 @@ class KlarnaPayments extends PaymentModule
 					'id' => 'id_option',
 					'name' => 'name'
 						)
-					),
-				array(
-				'type' => 'select',
-				'label' => $this->l('Use invoice fee?'),
-				'desc' => $this->l('Select for which payments you want to add invoice fee'),
-				'name' => 'KLARNA_INVOICE_FEE',
-				'tab' => 'general',
-				'required' => true,
-				'options' => array(
-					'query' => $klarna_invoice_fee,
-					'id' => 'id_option',
-					'name' => 'name'
-					)
 				),
 				array(
 					'type' => 'color',
@@ -1497,20 +1473,7 @@ class KlarnaPayments extends PaymentModule
 					'desc' => $this->l('Select a color for the link'),
 					'tab' => 'general',
 				'name' => 'KLARNA_CHECKOUT_COLOR_LINK'
-				),
-				array(
-				'type' => 'select',
-				'label' => $this->l('Invoice method'),
-				'desc' => $this->l('Select if you wish Klarna to send the invoice by mail or post'),
-				'name' => 'KLARNA_INVOICE_METHOD',
-				'tab' => 'general',
-				'options' => array(
-					'query' => $klarna_invoice_method,
-					'id' => 'id_option',
-					'name' => 'name'
-					)
-				),
-
+					),
 				),
 				'submit' => array(
 						'title' => $this->l('Save'),

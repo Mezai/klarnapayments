@@ -109,7 +109,7 @@
 </tr>
 <tr>
 	<td>Administrationsgebyr</td>
-	<td>{$KlarnaPClass[1]->getInvoiceFee()}{l s='kr/.md' mod='klarnapayments'}</td>
+	<td>{$KlarnaPClass[1]->getInvoiceFee()|escape:'htmlall':'UTF-8'}{l s='kr/.md' mod='klarnapayments'}</td>
 </tr>
 <tr>
 	<td>Månedlig omkostning</td>
@@ -144,7 +144,7 @@
 	</tr>
 	<tr>
 		<td>Hallinnointimaksu</td>
-		<td>{$KlarnaPClass[1]->getInvoiceFee()}{l s='€/kk' mod='klarnapayments'}</td>
+		<td>{$KlarnaPClass[1]->getInvoiceFee()|escape:'htmlall':'UTF-8'}{l s='€/kk' mod='klarnapayments'}</td>
 	</tr>
 	<tr>
 		<td>Kuukausikustannus</td>

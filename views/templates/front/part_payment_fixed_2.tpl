@@ -27,7 +27,7 @@
 
 
 {if $klarna_locale == 'SE'}
-<h4>{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</h4>
+<h4>{displayPrice price=$klarna_calc_monthly2}{l s=' i ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</h4>
 <table class="table">
 <tbody>
 <tr>
@@ -97,7 +97,7 @@
 <p><span>{$partpayment_use_case|escape:'htmlall':'UTF-8'}</span></p>
 {/if}
 {if $klarna_locale == 'DK'}
-<h4>{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</h4>
+<h4>{displayPrice price=$klarna_calc_monthly2}{l s=' i ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</h4>
 <table class="table">
 <tbody>
 <tr>
@@ -110,7 +110,7 @@
 </tr>
 <tr>
 	<td>Administrationsgebyr</td>
-	<td>{$KlarnaPClass[2]->getInvoiceFee()}{l s='kr/.md' mod='klarnapayments'}</td>
+	<td>{$KlarnaPClass[2]->getInvoiceFee()|escape:'htmlall':'UTF-8'}{l s='kr/.md' mod='klarnapayments'}</td>
 </tr>
 <tr>
 	<td>Månedlig omkostning</td>
@@ -144,7 +144,7 @@
 	</tr>
 	<tr>
 		<td>Hallinnointimaksu</td>
-		<td>{$KlarnaPClass[2]->getInvoiceFee()}{l s='€/kk' mod='klarnapayments'}</td>
+		<td>{$KlarnaPClass[2]->getInvoiceFee()|escape:'htmlall':'UTF-8'}{l s='€/kk' mod='klarnapayments'}</td>
 	</tr>
 	<tr>
 		<td>Kuukausikustannus</td>

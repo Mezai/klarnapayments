@@ -681,21 +681,6 @@ class KlarnaPayments extends PaymentModule
 				),
 		);
 
-		$klarna_invoice_fee = array(
-			array(
-				'id_option' => 0,
-				'name' => 'Part payments'
-				),
-			array(
-				'id_option' => 1,
-				'name' => 'Invoice payments'
-				),
-			array(
-				'id_option' => 2,
-				'name' => 'Both'
-				),
-			);
-
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(

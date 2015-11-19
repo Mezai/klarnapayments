@@ -24,15 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('KLARNA_DIRECTORY')) {
+if (!defined('KLARNA_DIRECTORY'))
 define('KLARNA_DIRECTORY', dirname(__FILE__) . '/../');
-}
 
 
-require_once KLARNA_DIRECTORY . '/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc';
-require_once KLARNA_DIRECTORY . '/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc';
+require_once KLARNA_DIRECTORY.'/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc';
+require_once KLARNA_DIRECTORY.'/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc';
 
-require_once KLARNA_DIRECTORY . '/libs/Klarna.php';
+require_once KLARNA_DIRECTORY.'/libs/Klarna.php';
 
 require_once '/includes/KlarnaPrestaConfig.php';
 require_once '/includes/KlarnaPrestaApi.php';

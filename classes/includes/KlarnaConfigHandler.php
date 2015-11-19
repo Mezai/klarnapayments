@@ -34,117 +34,117 @@ class KlarnaConfigHandler
 
 											"SE"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_SE'),
+											"active" => (int)Configuration::get('ACTIVE_SE'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_SE'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_SE'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_SE'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_SE'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_SE'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_SE'),
 
-																						"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_SE'),
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_SE'),
 
-																						"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_SE')
+											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_SE')
 
-																					 ),
+											),
 
 											"NO"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_NO'),
+											"active" => (int)Configuration::get('ACTIVE_NO'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_NO'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_NO'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NO'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NO'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_NO'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_NO'),
 
-																						"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NO'),
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NO'),
 
-																						"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_NO')
+											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_NO')
 
-																					 ),
+											),
 
 											"FI"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_FI'),
+											"active" => (int)Configuration::get('ACTIVE_FI'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_FI'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_FI'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_FI'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_FI'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_FI'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_FI'),
 
-																						 "klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_FI'),
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_FI'),
 
-																																								 "klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_FI')
+											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_FI')
 
-																					 ),
+											),
 
 											"DK"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_DK'),
+											"active" => (int)Configuration::get('ACTIVE_DK'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_DK'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_DK'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DK'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DK'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_DK'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_DK'),
 
-																						"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DK')
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DK')
 
-																					 ),
+											),
 
 											"NL"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_NL'),
+											"active" => (int)Configuration::get('ACTIVE_NL'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_NL'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_NL'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NL'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_NL'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_NL'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_NL'),
 
-																						"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NL')
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_NL')
 
 
 
-																					 ),
+											),
 
 											"DE"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_DE'),
+											"active" => (int)Configuration::get('ACTIVE_DE'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_DE'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_DE'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DE'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_DE'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_DE'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_DE'),
 
-																						 "klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DE'),
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_DE'),
 
-																						 "klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_DE')
+											"klarna_checkout" => (int)Configuration::get('KLARNA_CHECKOUT_DE')
 
 
 
-																					 ),
+											),
 
 											"AT"  => array(
 
-																					 "active" => (int)Configuration::get('ACTIVE_AT'),
+											"active" => (int)Configuration::get('ACTIVE_AT'),
 
-																					 "klarna_eid" => (int)Configuration::get('KLARNA_EID_AT'),
+											"klarna_eid" => (int)Configuration::get('KLARNA_EID_AT'),
 
-																					 "klarna_secret" => (String)Configuration::get('KLARNA_SECRET_AT'),
+											"klarna_secret" => (String)Configuration::get('KLARNA_SECRET_AT'),
 
-																						"klarna_part" => (int)Configuration::get('KLARNA_PART_AT'),
+											"klarna_part" => (int)Configuration::get('KLARNA_PART_AT'),
 
-																						"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_AT')
+											"klarna_invoice" => (int)Configuration::get('KLARNA_INVOICE_AT')
 
 
 
-																					 ),
+											),
 
-											);
+						);
 		}
 
 		public static function getInstance() {

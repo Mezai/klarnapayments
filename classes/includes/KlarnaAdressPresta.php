@@ -31,19 +31,19 @@ class KlarnaAdressPresta
 		$country = new Country($presta->id_country);
 		$address = KlarnaPrestaEncoding::encode($presta->address1);
 
-		$houseNr = '';
-		$houseExt = '';
+		$house_nr = '';
+		$house_ext = '';
 
-		
-		 if (($country->iso_code  == 'NL') || ($country->iso_code == 'DE')) {
+		 if (($country->iso_code == 'NL') || ($country->iso_code == 'DE'))
+		 {
 			$split = self::splitAddress($address);
 			$address = @$split[0];
-			$houseNr = @$split[1];
-			$houseExt = @$split[2];
-		}
+			$house_nr = @$split[1];
+			$house_ext = @$split[2];
+		 }
 
-		$addr = new KlarnaAddr(
-			KlarnaPrestaEncoding::encode($customer->email),  
+		$addr = new KlarnaAddr(KlarnaPrestaEncoding::encode(
+			$customer->email),
 			KlarnaPrestaEncoding::encode($presta->phone),
 			KlarnaPrestaEncoding::encode($presta->phone_mobile),
 			KlarnaPrestaEncoding::encode($presta->firstname),
@@ -53,38 +53,37 @@ class KlarnaAdressPresta
 			KlarnaPrestaEncoding::encode($presta->postcode),
 			KlarnaPrestaEncoding::encode($presta->city),
 			KlarnaPrestaEncoding::encode($country->iso_code),
-			$houseNr,
-			$houseExt
-		);
-		if ($presta->company) {
+			$house_nr,
+			$house_ext);
+
+		if ($presta->company)
 			$addr->setCompanyName($presta->company);
-		}
+
 		return $addr;
 	}
 
 	public static function splitAddress($address)
 	{
-		$hasMatch = preg_match('/^[^0-9]*/', $address, $match);
+		$has_match = preg_match('/^[^0-9]*/', $address, $match);
 
-		if (!$hasMatch) {
-			return array($address, "", "");
-		}
+		if (!$has_match)
+			return array($address, '', '');
 
-		$address = str_replace($match[0], "", $address);
+		$address = str_replace($match[0], '', $address);
 		$street = trim($match[0]);
 
-		if (Tools::strlen($address == 0)) {
-			return array($street, "", "");
-		}
-		$addrArray = explode(" ", $address);
+		if (Tools::strlen($address == 0))
+			return array($street, '', '');
 
-		$housenumber = array_shift($addrArray);
+		$addr_array = explode(' ', $address);
 
-		if (count($addrArray) == 0) {
-			return array($street, $housenumber, "");
-		}
+		$housenumber = array_shift($addr_array);
 
-		$extension = implode(" ", $addrArray);
+		if (count($addr_array) == 0)
+
+			return array($street, $housenumber, '');
+
+		$extension = implode(' ', $addr_array);
 
 		return array($street, $housenumber, $extension);
 	}

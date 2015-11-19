@@ -29,9 +29,8 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	public function activatePayment($reservation_id, $send_type)
 	{
-
-	if (!is_string($reservation_id) || !is_string($send_type))
-		return;
+		if (!is_string($reservation_id) || !is_string($send_type))
+			return;
 
 			$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($reservation_id);
 			$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
@@ -44,7 +43,6 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 			$config->klarna->setActivateInfo('orderid1', (string)$order_number);
 			$config->klarna->setActivateInfo('orderid2', (string)$reference_number);
 			$config->klarna->setComment('A text string stored in the invoice commentary area.');
-
 
 		try {
 
@@ -88,8 +86,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 	}
 
 	public function refundAll($invoicenumber)
-	{
-		
+	{	
 		if (!is_string($invoicenumber))
 			return;
 
@@ -140,11 +137,8 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	public function checkStatus($id_reservation)
 	{
-
 		if (!is_string($id_reservation))
-		{
 			return;
-		}	
 
 		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($id_reservation);	 	
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
@@ -168,7 +162,8 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 				$msg->private = 1;
 				$msg->add();
 
-			} elseif ($status == KlarnaFlags::DENIED) {
+			} elseif ($status == KlarnaFlags::DENIED)
+			{
 				$history = new OrderHistory();
 				$history->id_order = (int)$order_number;
 				$history->changeIdOrderState((int)Configuration::get('KLARNA_OS_DENIED'), $history->id_order);
@@ -213,17 +208,20 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 		foreach ($product as $addproduct)
 		{
-			$attributes = "";
+			$attributes = '';
 
-			if (isset($addproduct['attributes'])) {
+			if (isset($addproduct['attributes']))
 				$attributes = $addproduct['attributes'];
-			}
 
-			if (empty($addproduct['rate'])) {
+
+			if (empty($addproduct['rate']))
+			{
 				$price_wt = (float)$addproduct['price_wt'];
 				$price = (float)$addproduct['price'];
 				$rate = round((($price_wt / $price) - 1.0) * 100);
-			} else {
+			}
+			else
+			{
 				$rate = $addproduct['rate'];
 
 			}
@@ -231,11 +229,11 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 			$config->klarna->addArticle(
 					$quantity,
 					KlarnaPrestaEncoding::encode($addproduct['reference']),
-					KlarnaPrestaEncoding::encode($addproduct['name'] . $attributes),
+					KlarnaPrestaEncoding::encode($addproduct['name'].$attributes),
 					$addproduct['price_wt'],
 					$rate,
 					0,
-				   KlarnaFlags::INC_VAT
+					KlarnaFlags::INC_VAT
 					
 				);
 		
@@ -291,7 +289,6 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	public function getInvoiceURI($invoicenumber)
 	{
-
 		if (Configuration::get('KLARNA_ENVIRONMENT') == 'beta')
 			return 'https://online.testdrive.klarna.com/invoices/'.$invoicenumber.'.pdf';
 		elseif (Configuration::get('KLARNA_ENVIRONMENT') == 'live')
@@ -299,5 +296,3 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	}
 }
-
-?>

@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class KlarnaValidation 
+class KlarnaValidation
 {
 
 	public static function getPattern($country)

@@ -42,6 +42,7 @@ class KlarnaOrder extends ObjectModel
 			'customer_lastname' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 32),
 			'id_reservation' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 32),
 			'id_invoicenumber' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 32),
+			'risk_status' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 10),
 
 			),
 		);

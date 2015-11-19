@@ -51,6 +51,7 @@ class KlarnaOrdersController extends ModuleAdminController
 			'payment_status' => array('title' => $this->l('Payment status')),
 			'id_invoicenumber' => array('title' => $this->l('Id invoicenumber')),
 			'customer_country' => array('title' => $this->l('Customer country')),
+			'risk_status' => array('title' => $this->l('Risk status')),
 		);
 
 		parent::__construct();

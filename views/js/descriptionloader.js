@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-$(document).ready(function(e) {
-	$("input[type='radio'][name='klarna_payment_type']").click(function() {
+$(document).ready(function() {
+	$("body").on('click', 'input[name=klarna_payment_type]', function() {
     var $klarna_description_part = $('.klarna_description_part');
     var $klarna_description_inv = $('.klarna_description_inv');
     var loadImage = baseDir + "modules/klarnapayments/views/img/loading_spinner" + ".gif";
     var image = '<img src="' + loadImage + '" />';
 
-      if ($(this).attr('checked')) {
+      if ($(this).attr('checked', 'checked')) {
         $klarna_description_part.show();
         $.ajax({
           type: 'POST',

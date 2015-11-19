@@ -655,7 +655,7 @@ class KlarnaPayments extends PaymentModule
 		$this->html .= $this->context->smarty->fetch($this->local_path.'/views/templates/admin/admin.tpl');
 
 		$this->html .= $this->renderForm();
-
+		
 		$this->html .= $this->renderList();
 
 		return $this->html;
@@ -1494,6 +1494,7 @@ class KlarnaPayments extends PaymentModule
 
 	public function renderList()
 	{
+
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
 
 		foreach ($active_countries as $countries)
@@ -1506,6 +1507,8 @@ class KlarnaPayments extends PaymentModule
 
 			$fetch_json = Tools::file_get_contents($pclasses_uri);
 			$json_assoc = Tools::jsonDecode($fetch_json, true);
+			} else {
+				return;
 			}
 
 		}

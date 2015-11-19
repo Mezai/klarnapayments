@@ -33,34 +33,45 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 	public function __construct($country, $language = null, $currency = null)
 	{
 		// For legacy reasons getLanguageForCountry etc is not static
-		if (self::$_api === null) {
+		if (self::$_api === null)
+
 			self::$_api = new Klarna;
-		}
 
 		// Set country
-		if (is_numeric($country)) {
+		if (is_numeric($country))
+
 			$this->_country = (int)$country;
-		} else {
+
+		else
+
 			$this->_country = KlarnaCountry::fromCode($country);
-		}
 
 		// Set language from user input or from country default
-		if ($language === null) {
+		if ($language === null)
+
 			$this->_language = self::$_api->getLanguageForCountry($this->_country);
-		} else if (is_numeric($language)) {
+
+		else if (is_numeric($language))
+
 			$this->_language = (int)$language;
-		} else {
+
+		else
+
 			$this->_language = KlarnaLanguage::fromCode($language);
-		}
 
 		// Set currency from user input or from country default
-		if ($currency === null) {
+		if ($currency === null)
+
 			$this->_currency = self::$_api->getCurrencyForCountry($this->_country);
-		} else if (is_numeric($currency)) {
+
+		else if (is_numeric($currency))
+
 			$this->_currency = (int)$currency;
-		} else {
+
+		else
+
 			$this->_currency = KlarnaCurrency::fromCode($currency);
-		}
+
 	}
 
 	/**
@@ -108,9 +119,10 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 
 	public function getCurrencyCode()
 	{
-		switch ($this->_currency) {
+		switch ($this->_currency)
+		{
 			case 0:
-			   return 'SEK'; 
+			   return 'SEK';
 			case 1:
 				return 'NOK';
 			case 2:
@@ -122,7 +134,8 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 
 	public function setlocale()
 	{
-		switch(Tools::strtoupper($this->_country)) {
+		switch (Tools::strtoupper($this->_country))
+		{
 		case 'AT':
 		case 'DE':
 			return 'DE';

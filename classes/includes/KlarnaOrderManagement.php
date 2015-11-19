@@ -176,7 +176,8 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 				$msg->private = 1;
 				$msg->add();
 
-			} else
+			}
+			else
 			{
 				$msg = new Message();
 				$msg->message = 'Invoice is still pending try again later';

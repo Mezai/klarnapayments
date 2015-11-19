@@ -99,21 +99,20 @@ class KlarnaCountryLogic
 	public function isBelowLimit($sum, $method)
 	{
 		if ($this->country !== 'NL')
-		{
+
 			return true;
-		}
+
 
 		if ($method === KiTT::INVOICE)
-		{
+
 			return true;
-		}
 
 		if (((double)$sum) <= 250.0)
-		{
-			return true;
-		}
 
-			return false;
+			return true;
+
+
+		return false;
 	}
 
 }

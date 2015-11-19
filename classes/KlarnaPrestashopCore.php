@@ -25,7 +25,7 @@
 */
 
 if (!defined('KLARNA_DIRECTORY'))
-define('KLARNA_DIRECTORY', dirname(__FILE__) . '/../');
+define('KLARNA_DIRECTORY', dirname(__FILE__).'/../');
 
 
 require_once KLARNA_DIRECTORY.'/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc';

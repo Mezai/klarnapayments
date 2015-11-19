@@ -27,11 +27,10 @@
 class KlarnaOrderManagement extends KlarnaPrestaConfig
 {
 
-
-  public function activatePayment($reservation_id, $send_type)
+	public function activatePayment($reservation_id, $send_type)
 	{
 
-    if (!is_string($reservation_id) || !is_string($send_type))
+	if (!is_string($reservation_id) || !is_string($send_type))
 		return;
 
 			$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($reservation_id);
@@ -231,15 +230,15 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 			$config->klarna->addArticle(
 					$quantity,
-                    KlarnaPrestaEncoding::encode($addproduct['reference']),
-                    KlarnaPrestaEncoding::encode($addproduct['name'] . $attributes),
-                    $addproduct['price_wt'],
-                    $rate,
-                    0,
-           	       KlarnaFlags::INC_VAT
-                    
-                );
-    	
+					KlarnaPrestaEncoding::encode($addproduct['reference']),
+					KlarnaPrestaEncoding::encode($addproduct['name'] . $attributes),
+					$addproduct['price_wt'],
+					$rate,
+					0,
+				   KlarnaFlags::INC_VAT
+					
+				);
+		
 		}
 
 		$config->klarna->setEstoreInfo($id1, $id2, '');

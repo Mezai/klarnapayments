@@ -46,9 +46,9 @@ class KlarnaCheckoutService extends KlarnaPrestaConfig
 
 		
 		if ($response->getStatus() >= 400) {
-		    // server responded with error
-		    Logger::addLog('Communication with Klarna Failed with message' . print_r($data, true) . '');
-		    return false;
+			// server responded with error
+			Logger::addLog('Communication with Klarna Failed with message' . print_r($data, true) . '');
+			return false;
 		} 
 		
 	}

@@ -102,7 +102,7 @@ class KlarnaCountryLogic
 
 			return true;
 
-		if ($method === KiTT::INVOICE)
+		if ($method === 'invoice')
 
 			return true;
 

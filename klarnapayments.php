@@ -299,7 +299,15 @@ class KlarnaPayments extends PaymentModule
 			return;
 			$cart = $this->context->cart;
 			$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
-			$currency = $this->context->currency;
+			$currency = $this->context->currency;	
+
+			$locale = new KlarnaLocalization(Country::getIsoById($this->context->country->id));
+			$country_logic = new KlarnaCountryLogic($locale);
+			$address = new Address((int)$cart->id_address_invoice);
+			
+		if (!$country_logic->isBusinessAllowed() && Tools::strlen($address->company) > 0)
+			return;
+			
 			if (Country::getIsoById($this->context->country->id) === 'SE' || Country::getIsoById($this->context->country->id) === 'NO')
 			{
 				$checkout_data = new KlarnaCheckoutService();

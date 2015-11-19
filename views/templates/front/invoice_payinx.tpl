@@ -93,6 +93,34 @@
 </table>
 
 {/if}
+{if $klarna_locale == 'FI'}
+<h4>Maksa {$klarna_special_description|escape:'htmlall':'UTF-8'}ssa</h4>
+<table class="table">
+<tbody>
+	<tr>
+		<td>Ostosumma</td>
+		<td>{displayPrice price=$total}</td>
+	</tr>
+	<tr>
+		<td>Vuosikorko</td>
+		<td>{$klarna_special_interest|escape:'htmlall':'UTF-8'}{l s='%' mod=klarnapayments}</td>
+	</tr>
+	<tr>
+		<td>Aloitusmaksu</td>
+		<td>{displayPrice price=$klarna_special_start_fee}</td>
+	</tr>
+	<tr>
+		<td>Todellinen vuosikorko</td>
+		<td>{$klarna_special_apr|escape:'htmlall':'UTF-8'}{l s='%' mod=klarnapayments}</td>
+	</tr>
+	<tr>
+		<td>Kokonaiskustannukset</td>
+		<td>{displayPrice price=$klarna_special_credit}</td>
+	</tr>	
+</tbody>
+</table>
+{/if}
+
 <script type="text/javascript">
 new Klarna.Terms.Special({
     el: 'specialxx',

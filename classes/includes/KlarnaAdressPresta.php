@@ -47,7 +47,7 @@ class KlarnaAdressPresta
 			KlarnaPrestaEncoding::encode($presta->phone_mobile),
 			KlarnaPrestaEncoding::encode($presta->firstname),
 			KlarnaPrestaEncoding::encode($presta->lastname),
-			null,  // c/o
+			null,
 			$address,
 			KlarnaPrestaEncoding::encode($presta->postcode),
 			KlarnaPrestaEncoding::encode($presta->city),

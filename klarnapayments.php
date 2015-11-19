@@ -112,7 +112,6 @@ class KlarnaPayments extends PaymentModule
 	&& $this->registerHook('displayShoppingCartFooter')
 	&& $this->registerHook('displayShoppingCart')
 	&& $this->registerHook('displayRightColumnProduct')
-	&& $this->registerHook('shoppingCartExtra')
 	&& $this->registerHook('displayBeforeCarrier')
 	&& $this->registerHook('header');
 

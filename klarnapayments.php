@@ -317,7 +317,6 @@ class KlarnaPayments extends PaymentModule
 				
 			}
 		
-	
 		
 		if (!empty($data_klarna['payment_methods'])) {
 			foreach ($data_klarna['payment_methods'] as $key => $value) {
@@ -346,9 +345,9 @@ class KlarnaPayments extends PaymentModule
 					'partpayment_invoicefee_label' => $value['details']['monthly_invoice_fee']['label'],
 					'partpayment_invoicefee_symbol' => $value['details']['monthly_invoice_fee']['symbol'],
 					'partpayment_invoicefee_value' => $value['details']['monthly_invoice_fee']['value'],
-					'partpayment_monthlypay_label' => $value['details']['monthly_pay']['label'],
-					'partpayment_monthlypay_symbol' => $value['details']['monthly_pay']['symbol'],
-					'partpayment_monthlypay_value' => $value['details']['monthly_pay']['value'],
+					'partpayment_monthlypay_label' => $value['details']['minimum_monthly_pay']['label'],
+					'partpayment_monthlypay_symbol' => $value['details']['minimum_monthly_pay']['symbol'],
+					'partpayment_monthlypay_value' => $value['details']['minimum_monthly_pay']['value'],
 					));
 				}	
 			}
@@ -367,6 +366,7 @@ class KlarnaPayments extends PaymentModule
 		 	'klarna_calc_monthly'.$key.'' => KlarnaCalc::calc_monthly_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
 		 	'klarna_calc_apr'.$key.'' => KlarnaCalc::calc_apr($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
 		 	'klarna_calc_total_credit'.$key.'' => KlarnaCalc::total_credit_purchase_cost($cart->getOrderTotal(true, Cart::BOTH), $value, KlarnaFlags::CHECKOUT_PAGE),
+		 	'klarna_min_amount'.$key.'' => $value->getMinAmount(),
 			
 		 	));
 		 	}

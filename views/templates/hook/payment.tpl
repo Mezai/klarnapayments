@@ -118,17 +118,17 @@
         								{if $klarna_locale == 'FI'}Joustava erämaksu – Maksa omassa tahdissasi{/if}		
         								</label><br>
         							{/if}
-        							{if isset($KlarnaPClass[1])}
+        							{if isset($KlarnaPClass[1]) &&  ($total > $klarna_min_amount1)}
         							
           								<input type="radio" class="klarna_payment_part_fixed_1" id="klarna_payment_part_2" name="klarna_payment_type" value="{$KlarnaPClass[1]->getId()|escape:'htmlall':'UTF-8'}" required/><label for="klarna_payment_part_2">{displayPrice price=$klarna_calc_monthly1}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[1]->getDescription()|strip_tags:'UTF-8'}</label><br>
         							
         							{/if}
-        							{if isset($KlarnaPClass[2])}
+        							{if isset($KlarnaPClass[2]) && ($total > $klarna_min_amount2)}
         							
           								<input type="radio" class="klarna_payment_part_fixed_2" id="klarna_payment_part_3" name="klarna_payment_type" value="{$KlarnaPClass[2]->getId()|escape:'htmlall':'UTF-8'}" required/>
         								<label for="klarna_payment_part_3">{displayPrice price=$klarna_calc_monthly2}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[2]->getDescription()|strip_tags:'UTF-8'}</label><br>
         							{/if}
-        							{if isset($KlarnaPClass[3])}
+        							{if isset($KlarnaPClass[3]) && ($total > $klarna_min_amount1)}
         							
           								<input type="radio" class="klarna_payment_part_fixed_3" id="klarna_payment_part_4" name="klarna_payment_type" value="{$KlarnaPClass[3]->getId()|escape:'htmlall':'UTF-8'}" required/>
         								<label for="klarna_payment_part_4">{displayPrice price=$klarna_calc_monthly3}{l s=' in ' mod='klarnapayments'}{$KlarnaPClass[3]->getDescription()|strip_tags:'UTF-8'}</label><br>

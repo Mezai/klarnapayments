@@ -50,11 +50,11 @@ class KlarnaInvoiceFeeHandler
 	public static function getByReference($invoiceref)
 	{
 		$result = Db::getInstance()->getRow('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `reference` = '.$invoiceref);
-		
+
 		if (isset($result['id_product']) && (int)$result['id_product'] > 0)
 		{
 			$feeproduct = new Product((int)$result['id_product'], true);
-			
+
 			return $feeproduct;
 
 		}
@@ -71,7 +71,7 @@ class KlarnaInvoiceFeeHandler
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'product`
 			WHERE `reference` = \''.pSQL($invoicereference).'\'');
-		
+
 		if (isset($result['id_product']) && (int)$result['id_product'] > 0)
 		{
 
@@ -135,15 +135,17 @@ class KlarnaInvoiceFeeHandler
 
 	}
 
-	public static function getAllReservationIds() 
+	public static function getAllReservationIds()
 	{
 		$reservation_ids = Db::getInstance()->executeS('SELECT `id_reservation` FROM `'._DB_PREFIX_.'klarna_orders` GROUP BY `id_reservation`');
 
-		if (is_array($reservation_ids)) {
+		if (is_array($reservation_ids))
+
 			return $reservation_ids;
-		} else {
+
+		else
+
 			return 0;
-		}
 
 	}
 
@@ -151,11 +153,13 @@ class KlarnaInvoiceFeeHandler
 	{
 		$invoicenumber_ids = Db::getInstance()->executeS('SELECT `id_invoicenumber` FROM `'._DB_PREFIX_.'klarna_orders` GROUP BY `id_invoicenumber`');
 
-		if (is_array($invoicenumber_ids)) {
+		if (is_array($invoicenumber_ids))
+
 			return $invoicenumber_ids;
-		} else {
+
+		else
+
 			return 0;
-		}
 
 	}
 

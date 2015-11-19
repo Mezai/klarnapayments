@@ -338,9 +338,6 @@ class KlarnaPayments extends PaymentModule
 					'partpayment_invoicefee_label' => $value['details']['monthly_invoice_fee']['label'],
 					'partpayment_invoicefee_symbol' => $value['details']['monthly_invoice_fee']['symbol'],
 					'partpayment_invoicefee_value' => $value['details']['monthly_invoice_fee']['value'],
-					'partpayment_monthlypay_label' => $value['details']['minimum_monthly_pay']['label'],
-					'partpayment_monthlypay_symbol' => $value['details']['minimum_monthly_pay']['symbol'],
-					'partpayment_monthlypay_value' => $value['details']['minimum_monthly_pay']['value'],
 					));
 				}
 				if (Country::getIsoById($this->context->country->id) == 'NO' && (String)$value['group']['code'] == 'part_payment')

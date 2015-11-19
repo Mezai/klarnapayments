@@ -60,7 +60,6 @@ class KlarnaCalculate
 
 	public function calculateKlarnaApr($amount, $type, $id)
 	{
-		
 		$k = KlarnaConfigHandler::setConfigurationByLocale($this->country, $this->environment, $this->klarna_settings);
 
 		$pclass = $k->getPClass($id);

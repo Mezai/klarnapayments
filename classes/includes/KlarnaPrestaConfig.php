@@ -35,8 +35,8 @@ class KlarnaPrestaConfig
 
 	public function setKlarnaConfig($country = null, $locale = false)
 	{
-		 if (($this->klarna === null) || (($country != null) && ($this->country != $country)))
-		 {
+		if (($this->klarna === null) || (($country != null) && ($this->country != $country)))
+		{
 			if ($country == null || KlarnaCountry::fromCode($country) === null)
 			{
 				$eid = 1;
@@ -73,16 +73,15 @@ class KlarnaPrestaConfig
 		$klarna = new KlarnaPrestaApi();
 		$klarna->setConfig($this->kconfig);
 		if (KlarnaCountry::fromCode($country) !== null)
-		{
 				$klarna->setCountry($country);
-		}
 
 		$this->country = $country;
 		$this->klarna = $klarna;
 
 	}
 
-	public function deleteKlarnaConfig($country) {
+	public function deleteKlarnaConfig($country)
+	{
 		$storage_file = dirname(dirname(dirname(__FILE__))).'/pclasses/config'.Tools::strtolower($country).'.json';
 		$this->kconfig = new KlarnaConfig($storage_file);
 		$klarna = new KlarnaPrestaApi();

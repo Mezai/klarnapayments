@@ -36,8 +36,6 @@ class KlarnaCalculate
 
 	public function klarnaCalculateMonthlyCost($amount, $type, $id)
 	{
-
-
 		$k = KlarnaConfigHandler::setConfigurationByLocale($this->country, $this->environment, $this->klarna_settings);
 		
 		$pclass = $k->getPClass($id);
@@ -50,14 +48,12 @@ class KlarnaCalculate
 
 	public function klarnaCalculateTotalCredit($amount, $type, $id)
 	{
-	
+		$k = KlarnaConfigHandler::setConfigurationByLocale($this->country, $this->environment, $this->klarna_settings);
 
-	$k = KlarnaConfigHandler::setConfigurationByLocale($this->country, $this->environment, $this->klarna_settings);
+		$pclass = $k->getPClass($id);
 
-	$pclass = $k->getPClass($id);
-
-	if ($pclass)
-		$total = KlarnaCalc::total_credit_purchase_cost($amount, $pclass, $type);
+		if ($pclass)
+			$total = KlarnaCalc::total_credit_purchase_cost($amount, $pclass, $type);
 		return $total;
 	}
 

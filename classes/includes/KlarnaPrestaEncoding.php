@@ -33,14 +33,12 @@ class KlarnaPrestaEncoding
 	public static function encode($str, $from = null, $to = null)
 	{
 		if ($from === null)
-		{
+
 			$from = self::$prestaEncoding;
-		}
 
 		if ($to === null)
-		{
+
 			$to = self::$klarnaEncoding;
-		}
 
 		return iconv($from, $to, $str);
 	}
@@ -48,13 +46,13 @@ class KlarnaPrestaEncoding
 	public static function decode($str, $from = null, $to = null)
 	{
 		if ($from === null)
-		{
+
 			$from = self::$klarnaEncoding;
-		}
+
 		if ($to === null)
-		{
+
 			$to = self::$prestaEncoding;
-		}
+
 		return iconv($from, $to, $str);	
 	}
 }

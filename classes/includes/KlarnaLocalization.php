@@ -30,7 +30,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 	protected $_country;
 	protected $_language;
 	protected $_currency;
- public function __construct($country, $language = null, $currency = null)
+	public function __construct($country, $language = null, $currency = null)
 	{
 		// For legacy reasons getLanguageForCountry etc is not static
 		if (self::$_api === null) {
@@ -91,10 +91,10 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 	/**
 	 * get the language ISO code
 	*/
-   public function getLanguageCode()
-   {
+	public function getLanguageCode()
+	{
 	   return KlarnaLanguage::getCode($this->_language);
-   }
+	}
 
 	/**
 	 * get the currency of the locale
@@ -178,7 +178,6 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 				return array('NO', 'NB', 'NOK');
 			case 'NL':
 				return array('NL', 'NL', 'EUR');
-		   
 		}
 	}
 

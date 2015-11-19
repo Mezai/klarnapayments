@@ -35,14 +35,14 @@ class KlarnaPrestaPclasses extends KlarnaPrestaConfig
 		$config->klarna->clearPClasses();
 
 
-        try {
-             $config->klarna->fetchPClasses($country);
-             return true;
-        } catch(Exception $e) {
-        	Logger::addLog('Klarna module: failed fetching pclasses for country '.$country);
-        	return false;
-              
-       }
+		try {
+			 $config->klarna->fetchPClasses($country);
+			 return true;
+		} catch(Exception $e) {
+			Logger::addLog('Klarna module: failed fetching pclasses for country '.$country);
+			return false;
+			  
+	   }
 
 	}
 

@@ -35,7 +35,8 @@ set_time_limit(0);
 
 if ($klarnapayments->active)
 {
-	$array = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'klarna_orders`');
+	$array = Db::getInstance()->executeS('SELECT `payment_status`, `id_reservation` FROM `'._DB_PREFIX_.'klarna_orders`');
+
 	foreach ($array as $key => $value)
 	{
 		if ($value['payment_status'] == 'Pending')

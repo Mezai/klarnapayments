@@ -39,7 +39,7 @@
 		<ul class="klarna-list">
 			<li>Klarna invoice payments</li>
 			<li>Klarna part payments</li>
-			<li>Klarna get address function (only for Sweden)</li>
+			<li style="font-weight:bold;">The checkout option is currently not available but will be in a future release</li>
 		</ul>
 		</p>
 	</div>
@@ -72,10 +72,10 @@
 		{l s='To set up the invoice fee follow below steps' mod='klarnapayments'}
 		</p>
 		<ol class="klarna-list">
-			<li>{l s='Start with creating a new product called for example: Invoice fee' mod='klarnapayments'}</li>
-			<li>{l s='In the information section set the status enabled to : No' mod='klarnapayments'}</li>
-			<li>{l s='In the prices section set the price for the invoice fee' mod='klarnapayments'}</li>
-			<li>{l s='In the quantities section set the quantity and preferably when out of stock to : allow orders.' mod='klarnapayments'}</li>
+			<li>{l s='You can set the price and tax for the invoice fee here: Invoice fee' mod='klarnapayments'}</li>
+			<li>{l s='Make sure you have set the quantity for the invoice fee and preferably when out of stock to : allow orders' mod='klarnapayments'}</li>
+			<li>{l s='The invoice fee is created for you upon installation, do not edit the reference for this product' mod='klarnapayments'}</li>
+			<li>{l s='To inactivate the invoice fee: simply set the price to 0' mod='klarnapayments'}</li>
 		</ol>			
 	</div>	
 	<div style="clear:both;"></div>

@@ -1496,27 +1496,19 @@ class KlarnaPayments extends PaymentModule
 	public function renderList()
 	{
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
-		foreach ($active_countries as $countries)
-		{
-			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
-			if (!file_exists($pclasses_uri))
-				return;
-		}
-		
 
 		foreach ($active_countries as $countries)
 		{
-			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries);
-
 			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
 			if (file_exists($pclasses_uri))
 			{
-
+			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries);
 			$fetch_json = Tools::file_get_contents($pclasses_uri);
 			$json_assoc = Tools::jsonDecode($fetch_json, true);
+			$helper_array = $json_assoc[$klarna_merchant_id];
 			}
 		}
-			$helper_array = $json_assoc[$klarna_merchant_id];
+			
 
 			$this->fields_list = array(
 				'eid' => array(

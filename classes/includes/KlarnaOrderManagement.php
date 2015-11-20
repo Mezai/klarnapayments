@@ -132,6 +132,27 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 	}
 
+	public function refundGoodwill($invoicenumber, $description, $amount, $tax)
+	{
+		if (!is_string($invoicenumber) || !is_string($description) || !is_float($amount) || !is_float($tax))
+			return;
+
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);
+		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
+
+		$config = new KlarnaPrestaConfig();
+		$config->setKlarnaConfig($country, true);
+
+		try {
+			$config->klarna->returnAmount($invoicenumber, $amount, $tax, KlarnaFlags::INC_VAT, $description);
+			return true;
+		} catch (Exception $e) {
+			Logger::addLog('Klarna module: failed refunding invoicenumber '.$invoicenumber.' with code: '.$e->getCode().' and message: '.$e->getMessage());
+			return false;	
+		}
+
+	}
+
 
 
 	public function checkStatus($id_reservation)

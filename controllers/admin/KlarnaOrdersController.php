@@ -255,13 +255,7 @@ class KlarnaOrdersController extends ModuleAdminController
 				'desc' => $this->l('Fill in the tax for the discount'),
 				'type' => 'select',
 				'list' => Tax::getTaxes($this->context->language->id, true),
-				'identifier' => 'id_tax'
-				),
-			'KLARNA_REFUND_GOODWILL_VAT' => array(
-				'title' => $this->l('Include tax'),
-				'desc' => $this->l('Select if you wish to include tax in the discount'),
-				'type' => 'bool',
-				'cast' => 'intval'
+				'identifier' => 'rate'
 				),
 			'KLARNA_REFUND_GOODWILL_DESC' => array(
 				'title' => $this->l('Description'),
@@ -610,6 +604,29 @@ class KlarnaOrdersController extends ModuleAdminController
 			else
 
 			$this->displayWarning('Failed canceling reservation: see log for more information');
+		}
+
+		if (Tools::isSubmit('refundgoodwill_klarna'))
+		{
+			$id_invoicenumber = Tools::getValue('KLARNA_REFUND_GOODWILL_ID');
+			$tax = Tools::getValue('KLARNA_REFUND_GOODWILL_TAX');
+			$amount = Tools::getValue('KLARNA_REFUND_GOODWILL_AMOUNT');
+			$description = Tools::getValue('KLARNA_REFUND_GOODWILL_DESC');
+			if (!$this->postValidation(false, null, true, $id_invoicenumber))
+			{
+			$this->displayWarning('Invalid input please check your invoice id');
+			return;
+			}
+			
+			$klarna_order = new KlarnaOrderManagement();
+
+			if ($klarna_order->refundGoodwill($id_invoicenumber, $description, (float)$amount, (float)$tax))
+
+			$this->displayInformation('Successfully refunded amount '.$amount.' on invoice id:'.$id_invoicenumber);
+
+			else
+
+			$this->displayWarning('Failed refunding amount on invoice: see log for more information');
 		}
 	}
 }

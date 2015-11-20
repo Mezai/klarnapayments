@@ -648,7 +648,8 @@ class KlarnaPayments extends PaymentModule
 
 		$this->html .= '<br />';
 		//setting the admin template
-		$this->context->smarty->assign(array('module_dir' => $this->_path));
+		$this->context->smarty->assign(array('module_dir' => $this->_path,
+			'klarna_cron' => _PS_BASE_URL_._MODULE_DIR_.'klarnapayments/klarna_cron.php?token='.Tools::substr(Tools::encrypt('klarnapayments/cron'), 0, 10).''));
 
 		$this->context->controller->addJS($this->_path.'views/js/klarnabackoffice.js');
 

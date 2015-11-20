@@ -182,6 +182,8 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 				$msg->private = 1;
 				$msg->add();
 
+				KlarnaInvoiceFeeHandler::updateInvoiceStatus('OK', (int)$order_number);
+
 			} elseif ($status == KlarnaFlags::DENIED)
 			{
 				$history = new OrderHistory();
@@ -196,6 +198,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 				$msg->private = 1;
 				$msg->add();
 
+				KlarnaInvoiceFeeHandler::updateInvoiceStatus('DENIED', (int)$order_number);
 			}
 			else
 			{

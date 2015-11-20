@@ -108,6 +108,17 @@ class KlarnaInvoiceFeeHandler
 			die(Tools::displayError('Error when updating Klarna database'));
 	}
 
+	public static function updateInvoiceStatus($status, $id_order)
+	{
+		if (!Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'klarna_orders`
+			SET `payment_status` = \''.pSQL($status).'\'
+			WHERE `id_order` = '.(int)$id_order))
+		return false;
+	return true;
+
+	}
+
 	public static function getInvoiceCountry($id_order)
 	{
 		if (!(int)$id_order)

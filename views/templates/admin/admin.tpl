@@ -59,6 +59,9 @@
 		</p>
 		<p>
 			<a href="https://addons.prestashop.com/" target="_blank">{l s='Click here to contact us on Prestashop addons' mod='klarnapayments'}</a>
+		</p>
+		<p>
+			{l s='To automatically check status on invoices that have status pending ask your host to set up a cron job that runs in a interval lower than 4 hours pointing to this url.' mod='klarnapayments'}{$klarna_cron|escape:'htmlall':'UTF-8'}
 		</p>	
 
 	</div>

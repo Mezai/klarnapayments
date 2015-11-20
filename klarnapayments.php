@@ -1495,9 +1495,9 @@ class KlarnaPayments extends PaymentModule
 
 	public function renderList()
 	{
-
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
-		foreach ($active_countries as $countries) {
+		foreach ($active_countries as $countries)
+		{
 			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
 			if (!file_exists($pclasses_uri))
 				return;

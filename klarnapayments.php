@@ -210,6 +210,7 @@ class KlarnaPayments extends PaymentModule
 	{
 		$this->context->controller->addCSS($this->_path.'/views/css/klarnapayments.css', 'all');
 		$this->context->controller->addJS($this->_path.'views/js/klarnapayments.js');
+		$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
 
 		return '<script src="https://cdn.klarna.com/public/kitt/core/v1.0/js/klarna.min.js"></script>
 				<script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>';
@@ -298,7 +299,6 @@ class KlarnaPayments extends PaymentModule
 		if (!$this->active || !KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
 			return;
 			$cart = $this->context->cart;
-			$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
 			$currency = $this->context->currency;	
 
 			$locale = new KlarnaLocalization(Country::getIsoById($this->context->country->id));
@@ -1496,6 +1496,12 @@ class KlarnaPayments extends PaymentModule
 	{
 
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
+		foreach ($active_countries as $countries) {
+			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
+			if (!file_exists($pclasses_uri))
+				return;
+		}
+		
 
 		foreach ($active_countries as $countries)
 		{
@@ -1507,10 +1513,7 @@ class KlarnaPayments extends PaymentModule
 
 			$fetch_json = Tools::file_get_contents($pclasses_uri);
 			$json_assoc = Tools::jsonDecode($fetch_json, true);
-			} else {
-				return;
 			}
-
 		}
 			$helper_array = $json_assoc[$klarna_merchant_id];
 

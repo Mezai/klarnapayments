@@ -39,7 +39,7 @@ if ($klarnapayments->active)
 
 	foreach ($array as $key => $value)
 	{
-		if ($value['payment_status'] == 'Pending')
+		if ($value['payment_status'] == 'PENDING')
 		{
 			$klarna_check_status = new KlarnaOrderManagement();
 			$klarna_check_status->checkStatus($value['id_reservation']);

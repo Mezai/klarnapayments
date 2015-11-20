@@ -118,7 +118,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 			} elseif ((int)$klarna_order_status == 2)
 			{
 
-			$status = 'Pending';
+			$status = 'PENDING';
 
 			$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_PENDING'), $amount, $this->module->displayName, 'Status:'.
 			$status.'; Reservation id:'.$reservation_number.'; Type:'.$type, array(), (int)$currency->id, false, $customer->secure_key);

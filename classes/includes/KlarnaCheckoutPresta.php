@@ -2,6 +2,11 @@
 
 class KlarnaCheckoutPresta
 {
+	public function __construct()
+	{	
+		$this->context = Context::getContext();
+	}
+
 	public function checkout($cart, $country, $currency, $locale)
 	{	
 		session_start();
@@ -75,15 +80,24 @@ class KlarnaCheckoutPresta
 		        unset($_SESSION['klarna_order_id']);
 		    }
 		}
-		if ($order == null) {
+		if ($order == null) 
+		{
+
+			$cms = new CMS((int)(Configuration::get('KLARNA_CHECKOUT_TERMS')), (int)($this->context->cookie->id_lang));
+			$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
+			$is_ssl = Tools::usingSecureMode();
+			$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
+			$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
+
+			$terms_uri = $link_conditions;
 		    // Start new session
 		    $create['purchase_country'] = $country;
 		    $create['purchase_currency'] = $currency;
 		    $create['locale'] = $locale;
 		    $create['merchant'] = array(
 		        'id' => (String)$eid,
-		        'terms_uri' => 'http://example.com/terms.html',
-		        'checkout_uri' => 'http://psdevs.com/klarnacheckout/quick-order.php',
+		        'terms_uri' => $terms_uri,
+		        'checkout_uri' => $checkout_uri,
 		        'confirmation_uri' => 'http://example.com/confirmation.php' .
 		            '?klarna_order_id={checkout.order.id}',
 		        'push_uri' => 'http://example.com/push.php' .

@@ -109,12 +109,10 @@ $(document).ready(function(){
 
 	$('.cart_navigation').remove();
 
-	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete', function(){
+	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete,.delivery_option_radio', function(){
 	 	window._klarnaCheckout(function (api) {
-   		api.suspend();
-		});
-	 	window._klarnaCheckout(function (api) {
-   		api.resume();
+   			api.suspend();
+   			api.resume();
 		});
 
 	});

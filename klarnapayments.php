@@ -116,6 +116,7 @@ class KlarnaPayments extends PaymentModule
 		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
 			return;
 		$this->context->controller->addJS($this->_path.'views/js/klarnacheckout.js');
+		$this->context->controller->addCSS($this->_path.'views/css/klarnacheckout.css');
 		$cart = $this->context->cart;
 		$country = Country::getIsoById($this->context->country->id);
 		$currency = $this->context->currency->iso_code;

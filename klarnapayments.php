@@ -113,9 +113,22 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayShoppingCart()
 	{
-		if (!KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
+		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
 			return;
+		$this->context->controller->addJS($this->_path.'views/js/klarnacheckout.js');
+		$cart = $this->context->cart;
+		$country = Country::getIsoById($this->context->country->id);
+		$currency = $this->context->currency->iso_code;
+		$locale = $this->context->language->language_code;
+		$checkout = new KlarnaCheckoutPresta();
 
+		$snippet = $checkout->checkout($cart, $country, $currency, $locale);
+
+		$this->context->smarty->assign(array(
+			'snippet' => $snippet,
+			));
+
+		return $this->display(__FILE__, 'klarnacheckout.tpl');
 	}
 
 	/**

@@ -172,36 +172,41 @@ class KlarnaConfigHandler
 				{
 					if ((int)$value['active'] == 1 && $value['klarna_eid'] != '' && $value['klarna_secret'] != '')
 					{
-
-										if ($type == 'part' && (int)$value['klarna_part'] === 1)
-
-												return true;
-
-										else
-
-												return false;
-
-										if ($type == 'invoice' && (int)$value['klarna_invoice'] === 1)
-
-												return true;
-
-										else
-
-												return false;
-
-										if ($type == 'checkout' && (int)$value['klarna_checkout'] == 1)
-
-												return true;
-
-										else
-
-												return false;
-
+						if ($type !== null)
+						{	
+							switch ($type)
+							{
+							case 'part':
+								if ((int)$value['klarna_part'] === 1)
+								{
 									return true;
+								} else {
+									return false;
+								}
+							case 'invoice':
+								if ((int)$value['klarna_invoice'] === 1)
+								{
+									return true;
+								} else {
+									return false;
+								}
+							case 'checkout':
+								if ((int)$value['klarna_checkout'] === 1)
+								{
+									return true;
+								} else {
+									return false;
+								}	  
 							}
+							return false;
+						}
+						return true;
+					}
 					return false;
 				}
+				return false;
 			}
+			return false;
 		}
 
 
@@ -347,16 +352,27 @@ class KlarnaConfigHandler
 	*@return int Klarna::LIVE or KLARNA::BETA
 	*
 	*/
-		public static function mode()
+	public static function mode()
+	{
+		switch (Configuration::get('KLARNA_ENVIRONMENT'))
 		{
-			switch (Configuration::get('KLARNA_ENVIRONMENT'))
-			{
-				case 'live':
-					return KLARNA::LIVE;
-				case 'beta':
-					return KLARNA::BETA;
-			}
+			case 'live':
+				return KLARNA::LIVE;
+			case 'beta':
+				return KLARNA::BETA;
 		}
+	}
+
+	public static function modeCheckout()
+	{
+		switch (Configuration::get('KLARNA_ENVIRONMENT'))
+		{
+			case 'live':
+				return Klarna_Checkout_Connector::BASE_URL;
+			case 'beta':
+				return Klarna_Checkout_Connector::BASE_TEST_URL;
+		}
+	}
 
 
 

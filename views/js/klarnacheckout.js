@@ -28,10 +28,7 @@ $(document).ready(function(){
 		$(this).find('.button').hide();
 		$(this).append(klarnaKcoLoader());
 	});
-});
 
-
-$(document).ready(function(){
 	var id = '.klarnaKcoGiftWrapping #giftMessage';
 	var formGroup = $(id).closest('.form-group');
 
@@ -65,15 +62,11 @@ $(document).ready(function(){
 
 	$('.klarnaGiftWrapping form input').change(onChange);
 
-});
+	function klarnaKcoLoader() {
+		return '<span class="klarnaKcoLoader"></span>';
+	}
 
-function klarnaKcoLoader() {
-	return '<span class="klarnaKcoLoader"></span>';
-}
-
-
-$(document).ready(function(){
-		var ps = {};
+	var ps = {};
 
 	function togglePS(show) {
 		if (!show) {
@@ -116,12 +109,14 @@ $(document).ready(function(){
 
 	$('.cart_navigation').remove();
 
-	 // $('document').on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete', function() {
-	 // 	$('#klarnaPaymentsKco').click();
-
-
 	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete', function(){
-	 	$('#klarnaPaymentsKco').click();
+	 	window._klarnaCheckout(function (api) {
+   		api.suspend();
+		});
+	 	window._klarnaCheckout(function (api) {
+   		api.resume();
+		});
+
 	});
 });
 

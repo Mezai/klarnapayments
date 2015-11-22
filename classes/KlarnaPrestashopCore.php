@@ -28,10 +28,12 @@ if (!defined('KLARNA_DIRECTORY'))
 define('KLARNA_DIRECTORY', dirname(__FILE__).'/../');
 
 
-require_once KLARNA_DIRECTORY.'/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc';
-require_once KLARNA_DIRECTORY.'/libs/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc';
+require_once KLARNA_DIRECTORY.'/libs/payment/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc';
+require_once KLARNA_DIRECTORY.'/libs/payment/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc';
 
-require_once KLARNA_DIRECTORY.'/libs/Klarna.php';
+require_once KLARNA_DIRECTORY.'/libs/payment/Klarna.php';
+
+require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
 
 require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaPrestaConfig.php';
 require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaPrestaApi.php';
@@ -47,3 +49,4 @@ require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaCalculationHandler.php';
 require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaLocalization.php';
 require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaValidation.php';
 require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaAdressPresta.php';
+require_once KLARNA_DIRECTORY.'/classes/includes/KlarnaCheckoutPresta.php';

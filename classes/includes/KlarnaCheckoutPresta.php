@@ -1,7 +1,8 @@
 <?php
-
+require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
 class KlarnaCheckoutPresta
 {
+	
 	public function __construct()
 	{	
 		$this->context = Context::getContext();
@@ -10,7 +11,7 @@ class KlarnaCheckoutPresta
 
 	public function checkout($cart, $country, $currency, $locale)
 	{	
-		
+
 		session_start();
 		$order = null;
 		$sharedSecret = KlarnaConfigHandler::getKlarnaSecret($country);
@@ -96,13 +97,13 @@ class KlarnaCheckoutPresta
 		    $create['purchase_country'] = $country;
 		    $create['purchase_currency'] = $currency;
 		    $create['locale'] = $locale;
-		    $create['merchant'] = array(
-		        'id' => (String)$eid,
-		        'terms_uri' => $terms_uri,
-		        'checkout_uri' => $checkout_uri,
-		        'confirmation_uri' => $confirmation_uri,
-		        'push_uri' => $pushPage
-		    );
+		    $create['merchant']['id'] = (String)$eid;
+		    $create['merchant']['terms_uri'] = $terms_uri;
+		    $create['merchant']['checkout_uri'] = $checkout_uri;
+		    $create['merchant']['confirmation_uri'] = $confirmation_uri;
+		    $create['merchant']['push_uri'] = $pushPage;
+		    $create['merchant_reference']['orderid1'] = "".(int)$this->context->cart->id;
+		    
 		    $update['cart']['items'] = array();
 		    foreach ($checkoutcart as $item) {
 		        $create['cart']['items'][] = $item;

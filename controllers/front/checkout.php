@@ -40,12 +40,12 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			Tools::redirect('index.php');
 		try
 		{
-			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'),
-				Klarna_Checkout_Connector::BASE_TEST_URL); 
+			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'), Klarna_Checkout_Connector::BASE_TEST_URL); 
 
 			
 
 			$checkout_id = $_SESSION['klarna_order_id'];
+			//var_dump($checkout_id);
 			$klarnaorder = new Klarna_Checkout_Order($connector, $checkout_id);  
 			$klarnaorder->fetch();
 
@@ -53,10 +53,13 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			{
 				Tools::redirect('order-opc');
 			}
+			$sql = 'SELECT id_order FROM '._DB_PREFIX_.'orders WHERE id_cart='.(int)($klarnaorder['merchant_reference']['orderid1']);
+			$result = Db::getInstance()->getRow($sql);
 
 			$snippet = $klarnaorder['gui']['snippet'];
 			$this->context->smarty->assign(array(
-					'klarna_html' => $snippet
+					'klarna_html' => $snippet,
+					'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation((int)($result['id_order']))
 				));
 			unset($_SESSION['klarna_order_id']);  
 
@@ -66,7 +69,24 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 
 		}
 		$this->setTemplate('checkout-confirmation.tpl');
+	}
 
-
+	public function displayOrderConfirmation($id_order)
+	{
+		if (Validate::isUnsignedId($id_order))
+		{
+			$params = array();
+			$order = new Order($id_order);
+			$currency = new Currency($order->id_currency);
+			if (Validate::isLoadedObject($order))
+			{
+				$params['total_to_pay'] = $order->getOrdersTotalPaid();
+				$params['currency'] = $currency->sign;
+				$params['objOrder'] = $order;
+				$params['currencyObj'] = $currency;
+				return Hook::exec('displayOrderConfirmation', $params);
+			}
+		}
+		return false;
 	}
 }

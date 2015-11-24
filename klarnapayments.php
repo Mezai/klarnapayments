@@ -74,7 +74,6 @@ class KlarnaPayments extends PaymentModule
 
 		if (version_compare(phpversion(), '5.2.16', '<'))
 			$this->warning = $this->l('You need to have at least PHP version 5.2.16 in order to use Klarna');
-
 	}
 
 	/**

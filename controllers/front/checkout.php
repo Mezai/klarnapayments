@@ -40,16 +40,16 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			Tools::redirect('index.php');
 		try
 		{
-			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'), Klarna_Checkout_Connector::BASE_TEST_URL); 
+			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'),
+			 (Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL); 
 
 			
 
 			$checkout_id = $_SESSION['klarna_order_id'];
-			//var_dump($checkout_id);
 			$klarnaorder = new Klarna_Checkout_Order($connector, $checkout_id);  
 			$klarnaorder->fetch();
 
-			if ($klarnaorder['status'] == 'checkout_incomplete')
+			if ($klarnaorder['status'] == "checkout_incomplete")
 			{
 				Tools::redirect('order-opc');
 			}

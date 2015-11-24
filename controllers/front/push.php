@@ -55,12 +55,12 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		try {
 			session_start();
 			
-			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'), Klarna_Checkout_Connector::BASE_TEST_URL);
+			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'),
+			(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL);
 
-			@$orderID = $_GET['klarna_order_id'];
+			@$orderID = $_GET['klarna_order'];
 			$klarna_order = new Klarna_Checkout_Order($connector, $orderID);
 		 	$klarna_order->fetch();
-		 	//var_dump($klarna_order);
 
 		 	if ($klarna_order['status'] == "checkout_complete")
 		 	{
@@ -70,7 +70,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 		$amount = (float)($amount/100);
 		 		$shipping = $klarna_order['shipping_address'];
 		 		$billing = $klarna_order['billing_address'];
-		 		$reference = $klarna_order['reservation'];
+		 		$reservation_number = $klarna_order['reservation'];
 		 		$extra['transaction_id'] = $reference;
 		 		$id_customer = (int)Customer::customerExists($shipping['email'], true, false);
 		 		if ($id_customer > 0)
@@ -79,7 +79,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		 		} else {
 		 			
-                                        $customer = new Customer();
+                    $customer = new Customer();
 					$customer->firstname = $shipping['given_name'];
 					$customer->lastname =  $shipping['family_name'];
 					$customer->email = $shipping['email'];
@@ -204,12 +204,17 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		 		$cart = new Cart($cart->id);
 		 		$klarnapayments = new KlarnaPayments();
-		 		$this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), number_format($amount, 2, '.', ''), $this->module->displayName, $reference, $extra, NULL,false,$customer->secure_key);
-		 		$order = new Order($klarnapayments->currentOrder);
+		 		$this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), number_format($amount, 2, '.', ''), $this->module->displayName, $reservation_number, $extra, NULL,false,$customer->secure_key);
+		 		Db::getInstance()->Execute('
+				INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
+				VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($billing['given_name']).'\', \''.pSQL($billing['family_name']).'\', \''.pSQL($klarna_order['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');
+
+		 		$reference_ps = Order::getUniqReferenceOf((int)$this->module->currentOrder);
+
 		 		$update['status'] = 'created';  
 				$update['merchant_reference'] = array(  
 					'orderid1' => ''.$cart->id,
-					'orderid2' => ''
+					'orderid2' => ''.$reference_ps
 				);  
 				$klarna_order->update($update);  
 		 	}

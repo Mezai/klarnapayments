@@ -21,7 +21,7 @@ class KlarnaCheckoutPresta
 		$products = $cart->getProducts();
 		$connector = Klarna_Checkout_Connector::create(
     	$sharedSecret,
-		Klarna_Checkout_Connector::BASE_TEST_URL
+		(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL
 		);
 		//products
 		foreach ($products as $product) {
@@ -90,13 +90,14 @@ class KlarnaCheckoutPresta
 			$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
 			$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
 			$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
-			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order_id={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=checkout';
-			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order_id={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=push';
+			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=checkout';
+			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=push';
 
 			$terms_uri = $link_conditions;
 		    $create['purchase_country'] = $country;
 		    $create['purchase_currency'] = $currency;
 		    $create['locale'] = $locale;
+		    $create['gui']['layout'] = $this->module->checkMobile();
 		    $create['merchant']['id'] = (String)$eid;
 		    $create['merchant']['terms_uri'] = $terms_uri;
 		    $create['merchant']['checkout_uri'] = $checkout_uri;

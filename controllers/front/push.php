@@ -57,7 +57,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 			
 			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_SE'), Klarna_Checkout_Connector::BASE_TEST_URL);
 
-			@$orderID = $_GET['klarna_order'];
+			@$orderID = $_GET['klarna_order_id'];
 			$klarna_order = new Klarna_Checkout_Order($connector, $orderID);
 		 	$klarna_order->fetch();
 		 	//var_dump($klarna_order);
@@ -72,10 +72,14 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 		$billing = $klarna_order['billing_address'];
 		 		$reference = $klarna_order['reservation'];
 		 		$extra['transaction_id'] = $reference;
-		 		$id_customer = (int)(Customer::customerExists($shipping['email'], true, false));
-		 		if (!$id_customer)
+		 		$id_customer = (int)Customer::customerExists($shipping['email'], true, false);
+		 		if ($id_customer > 0)
 		 		{
-		 			$customer = new Customer();
+		 			$customer = new Customer($id_customer);
+
+		 		} else {
+		 			
+                                        $customer = new Customer();
 					$customer->firstname = $shipping['given_name'];
 					$customer->lastname =  $shipping['family_name'];
 					$customer->email = $shipping['email'];
@@ -86,10 +90,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$customer->optin = 0;
 					$customer->active = 1;
 					$customer->id_gender = 9;
-					$customer->add();
-
-		 		} else {
-		 			$customer = new Customer($id_customer);	
+					$customer->add();	
 		 		}
 
 		 		$delivery_address_id = 0;
@@ -219,4 +220,4 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 
 	}
-}
+}	

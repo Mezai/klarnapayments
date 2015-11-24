@@ -10,9 +10,10 @@ class KlarnaCheckoutPresta
 
 
 	public function checkout($cart, $country, $currency, $locale)
-	{	
+	{
 
 		session_start();
+
 		$order = null;
 		$sharedSecret = KlarnaConfigHandler::getKlarnaSecret($country);
 		$eid = KlarnaConfigHandler::getMerchantID($country);
@@ -89,9 +90,8 @@ class KlarnaCheckoutPresta
 			$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
 			$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
 			$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
-			$confirmation_uri = $this->context->link->getModuleLink('klarnapayments', 'checkout', array(), $is_ssl);
-			$pushPage = $this->context->link->getModuleLink('klarnapayments', 'push', array('sid' => '123'));
-			$pushPage .= '&klarna_order={checkout.order.uri}';
+			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order_id={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=checkout';
+			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order_id={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=push';
 
 			$terms_uri = $link_conditions;
 		    $create['purchase_country'] = $country;
@@ -125,4 +125,4 @@ class KlarnaCheckoutPresta
 		}
 	}
 	
-}
+}			

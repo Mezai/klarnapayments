@@ -100,7 +100,7 @@ class KlarnaInstall extends KlarnaPayments
 		if (!$invoice_fee->id)
 		{
 			$invoice_fee = new Product();
-			//$invoice_fee->name = array();
+			$invoice_fee->name = array();
 			foreach (Language::getLanguages() as $language)
 			{
 

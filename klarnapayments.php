@@ -1430,7 +1430,6 @@ class KlarnaPayments extends PaymentModule
 		                    'label' => $this->l('Checkout description'),
 		                    'desc' => $this->l('Displayed for the customer on success page'),
 		                    'tab' => 'general',
-                                     'class' => 'fixed-width-lg',   
 		                    'name' => 'KLARNA_CHECKOUT_SHIPPING_DETAILS',
 		                    'maxchar' => 70
 		                ),

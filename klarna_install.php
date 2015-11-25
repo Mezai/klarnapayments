@@ -154,6 +154,36 @@ class KlarnaInstall extends KlarnaPayments
 
 	public function createStatus()
 	{
+		if (!Configuration::get('KLARNA_OS_CHECKOUT'))
+		{
+			$order_state_checkout = new OrderState();
+			$order_state_checkout->name = array();
+
+			foreach (Language::getLanguages() as $language) {
+				
+				$order_state_checkout->name[$language['id_lang']] = 'Klarna checkout';
+			}
+
+			$order_state_checkout->send_email = false;
+			$order_state_checkout->color = '#0072cc';
+			$order_state_checkout->hidden = false;
+			$order_state_checkout->delivery = false;
+			$order_state_checkout->logoable = true;
+			$order_state_checkout->invoice = true;
+			$order_state_checkout->add();
+
+			$source = _PS_MODULE_DIR_.'klarnapayments/views/img/klarnastate.gif';
+			$destination = _PS_IMG_DIR_.'os/'.(int)$order_state_authorized->id.'.gif';
+
+			if (version_compare(_PS_VERSION_, '1.5.5', '<'))
+
+				copy($source, $destination);
+			else 
+				Tools::copy($source, $destination);
+
+			Configuration::updateValue('KLARNA_OS_CHECKOUT', (int)$order_state_checkout->id);
+		}
+
 		if (!Configuration::get('KLARNA_OS_PENDING'))
 		{
 			$order_state_pending = new OrderState();

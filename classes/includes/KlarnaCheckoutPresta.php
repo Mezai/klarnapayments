@@ -27,10 +27,16 @@ class KlarnaCheckoutPresta
 			$price = Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
 			$price = (int)($price * 100);
 
+			$product_img = $this->context->link->getImageLink($product["link_rewrite"], $product['id_image']);
+			$product_uri = $this->context->link->getProductLink(new Product($product['id_product']));
+
 			$checkoutcart[] = array(
 		   'reference' => $product['reference'],
 		   'name' => $product['name'],
 		   'quantity' => (int)($product['cart_quantity']),
+		   'ean' => $product['ean13'],
+		   'uri' => $product_uri,
+		   'image_uri' => $product_img,
 		   'unit_price' => $price,
 		   'discount_rate' => 0,
 		   'tax_rate' => (int)$product['rate'] * 100
@@ -89,8 +95,8 @@ class KlarnaCheckoutPresta
 			$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
 			$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
 			$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
-			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=checkout';
-			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&fc=module&module=klarnapayments&controller=push';
+			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.Country::getIsoById($this->context->country->id).'&fc=module&module=klarnapayments&controller=checkout';
+			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.Country::getIsoById($this->context->country->id).'&fc=module&module=klarnapayments&controller=push';
 			$terms_uri = $link_conditions;
 			$klarnapayments = new KlarnaPayments();
 

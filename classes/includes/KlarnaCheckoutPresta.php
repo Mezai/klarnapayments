@@ -98,12 +98,20 @@ class KlarnaCheckoutPresta
 		    $create['purchase_currency'] = $currency;
 		    $create['locale'] = $locale;
 		    $create['gui']['layout'] = $klarnapayments->checkMobile();
-		    $create['options']['color_button'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON');
-		    $create['options']['color_button_text'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT');
-		    $create['options']['color_checkbox'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX');
-		    $create['options']['color_checkbox_checkmark'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK');
-		    $create['options']['color_header'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER'); 
-		    $create['options']['color_link'] = (is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_LINK'))) ? '' : Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
+		    
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON')))
+		    $create['options']['color_button'] = Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON');
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT')))
+		    $create['options']['color_button_text'] = Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT');
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX')))
+		    $create['options']['color_checkbox'] = Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX');
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK')))
+		    $create['options']['color_checkbox_checkmark'] = Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK');
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER')))
+		    $create['options']['color_header'] = Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER');
+		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_LINK')))
+		    $create['options']['color_link'] = Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
+		    
 		    $create['merchant']['id'] = (String)$eid;
 		    $create['merchant']['terms_uri'] = $terms_uri;
 		    $create['merchant']['checkout_uri'] = $checkout_uri;

@@ -41,7 +41,7 @@ class KlarnaPayments extends PaymentModule
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
-			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_DESCRIPTION'),
+			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -1430,7 +1430,7 @@ class KlarnaPayments extends PaymentModule
 		                    'label' => $this->l('Checkout description'),
 		                    'desc' => $this->l('Displayed for the customer on success page'),
 		                    'tab' => 'general',
-		                    'name' => 'KLARNA_CHECKOUT_DESCRIPTION',
+		                    'name' => 'KLARNA_CHECKOUT_SHIPPING_DETAILS',
 		                    'maxchar' => 70
 		                ),
 				array(

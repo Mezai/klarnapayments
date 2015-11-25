@@ -99,6 +99,9 @@ class KlarnaCheckoutPresta
 		    $create['locale'] = $locale;
 		    $create['gui']['layout'] = $klarnapayments->checkMobile();
 		    
+		    if (Tools::strlen(Configuration::get('KLARNA_CHECKOUT_SHIPPING_DETAILS')) > 0)
+		    $create['options']['shipping_details'] = Configuration::get('KLARNA_CHECKOUT_SHIPPING_DETAILS');
+		    
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON')))
 		    $create['options']['color_button'] = Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT')))

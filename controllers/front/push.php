@@ -204,7 +204,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		 		$cart = new Cart($cart->id);
 		 		$klarnapayments = new KlarnaPayments();
-		 		$this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), number_format($amount, 2, '.', ''), $this->module->displayName, $reservation_number, $extra, NULL,false,$customer->secure_key);
+		 		$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_CHECKOUT'), number_format($amount, 2, '.', ''), $this->module->displayName, $reservation_number, $extra, NULL,false,$customer->secure_key);
 		 		Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
 				VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($billing['given_name']).'\', \''.pSQL($billing['family_name']).'\', \''.pSQL($klarna_order['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');

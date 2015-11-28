@@ -109,7 +109,7 @@ $(document).ready(function(){
 
 	$('.cart_navigation').remove();
 
-	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete,.delivery_option_radio', function(){
+	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete,.delivery_option_radio','input[name=submitAddDiscount]', function(){
 	 	window._klarnaCheckout(function (api) {
    			api.suspend();
    			api.resume();

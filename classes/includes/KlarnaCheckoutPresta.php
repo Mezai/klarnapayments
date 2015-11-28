@@ -66,6 +66,27 @@ class KlarnaCheckoutPresta
 		   'tax_rate' => (int)$shipping_tax * 100
 		   ); 	
 
+		}
+
+		$discounts = $this->context->cart->getCartRules();
+
+		if (!empty($discounts) && count($discounts) > 0)
+		{
+			foreach ($discounts as $discount) {
+				$tax_discount = (int)round((($discount['value_real'] / $discount['value_tax_exc']) - 1.0) *100);
+				$price = $discount['value_real'];
+				$price = Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_);
+
+				$checkoutcart[] = array(
+				'type' => 'discount',
+				'reference' => $discount['name'],
+				'name' => $discount['name'],
+				'quantity' => 1,
+				'unit_price' => -($price * 100),
+				'tax_rate' => $tax_discount * 100	
+
+				);
+			}
 		}	
 
 		if (array_key_exists('klarna_order_id', $_SESSION)) {

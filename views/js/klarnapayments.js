@@ -24,11 +24,77 @@
  */
  
 $(document).ready(function(){
-	
+
+	$('#klarna_invoice_payment').validate({
+		onkeyup: false,
+		onfocusout: false,
+		errorElement: "div",
+		errorPlacement: function(error, element) {
+			error.appendTo("div#error_invoice");
+		},
+
+		rules: {
+            klarna_pno: {
+                required: true,
+                minlength: 5
+            },
+            klarna_de_constent : {
+            	required: true
+			}
+        },
+        messages: {
+        	klarna_pno: 
+          	{
+            required: this.warningPno
+          	},
+          	klarna_de_constent: 
+          	{
+            required: this.warningConsent
+          	}
+        	
+        },
+
+    });
+
+     $("#klarna_invoice_submit").on('click', function() {
+         $("#klarna_invoice_payment").valid();  
+     });
 
 
-	function showErrorMessage(el) {
-		var $el = $(el);
-		
-	}
+
+     $('#klarna_part_payment').validate({
+     	onkeyup: false,
+		onfocusout: false,
+		errorElement: "div",
+		errorPlacement: function(error, element) {
+			error.appendTo("div#error_part");
+		},
+		rules: {
+            klarna_pno: {
+                required: true,
+                minlength: 5
+            },
+            klarna_de_constent : {
+            	required: true
+			}
+        },
+        messages: {
+        	klarna_pno: 
+          	{
+            required: this.warningPno
+          	},
+          	klarna_de_constent: 
+          	{
+            required: this.warningConsent
+          	}
+        	
+        },
+
+    });
+
+     $("#klarna_part_submit").on('click', function() {
+         $("#klarna_part_payment").valid();  
+     });
+
+
 });

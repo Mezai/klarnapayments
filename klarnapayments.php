@@ -221,9 +221,14 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayHeader()
 	{
+		$this->context->controller->addJquery('1.9.1');
+		$this->context->controller->addJqueryPlugin('validate');
 		$this->context->controller->addCSS($this->_path.'/views/css/klarnapayments.css', 'all');
 		$this->context->controller->addJS($this->_path.'views/js/klarnapayments.js');
 		$this->context->controller->addJS($this->_path.'views/js/descriptionloader.js');
+		$this->context->controller->addJS($this->_path.'views/js/klarnacheckout.js');
+		$this->context->controller->addCSS($this->_path.'views/css/klarnacheckout.css');
+		$this->context->controller->addJS($this->_path.'views/js/additional-methods.min.js');
 
 		return '<script src="https://cdn.klarna.com/public/kitt/core/v1.0/js/klarna.min.js"></script>
 				<script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>';

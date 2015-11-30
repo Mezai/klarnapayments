@@ -68,8 +68,8 @@
         					{/if}	
 									<label for="klarna_pno" class="required" style="display:block">{l s='Social security number:' mod='klarnapayments'}</label>
 										<input type="text" class="klarna_pno_input" autocomplete="off" name="klarna_pno" pattern="{$klarna_pattern|escape:'htmlall':'UTF-8'}" placeholder="{$klarna_placeholder|escape:'htmlall':'UTF-8'}" id="klarna_pno_invoice" maxlength="11" required/>
-										<div class="klarna_error_invoice"></div>
-										<button type="submit" class="klarna-submit-button">{l s='Submit Payment' mod='klarnapayments'}</button>
+										<div id="error_invoice"></div>
+										<button type="submit" id="klarna_invoice_submit" class="klarna-submit-button">{l s='Submit Payment' mod='klarnapayments'}</button>
 									</div>
 						
 								
@@ -143,10 +143,11 @@
         							{/if}	
 									<label for="klarna_pno" class="required" style="display:block">{l s='Social security number:' mod='klarnapayments'}</label>
 										<input type="text" class="klarna_pno_input" autocomplete="off" name="klarna_pno" pattern="{$klarna_pattern|escape:'htmlall':'UTF-8'}" placeholder="{$klarna_placeholder|escape:'htmlall':'UTF-8'}" id="klarna_pno_part_payment" maxlength="11" required/>						
-      									<div class="klarna_error_part"></div>
+      									<div id="error_part"></div>
       								
-      								<button type="submit" class="klarna-submit-button">{l s='Submit Payment' mod='klarnapayments'}</button>
+      								<button type="submit" id="klarna_part_submit" class="klarna-submit-button">{l s='Submit Payment' mod='klarnapayments'}</button>
       								</div>
+
       							</form>
   							</div>
 						</div>
@@ -171,7 +172,8 @@
 
 <script type="text/javascript">
 // <![CDATA[
-var  warningPno = "{l s='Please check your social security number' mod='klarnapayments'}";
+var warningPno = "{l s='Please check your social security number' mod='klarnapayments'}";
+var warningConsent = "{l s='Please agree to the consent'}";
 //]]>
 </script>
 {/if}

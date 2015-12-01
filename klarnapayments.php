@@ -114,21 +114,22 @@ class KlarnaPayments extends PaymentModule
 	{
 		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
 			return;
-		$this->context->controller->addJS($this->_path.'views/js/klarnacheckout.js');
-		$this->context->controller->addCSS($this->_path.'views/css/klarnacheckout.css');
+		
 		$cart = $this->context->cart;
 		$country = Country::getIsoById($this->context->country->id);
 		$currency = $this->context->currency->iso_code;
 		$locale = $this->context->language->language_code;
-		$checkout = new KlarnaCheckoutPresta();
+		if ($this->context->cart->nbProducts() > 0)
+		{
+			$checkout = new KlarnaCheckoutPresta();
+			$snippet = $checkout->checkout($cart, $country, $currency, $locale);
 
-		$snippet = $checkout->checkout($cart, $country, $currency, $locale);
+			$this->context->smarty->assign(array(
+				'snippet' => $snippet,
+				));
 
-		$this->context->smarty->assign(array(
-			'snippet' => $snippet,
-			));
-
-		return $this->display(__FILE__, 'klarnacheckout.tpl');
+			return $this->display(__FILE__, 'klarnacheckout.tpl');
+		}
 	}
 
 	/**
@@ -229,9 +230,8 @@ class KlarnaPayments extends PaymentModule
 		$this->context->controller->addJS($this->_path.'views/js/klarnacheckout.js');
 		$this->context->controller->addCSS($this->_path.'views/css/klarnacheckout.css');
 		$this->context->controller->addJS($this->_path.'views/js/additional-methods.min.js');
-
-		return '<script src="https://cdn.klarna.com/public/kitt/core/v1.0/js/klarna.min.js"></script>
-				<script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>';
+		$this->context->controller->addJS('https://cdn.klarna.com/public/kitt/core/v1.0/js/klarna.min.js');
+		$this->context->controller->addJS('https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js');
 	}
 
 

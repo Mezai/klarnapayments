@@ -28,9 +28,9 @@
 <h1>{l s='Payment Error' mod='klarnapayments'}</h1>
 
 <p>
-{l s='There was an error in your transaction' mod='klarnapayments'}
+{l s='There was an error in your transaction' mod='klarnapayments'}<br /><br />
 
-<strong>{$klarna_error|escape:'htmlall':'UTF-8'}</strong>
+<strong>{$klarna_error|unescape:"entity"}</strong>
 
 <br/><br/>{l s='Please' mod='klarnapayments'} <a href="{$link->getPageLink('order', true)|escape:'htmlall':'UTF-8'}">{l s='click here' mod='klarnapayments'}</a> {l s='to return to checkout page' mod='klarnapayments'}.
 

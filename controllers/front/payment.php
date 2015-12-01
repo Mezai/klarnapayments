@@ -38,10 +38,12 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 		$this->display_column_left = false;
 		$this->display_column_right = false;
 		parent::initContent();
+		$this->context->smarty->assign('klarna_error', $this->error_type);
 		$klarna_locale = KlarnaEncoding::get(Country::getIsoById($this->context->country->id));
 		$enc = KlarnaEncoding::getRegexp($klarna_locale);
 		if (!preg_match($enc, Tools::getValue('klarna_pno')))
 		{
+			$this->error_type = $this->module->l('The social security number provided was not correct');
 			$location = $this->context->link->getModuleLink('klarnapayments', 'error');
 			Tools::redirect($location);
 
@@ -130,11 +132,15 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 
 			}
 			} catch (Exception $e) {
-				if ($invoiceadd)
+				if (isset($invoiceadd) && ($invoiceadd === true))
 				$cart->deleteProduct($invoicefee);
 
+				$error_msg = $e->getMessage();
+
+				$this->error_type = $error_msg;
+
 				Logger::addLog('Klarna module: transaction failed with message: '.$e->getMessage().' and code :'.$e->getCode());
-				Tools::redirect($this->context->link->getModuleLink('klarnapayments', 'error'));
+				$this->setTemplate('error.tpl');
 
 			}
 		}

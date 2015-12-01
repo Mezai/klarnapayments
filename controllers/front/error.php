@@ -34,9 +34,6 @@ class KlarnaPaymentsErrorModuleFrontController extends ModuleFrontController
 
 		parent::initContent();
 
-		$this->context->smarty->assign(array(
-			'klarna_error' => $cookie->klarna_error
-			));
 		$this->setTemplate('error.tpl');
 
 	}

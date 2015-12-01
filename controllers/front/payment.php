@@ -50,14 +50,14 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 		else
 		{
 
-		$this->validation();
+		$this->postProcess();
 
 		}
 	}
 
 
 
-		public function validation()
+		public function postProcess()
 		{
 			$cart = $this->context->cart;
 			$currency = new Currency((int)$cart->id_currency);

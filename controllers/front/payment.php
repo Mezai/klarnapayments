@@ -44,8 +44,7 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 		if (!preg_match($enc, Tools::getValue('klarna_pno')))
 		{
 			$this->error_type = $this->module->l('The social security number provided was not correct');
-			$location = $this->context->link->getModuleLink('klarnapayments', 'error');
-			Tools::redirect($location);
+			$this->setTemplate('error.tpl');
 
 		}
 		else

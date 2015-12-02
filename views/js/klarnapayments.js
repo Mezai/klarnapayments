@@ -23,78 +23,112 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
  
-$(document).ready(function(){
+$(document).ready(function () {
+	var patternPno = new RegExp($('#klarna_pno_invoice').attr('pattern'));
 
-	$('#klarna_invoice_payment').validate({
-		onkeyup: false,
-		onfocusout: false,
-		errorElement: "div",
-		errorPlacement: function(error, element) {
-			error.appendTo("div#error_invoice");
+	$.validator.setDefaults({
+		errorClass: 'klarna_error',
+		errorElement: 'div',
+		focusInvalid: false,
+		highlight: function(element) {
+			$(element).closest('.control-group').addClass('klarna_error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.control-group').removeClass('klarna_error');
+		},
+		eachValidField : function() {
+					$(this).closest('.control-group').removeClass('klarna_error').addClass('success');
+				},
+		eachInvalidField : function() {
+				$(this).closest('.control-group').removeClass('success').addClass('klarna_error');
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+
+		});
+
+		$('#klarna_invoice_payment').validate({
+			errorLabelContainer: "#error_invoice",
+			rules: {
+				klarna_pno: {
+					required: {
+					depends: function (element) {
+						return ($("#klarna_payment_invoice_1").is(":checked") || $("#klarna_payment_invoice_2").is(":checked"));
+						}
+					},
+					pattern: patternPno
+				},
+				klarna_de_constent: {
+					required: true
+				},
+				klarna_payment_gender: {
+					required: true
+				},
+				klarna_payment_type: {
+					required:{ 
+					depends: function(element) {
+						return ($('#klarna_pno_invoice').val() == '');
+					}
+
+				}
+			}
+
+		},
+		messages: {
+			klarna_pno: {
+				required: warningPno,
+				pattern: patternValid
+			},
+			klarna_de_constent: {
+				required: warningConsent
+			},
+			klarna_payment_type: {
+				required: choosePayTypeKlarna
+			}
+
 		},
 
-		rules: {
-            klarna_pno: {
-                required: true,
-                minlength: 5
-            },
-            klarna_de_constent : {
-            	required: true
-			}
-        },
-        messages: {
-        	klarna_pno: 
-          	{
-            required: this.warningPno
-          	},
-          	klarna_de_constent: 
-          	{
-            required: this.warningConsent
-          	}
-        	
-        },
+	});
 
-    });
+	$('#klarna_part_payment').validate({
+			errorLabelContainer: "#error_part",
+			rules: {
+				klarna_payment_type: {
+					required:{ 
+					depends: function(element) {
+						return ($('#klarna_pno_part_payment').val() == '');
+						}
+					}
+				},
+				klarna_pno : {
+					required: {
+					depends: function(element) {
+						return ($("#klarna_payment_part_1").is(":checked") || $("#klarna_payment_part_2").is(":checked") || $("#klarna_payment_part_3").is(":checked") || $("#klarna_payment_part_4").is(":checked"));
+						}
+					},
+					pattern: patternPno
+				},
+				klarna_payment_gender: {
+					required: true
+				},
+				klarna_de_constent: {
+					required: true
+				}
 
-     $("#klarna_invoice_submit").on('click', function() {
-         $("#klarna_invoice_payment").valid();  
-     });
+			},
+			messages: {
+				klarna_pno: {
+					required: warningPno,
+					pattern: patternValid
+				},
+				klarna_payment_type: {
+					required: choosePayTypeKlarna
+				},
+				klarna_de_constent: {
+					required: warningConsent
+					}
+			},
 
-
-
-     $('#klarna_part_payment').validate({
-     	onkeyup: false,
-		onfocusout: false,
-		errorElement: "div",
-		errorPlacement: function(error, element) {
-			error.appendTo("div#error_part");
-		},
-		rules: {
-            klarna_pno: {
-                required: true,
-                minlength: 5
-            },
-            klarna_de_constent : {
-            	required: true
-			}
-        },
-        messages: {
-        	klarna_pno: 
-          	{
-            required: this.warningPno
-          	},
-          	klarna_de_constent: 
-          	{
-            required: this.warningConsent
-          	}
-        	
-        },
-
-    });
-
-     $("#klarna_part_submit").on('click', function() {
-         $("#klarna_part_payment").valid();  
-     });
-
-
+	});  
 });

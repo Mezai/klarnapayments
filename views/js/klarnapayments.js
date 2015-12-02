@@ -30,18 +30,6 @@ $(document).ready(function () {
 		errorClass: 'klarna_error',
 		errorElement: 'div',
 		focusInvalid: false,
-		highlight: function(element) {
-			$(element).closest('.control-group').addClass('klarna_error');
-		},
-		unhighlight: function(element) {
-			$(element).closest('.control-group').removeClass('klarna_error');
-		},
-		eachValidField : function() {
-					$(this).closest('.control-group').removeClass('klarna_error').addClass('success');
-				},
-		eachInvalidField : function() {
-				$(this).closest('.control-group').removeClass('success').addClass('klarna_error');
-		},
 		submitHandler: function(form) {
 			form.submit();
 		}
@@ -50,6 +38,15 @@ $(document).ready(function () {
 
 		$('#klarna_invoice_payment').validate({
 			errorLabelContainer: "#error_invoice",
+			onfocusout: function (element) {
+        $(element).valid();
+    	},
+			showErrors: function(errorMap, errorList){
+				if (errorList.length)
+				{
+					 	$('#error_invoice').addClass('klarna_error').html(errorList[0]['message']);
+				}
+			},
 			rules: {
 				klarna_pno: {
 					required: {
@@ -66,13 +63,8 @@ $(document).ready(function () {
 					required: true
 				},
 				klarna_payment_type: {
-					required:{ 
-					depends: function(element) {
-						return ($('#klarna_pno_invoice').val() == '');
-					}
-
+					required: true
 				}
-			}
 
 		},
 		messages: {
@@ -93,13 +85,18 @@ $(document).ready(function () {
 
 	$('#klarna_part_payment').validate({
 			errorLabelContainer: "#error_part",
+			onfocusout: function (element) {
+        $(element).valid();
+    	},
+			showErrors: function(errorMap, errorList){
+				if (errorList.length)
+				{
+					 	$('#error_part').addClass('klarna_error').html(errorList[0]['message']);
+				}
+			},
 			rules: {
 				klarna_payment_type: {
-					required:{ 
-					depends: function(element) {
-						return ($('#klarna_pno_part_payment').val() == '');
-						}
-					}
+					required: true
 				},
 				klarna_pno : {
 					required: {

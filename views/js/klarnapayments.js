@@ -69,14 +69,14 @@ $(document).ready(function () {
 		},
 		messages: {
 			klarna_pno: {
-				required: warningPno,
-				pattern: patternValid
+				required: (typeof warningPno !== 'undefined') ? warningPno : '',
+				pattern: (typeof patternValid !== 'undefined') ? patternValid : ''
 			},
 			klarna_de_constent: {
-				required: warningConsent
+				required: (typeof warningConsent !== 'undefined') ? warningConsent : ''
 			},
 			klarna_payment_type: {
-				required: choosePayTypeKlarna
+				required: (typeof choosePayTypeKlarna !== 'undefined') ? choosePayTypeKlarna : ''
 			}
 
 		},
@@ -116,14 +116,14 @@ $(document).ready(function () {
 			},
 			messages: {
 				klarna_pno: {
-					required: warningPno,
-					pattern: patternValid
+					required: (typeof warningPno !== 'undefined') ? warningPno : '',
+					pattern: (typeof patternValid !== 'undefined') ? patternValid : ''
 				},
 				klarna_payment_type: {
-					required: choosePayTypeKlarna
+					required: (typeof choosePayTypeKlarna !== 'undefined') ? choosePayTypeKlarna : ''
 				},
 				klarna_de_constent: {
-					required: warningConsent
+					required: (typeof warningConsent !== 'undefined') ? warningConsent : ''
 					}
 			},
 

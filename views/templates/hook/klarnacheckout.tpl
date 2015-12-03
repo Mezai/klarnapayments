@@ -26,7 +26,7 @@
 <div class="klarnaKcoChoosePayment">
   <div id="klarnaPaymentsKco" class="KlarnaCheckoutPaymentOption current">
     <h3>{l s='Klarna checkout' mod='klarnapayments'}</h3>
-      <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/sv_se/checkout/short-blue.png?width=276&amp;eid=1736" alt="Klarna Checkout">
+      <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/sv_se/checkout/short-blue.png?width=276&amp;eid={$klarna_eid|escape:'htmlall':'UTF-8'}" alt="Klarna Checkout">
   </div>
   <div id="klarnaCheckoutNormalPayment" class="klarnaCheckoutPaymentOption">
     <h3>{l s='Other payment options' mod='klarnapayments'}</h3><ul></ul></div>

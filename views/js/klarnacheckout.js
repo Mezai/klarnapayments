@@ -102,4 +102,12 @@ $(document).ready(function(){
 		});
 
 	});
+
+	$(document).on('change', '.klarna_delivery_option_radio', function(){
+		window._klarnaCheckout(function (api) {
+   			api.suspend();
+   			api.resume();
+		});
+
+	});
 });

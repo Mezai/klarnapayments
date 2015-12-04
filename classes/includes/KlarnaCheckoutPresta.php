@@ -46,26 +46,28 @@ class KlarnaCheckoutPresta
 		}
 
 		//shipping
-		$carrier = new Carrier((int)$cart->id_carrier);
-		$shipmentfee = $cart->getOrderShippingCost();
-		$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+		if (!$cart->isVirtualCart())
+		{
+			$carrier = new Carrier((int)$cart->id_carrier);
+			$shipmentfee = $cart->getOrderShippingCost();
+			$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
-		$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
+			$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
 
 
-		$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
-		$shipping_price = (int)($shipping_price * 100);
+			$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
+			$shipping_price = (int)($shipping_price * 100);
 
-		$checkoutcart[] = array(
-			'type' => 'shipping_fee',	
-			'reference' => (String)$carrier->id_reference,
-			'name' => (String)$carrier->name,
-			'quantity' => 1,
-			'unit_price' => $shipping_price,
-			'discount_rate' => 0,
-			'tax_rate' => (int)$shipping_tax * 100
-			);
-
+			$checkoutcart[] = array(
+				'type' => 'shipping_fee',	
+				'reference' => (String)$carrier->id_reference,
+				'name' => (String)$carrier->name,
+				'quantity' => 1,
+				'unit_price' => $shipping_price,
+				'discount_rate' => 0,
+				'tax_rate' => (int)$shipping_tax * 100
+				);
+		}
 		$discounts = $this->context->cart->getCartRules();
 		if (!empty($discounts) && count($discounts) > 0)
 		{

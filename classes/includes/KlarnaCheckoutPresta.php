@@ -44,15 +44,14 @@ class KlarnaCheckoutPresta
 		}
 
 		//shipping
+		if (!$cart->isVirtualCart())
+		{	
 		$carrier = new Carrier((int)$cart->id_carrier);
 		$shipmentfee = $cart->getOrderShippingCost();
 		$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
 		$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
 
-
-		if ($shipping > 0)
-		{
 			$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
 			$shipping_price = (int)($shipping_price * 100);
 

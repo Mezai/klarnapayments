@@ -119,14 +119,24 @@ class KlarnaPayments extends PaymentModule
 		$country = Country::getIsoById($this->context->country->id);
 		$currency = $this->context->currency->iso_code;
 		$locale = $this->context->language->language_code;
+		
 		if ($this->context->cart->nbProducts() > 0)
 		{
 			$checkout = new KlarnaCheckoutPresta();
 			$snippet = $checkout->checkout($cart, $country, $currency, $locale);
 
 			$this->context->smarty->assign(array(
+				'klarna_eid' => KlarnaConfigHandler::getMerchantID($country),
 				'snippet' => $snippet,
+				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+				'conditions' => (int)Configuration::get('PS_CONDITIONS'),
+				'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
+				'giftAllowed' => (int)Configuration::get('PS_GIFT_WRAPPING'),
+				'recyclablePackAllowed' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
+				'checkedTOS' => (int)$this->context->cookie->checkedTOS,
 				));
+
+
 
 			return $this->display(__FILE__, 'klarnacheckout.tpl');
 		}

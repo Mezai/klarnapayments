@@ -13,11 +13,13 @@ class KlarnaCheckoutPresta
 	{
 		
 		session_start();
+
 		$order = null;
-		$sharedSecret = KlarnaConfigHandler::getKlarnaSecret($country);
-		$eid = KlarnaConfigHandler::getMerchantID($country);
+		$sharedSecret = (String)KlarnaConfigHandler::getKlarnaSecret($country);
+		$eid = (String)KlarnaConfigHandler::getMerchantID($country);
 
 		$products = $cart->getProducts();
+				
 		$connector = Klarna_Checkout_Connector::create(
     	$sharedSecret,
 		(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL
@@ -26,10 +28,10 @@ class KlarnaCheckoutPresta
 		foreach ($products as $product) {
 			$price = Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
 			$price = (int)($price * 100);
-
+			
 			$product_img = $this->context->link->getImageLink($product["link_rewrite"], $product['id_image']);
 			$product_uri = $this->context->link->getProductLink(new Product($product['id_product']));
-
+			
 			$checkoutcart[] = array(
 		   'reference' => $product['reference'],
 		   'name' => $product['name'],
@@ -44,38 +46,34 @@ class KlarnaCheckoutPresta
 		}
 
 		//shipping
-		if (!$cart->isVirtualCart())
-		{	
 		$carrier = new Carrier((int)$cart->id_carrier);
 		$shipmentfee = $cart->getOrderShippingCost();
 		$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
 		$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
 
-			$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
-			$shipping_price = (int)($shipping_price * 100);
 
-			$checkoutcart[] = array(
+		$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
+		$shipping_price = (int)($shipping_price * 100);
+
+		$checkoutcart[] = array(
 			'type' => 'shipping_fee',	
-		   'reference' => (String)$carrier->id_reference,
-		   'name' => (String)$carrier->name,
-		   'quantity' => 1,
-		   'unit_price' => $shipping_price,
-		   'discount_rate' => 0,
-		   'tax_rate' => (int)$shipping_tax * 100
-		   ); 	
-
-		}
+			'reference' => (String)$carrier->id_reference,
+			'name' => (String)$carrier->name,
+			'quantity' => 1,
+			'unit_price' => $shipping_price,
+			'discount_rate' => 0,
+			'tax_rate' => (int)$shipping_tax * 100
+			);
 
 		$discounts = $this->context->cart->getCartRules();
-
 		if (!empty($discounts) && count($discounts) > 0)
 		{
 			foreach ($discounts as $discount) {
 				$tax_discount = (int)round((($discount['value_real'] / $discount['value_tax_exc']) - 1.0) *100);
+				
 				$price = $discount['value_real'];
 				$price = Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_);
-
 				$checkoutcart[] = array(
 				'type' => 'discount',
 				'reference' => $discount['name'],
@@ -87,6 +85,8 @@ class KlarnaCheckoutPresta
 				);
 			}
 		}	
+
+
 
 		if (array_key_exists('klarna_order_id', $_SESSION)) {
 		    // Resume session
@@ -141,7 +141,7 @@ class KlarnaCheckoutPresta
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_LINK')))
 		    $create['options']['color_link'] = Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
 		    
-		    $create['merchant']['id'] = (String)$eid;
+		    $create['merchant']['id'] = $eid;
 		    $create['merchant']['terms_uri'] = $terms_uri;
 		    $create['merchant']['checkout_uri'] = $checkout_uri;
 		    $create['merchant']['confirmation_uri'] = $confirmation_uri;

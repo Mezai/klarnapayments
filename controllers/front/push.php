@@ -54,11 +54,11 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		try {
 			session_start();
-			$country = Tools::strtoupper($_GET['country']);
+			$country = Tools::strtoupper(Tools::getValue('country'));
 			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_'.$country.''),
 			(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL);
 
-			@$orderID = $_GET['klarna_order'];
+			@$orderID = Tools::getValue('klarna_order');
 			$klarna_order = new Klarna_Checkout_Order($connector, $orderID);
 		 	$klarna_order->fetch();
 
@@ -127,7 +127,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$address = new Address();
 					$address->firstname = $billing['given_name'];
 					$address->lastname = $billing['family_name'];
-					if(strlen($billing['care_of'])>0)
+					if(Tools::strlen($billing['care_of'])>0)
 					{
 						$address->address1 = $billing['care_of'];
 						$address->address2 = $billing['street_address'];
@@ -155,7 +155,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$address->firstname = $shipping['given_name'];
 					$address->lastname = $shipping['family_name'];
 					
-					if(strlen($shipping['care_of'])>0)
+					if(Tools::strlen($shipping['care_of'])>0)
 					{
 						$address->address1 = $shipping['care_of'];
 						$address->address2 = $shipping['street_address'];

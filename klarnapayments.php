@@ -41,7 +41,7 @@ class KlarnaPayments extends PaymentModule
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
-			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS'),
+			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -128,6 +128,7 @@ class KlarnaPayments extends PaymentModule
 			$this->context->smarty->assign(array(
 				'klarna_eid' => KlarnaConfigHandler::getMerchantID($country),
 				'snippet' => $snippet,
+				'klarna_one_page' => (int)Configuration::get('KLARNA_CHECKOUT_ONEPAGE'),
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 				'conditions' => (int)Configuration::get('PS_CONDITIONS'),
 				'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
@@ -1448,6 +1449,25 @@ class KlarnaPayments extends PaymentModule
 		                    'name' => 'KLARNA_CHECKOUT_SHIPPING_DETAILS',
 		                    'maxchar' => 70
 		                ),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('One page checkout'),
+					'desc' => $this->l('One page checkout for Klarna checkout'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_ONEPAGE',
+					'values' => array(
+						array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('No')
+						)
+					),
+				),
 				array(
 					'type' => 'color',
 					'label' => $this->l('Color button'),

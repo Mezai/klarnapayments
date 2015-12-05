@@ -30,6 +30,15 @@ $(document).ready(function(){
 		togglePresta(false);
 		toggleKlarnaCheckout(true);
 		setCurrent('#klarnaPaymentsKco');
+
+		if (typeof klarnaOnePage !== 'undefined')
+		{
+			if(klarnaOnePage === "1")
+			{
+				$('.klarnaKcoChoosePayment').detach();
+			}
+
+		}
 	}
 	function showPrestashop()
 	{
@@ -53,6 +62,7 @@ $(document).ready(function(){
 
 		} else {
 			$('#center_column .opc-main-block').show();
+			
 		}
 	}
 
@@ -61,8 +71,11 @@ $(document).ready(function(){
 
 		if (!show) {
 		$('.klarnapaymentsKCO').hide();
+		$('.klarnaCheckoutCarrier').hide();
+
 		} else {
-		$('.klarnapaymentsKCO').show();	
+		$('.klarnapaymentsKCO').show();
+		$('.klarnaCheckoutCarrier').show();	
 		}
 	}
 
@@ -95,7 +108,7 @@ $(document).ready(function(){
 
 	init();	
 
-	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete,.delivery_option_radio', 'input[name=submitAddDiscount]', function(){
+	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete', 'input[name=submitAddDiscount]', function(){
 	 	window._klarnaCheckout(function (api) {
    			api.suspend();
    			api.resume();
@@ -103,11 +116,4 @@ $(document).ready(function(){
 
 	});
 
-	$(document).on('change', '.klarna_delivery_option_radio', function(){
-		window._klarnaCheckout(function (api) {
-   			api.suspend();
-   			api.resume();
-		});
-
-	});
 });

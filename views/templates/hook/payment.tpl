@@ -173,7 +173,10 @@
 <script type="text/javascript">
 // <![CDATA[
 var warningPno = "{l s='Please check your social security number' mod='klarnapayments'}";
-var warningConsent = "{l s='Please agree to the consent'}";
+var warningConsent = "{l s='Please agree to the consent' mod='klarnapayments'}";
+var warningPayment = "{l s='Please select a payment option' mod='klarnapayments'}";
+var patternValid = "{l s='Please check the format of your social security number' mod='klarnapayments'}";
+var choosePayTypeKlarna = "{l s='Please select a payment method' mod='klarnapayments'}";
 //]]>
 </script>
 {/if}

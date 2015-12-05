@@ -297,3 +297,9 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+// <![CDATA[
+var klarnaOnePage = "{$klarna_one_page}";
+//]]>
+</script>

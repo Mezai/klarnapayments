@@ -40,7 +40,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			Tools::redirect('index.php');
 		try
 		{
-			$country = Tools::strtoupper($_GET['country']);
+			$country = Tools::strtoupper(Tools::getValue('country'));
 			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_'.$country.''),
 			 (Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL); 
 

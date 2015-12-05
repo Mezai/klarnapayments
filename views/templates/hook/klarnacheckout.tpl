@@ -35,16 +35,16 @@
 <div class="klarnaCheckoutCarrier klarnaCheckout" style="display: block;">
   <h2>{l s='Delivery options' mod='klarnapayments'}</h2>
   {if isset($isVirtualCart) && $isVirtualCart}
-      <p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
+      <p class="alert alert-warning">{l s='No carrier is needed for this order.' mod='klarnapayments'}</p>
     {else}
       <div class="delivery_options_address">
         {if isset($delivery_option_list)}
           {foreach $delivery_option_list as $id_address => $option_list}
             <p class="carrier_title">
               {if isset($address_collection[$id_address])}
-                {l s='Choose a shipping option for this address:'} {$address_collection[$id_address]->alias}
+                {l s='Choose a shipping option for this address:' mod='klarnapayments'} {$address_collection[$id_address]->alias}
               {else}
-                {l s='Choose a shipping option'}
+                {l s='Choose a shipping option' mod='klarnapayments'}
               {/if}
             </p>
             <form action="{$link->getModuleLink('klarnapayments', 'carrier')|escape:'htmlall':'UTF-8'}" method="POST">
@@ -73,19 +73,19 @@
                               <strong>{$carrier.instance->name|escape:'htmlall':'UTF-8'}</strong>
                             {/foreach}
                             {if isset($carrier.instance->delay[$cookie->id_lang])}
-                              <br />{l s='Delivery time:'}&nbsp;{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+                              <br />{l s='Delivery time:' mod='klarnapayments'}&nbsp;{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
                             {/if}
                           {/if}
                           {if count($option_list) > 1}
                           <br />
                             {if $option.is_best_grade}
                               {if $option.is_best_price}
-                                <span class="best_grade best_grade_price best_grade_speed">{l s='The best price and speed'}</span>
+                                <span class="best_grade best_grade_price best_grade_speed">{l s='The best price and speed' mod='klarnapayments'}</span>
                               {else}
-                                <span class="best_grade best_grade_speed">{l s='The fastest'}</span>
+                                <span class="best_grade best_grade_speed">{l s='The fastest' mod='klarnapayments'}</span>
                               {/if}
                             {elseif $option.is_best_price}
-                              <span class="best_grade best_grade_price">{l s='The best price'}</span>
+                              <span class="best_grade best_grade_price">{l s='The best price' mod='klarnapayments'}</span>
                             {/if}
                           {/if}
                         </td>
@@ -94,15 +94,15 @@
                             {if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
                               {if $use_taxes == 1}
                                 {if $priceDisplay == 1}
-                                  {convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)'}{/if}
+                                  {convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)' mod='klarnapayments'}{/if}
                                 {else}
-                                  {convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)'}{/if}
+                                  {convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)' mod='klarnapayments'}{/if}
                                 {/if}
                               {else}
                                 {convertPrice price=$option.total_price_without_tax}
                               {/if}
                             {else}
-                              {l s='Free'}
+                              {l s='Free' mod='klarnapayments'}
                             {/if}
                           </div>
                         </td>
@@ -132,9 +132,9 @@
                                 {$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
                                 &nbsp;
                                 {if count($first.product_list) <= 1}
-                                  ({l s='For this product:'}
+                                  ({l s='For this product:' mod='klarnapayments'}
                                 {else}
-                                  ({l s='For these products:'}
+                                  ({l s='For these products:' mod='klarnapayments'}
                                 {/if}
                               {/strip}
                               {foreach $first.product_list as $product}
@@ -172,15 +172,15 @@
                               {if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
                                 {if $use_taxes == 1}
                                   {if $priceDisplay == 1}
-                                    {convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)'}{/if}
+                                    {convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)' mod='klarnapayments'}{/if}
                                   {else}
-                                    {convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)'}{/if}
+                                    {convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)' mod='klarnapayments'}{/if}
                                   {/if}
                                 {else}
                                   {convertPrice price=$option.total_price_without_tax}
                                 {/if}
                               {else}
-                                {l s='Free'}
+                                {l s='Free' mod='klarnapayments'}
                               {/if}
                             </div>
                           </td>
@@ -203,9 +203,9 @@
                                   {$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
                                   &nbsp;
                                   {if count($first.product_list) <= 1}
-                                    ({l s='For this product:'}
+                                    ({l s='For this product:' mod='klarnapayments'}
                                   {else}
-                                    ({l s='For these products:'}
+                                    ({l s='For these products:' mod='klarnapayments'}
                                   {/if}
                                 {/strip}
                                 {foreach $carrier.product_list as $product}
@@ -253,30 +253,30 @@
               <p class="alert alert-warning" id="noCarrierWarning">
                 {foreach $cart->getDeliveryAddressesWithoutCarriers(true, $errors) as $address}
                   {if empty($address->alias)}
-                    {l s='No carriers available.'}
+                    {l s='No carriers available.' mod='klarnapayments'}
                   {else}
                     {assign var='flag_error_message' value=false}
                     {foreach $errors as $error}
                       {if $error == Carrier::SHIPPING_WEIGHT_EXCEPTION}
                         {$flag_error_message = true}
-                        {l s='The product selection cannot be delivered by the available carrier(s): it is too heavy. Please amend your cart to lower its weight.'}
+                        {l s='The product selection cannot be delivered by the available carrier(s): it is too heavy. Please amend your cart to lower its weight.' mod='klarnapayments'}
                       {elseif $error == Carrier::SHIPPING_PRICE_EXCEPTION}
                         {$flag_error_message = true}
-                        {l s='The product selection cannot be delivered by the available carrier(s). Please amend your cart.'}
+                        {l s='The product selection cannot be delivered by the available carrier(s). Please amend your cart.' mod='klarnapayments'}
                       {elseif $error == Carrier::SHIPPING_SIZE_EXCEPTION}
                         {$flag_error_message = true}
-                        {l s='The product selection cannot be delivered by the available carrier(s): its size does not fit. Please amend your cart to reduce its size.'}
+                        {l s='The product selection cannot be delivered by the available carrier(s): its size does not fit. Please amend your cart to reduce its size.' mod='klarnapayments'}
                       {/if}
                     {/foreach}
                     {if !$flag_error_message}
-                      {l s='No carriers available for the address "%s".' sprintf=$address->alias}
+                      {l s='No carriers available for the address "%s".' sprintf=$address->alias mod='klarnapayments'}
                     {/if}
                   {/if}
                   {if !$address@last}
                     <br />
                   {/if}
                 {foreachelse}
-                  {l s='No carriers available.'}
+                  {l s='No carriers available.' mod='klarnapayments'}
                 {/foreach}
               </p>
             {/foreach}

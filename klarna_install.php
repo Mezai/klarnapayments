@@ -173,7 +173,7 @@ class KlarnaInstall extends KlarnaPayments
 			$order_state_checkout->add();
 
 			$source = _PS_MODULE_DIR_.'klarnapayments/views/img/klarnastate.gif';
-			$destination = _PS_IMG_DIR_.'os/'.(int)$order_state_authorized->id.'.gif';
+			$destination = _PS_IMG_DIR_.'os/'.(int)$order_state_checkout->id.'.gif';
 
 			if (version_compare(_PS_VERSION_, '1.5.5', '<'))
 

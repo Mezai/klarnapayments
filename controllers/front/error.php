@@ -28,8 +28,6 @@ class KlarnaPaymentsErrorModuleFrontController extends ModuleFrontController
 {
 	public function initContent()
 	{
-		$cookie = Context::getContext()->cookie;
-
 		$this->display_column_left = false;
 
 		parent::initContent();

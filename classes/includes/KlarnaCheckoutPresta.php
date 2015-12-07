@@ -1,29 +1,4 @@
 <?php
-/**
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
-
 require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
 class KlarnaCheckoutPresta
 {
@@ -31,17 +6,18 @@ class KlarnaCheckoutPresta
 	public function __construct()
 	{	
 		$this->context = Context::getContext();
+
 	}
 
 
 	public function checkout($cart, $country, $currency, $locale)
 	{
-		
+
 		session_start();
 
 		$order = null;
 		$sharedSecret = (String)KlarnaConfigHandler::getKlarnaSecret($country);
-		$eid = (String)KlarnaConfigHandler::getMerchantID($country);
+		$eid = KlarnaConfigHandler::getMerchantID($country);
 
 		$products = $cart->getProducts();
 				
@@ -73,24 +49,24 @@ class KlarnaCheckoutPresta
 		//shipping
 		if (!$cart->isVirtualCart())
 		{
-			$carrier = new Carrier((int)$cart->id_carrier);
-			$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+		$carrier = new Carrier((int)$cart->id_carrier);
+		$shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
-			$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
+		$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
 
 
-			$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
-			$shipping_price = (int)($shipping_price * 100);
+		$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
+		$shipping_price = (int)($shipping_price * 100);
 
-			$checkoutcart[] = array(
-				'type' => 'shipping_fee',	
-				'reference' => (String)$carrier->id_reference,
-				'name' => (String)$carrier->name,
-				'quantity' => 1,
-				'unit_price' => $shipping_price,
-				'discount_rate' => 0,
-				'tax_rate' => (int)$shipping_tax * 100
-				);
+		$checkoutcart[] = array(
+			'type' => 'shipping_fee',	
+			'reference' => (String)$carrier->id_reference,
+			'name' => (String)$carrier->name,
+			'quantity' => 1,
+			'unit_price' => $shipping_price,
+			'discount_rate' => 0,
+			'tax_rate' => (int)$shipping_tax * 100
+			);
 		}
 		$discounts = $this->context->cart->getCartRules();
 		if (!empty($discounts) && count($discounts) > 0)
@@ -167,7 +143,7 @@ class KlarnaCheckoutPresta
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_LINK')))
 		    $create['options']['color_link'] = Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
 		    
-		    $create['merchant']['id'] = $eid;
+		    $create['merchant']['id'] = (String)$eid;
 		    $create['merchant']['terms_uri'] = $terms_uri;
 		    $create['merchant']['checkout_uri'] = $checkout_uri;
 		    $create['merchant']['confirmation_uri'] = $confirmation_uri;
@@ -183,7 +159,7 @@ class KlarnaCheckoutPresta
 		        $order->create($create);
 		        $order->fetch();
 		    } catch (Klarna_Checkout_ApiErrorException $e) {
-		    	Logger::addLog('Klarna module: failed creating checkout with message: '.$e->getMessage().' and payload :'.$e->getPayload().'');
+		    	Logger::addLog('Klarna module: failed creating checkout with message: '.$e->getMessage().' and payload :'.print_r($e->getPayload()).'');
 		    }
 		}
 		// Store location of checkout session

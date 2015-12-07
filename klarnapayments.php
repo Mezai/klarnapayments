@@ -112,15 +112,19 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayShoppingCart()
 	{
-		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($this->context->country->id), 'checkout'))
+		$get_country = Tools::getCountry(new Address((int)$cart->id_address_invoice));
+		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($get_country), 'checkout'))
 			return;
 		
 		$cart = $this->context->cart;
-		$country = Country::getIsoById($this->context->country->id);
+		$country = Country::getIsoById($get_country);
 		$currency = $this->context->currency->iso_code;
 		$locale = $this->context->language->language_code;
-		
-		if ($this->context->cart->nbProducts() > 0)
+		$klarna_locale = new KlarnaLocalization(Country::getIsoById($get_country));
+		$valid_location = $klarna_locale->checkLocale(Country::getIsoById($this->context->country->id),
+			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code);
+
+		if ($this->context->cart->nbProducts() > 0 && $valid_location === true)
 		{
 			$checkout = new KlarnaCheckoutPresta();
 			$snippet = $checkout->checkout($cart, $country, $currency, $locale);
@@ -294,27 +298,6 @@ class KlarnaPayments extends PaymentModule
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 
-	private function checkLocale($country, $currency, $language)
-	{
-		if ($country == 'SE' && $currency == 'SEK' && $language == 'sv')
-			return true;
-		elseif ($country == 'DE' && $currency == 'EUR' && $language == 'de')
-			return true;
-		elseif ($country == 'DK' && $currency == 'DKK' && $language == 'da')
-			return true;
-		elseif ($country == 'NL' && $currency == 'EUR' && $language == 'nl')
-			return true;
-		elseif ($country == 'NO' && $currency == 'NOK' && $language == 'no')
-			return true;
-		elseif ($country == 'FI' && $currency == 'EUR' && $language == 'fi')
-			return true;
-		elseif ($country == 'AT' && $currency == 'EUR' && $language == 'at')
-			return true;
-		else
-			return false;
-	}
-
-
 	/**
 	* Hook payment
 	*
@@ -460,7 +443,7 @@ class KlarnaPayments extends PaymentModule
 			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),
 			'klarna_locale' => Country::getIsoById($this->context->country->id),
-			'checkLocale' => $this->checkLocale(Country::getIsoById($this->context->country->id),
+			'checkLocale' => $locale->checkLocale(Country::getIsoById($this->context->country->id),
 			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code),
 			));
 

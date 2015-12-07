@@ -112,22 +112,23 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayShoppingCart()
 	{
-		$get_country = Tools::getCountry(new Address((int)$cart->id_address_invoice));
-		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById($get_country), 'checkout'))
-			return;
 		
+		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById(Tools::getCountry(new Address((int)$this->context->cart->id_address_invoice)), 'checkout')))
+			return;
 		$cart = $this->context->cart;
-		$country = Country::getIsoById($get_country);
+		$get_country = Tools::getCountry(new Address((int)$cart->id_address_invoice));
+		$country = Country::getIsoById($get_country);		
 		$currency = $this->context->currency->iso_code;
-		$locale = $this->context->language->language_code;
-		$klarna_locale = new KlarnaLocalization(Country::getIsoById($get_country));
-		$valid_location = $klarna_locale->checkLocale(Country::getIsoById($this->context->country->id),
-			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code);
+		$language_iso = $this->context->language->iso_code;
+		$language_code = $this->context->language->language_code;
+		$klarna_locale = new KlarnaCountryLogic(new KlarnaLocalization(Country::getIsoById($get_country)));
+
+		$valid_location = $klarna_locale->checkLocale($country, Tools::strtoupper($currency), $language_iso);
 
 		if ($this->context->cart->nbProducts() > 0 && $valid_location === true)
 		{
 			$checkout = new KlarnaCheckoutPresta();
-			$snippet = $checkout->checkout($cart, $country, $currency, $locale);
+			$snippet = $checkout->checkout($cart, $country, $currency, $language_code);
 
 			$this->context->smarty->assign(array(
 				'klarna_eid' => KlarnaConfigHandler::getMerchantID($country),

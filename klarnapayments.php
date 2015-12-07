@@ -444,7 +444,7 @@ class KlarnaPayments extends PaymentModule
 			'klarna_pattern' => KlarnaValidation::getPattern(Country::getIsoById($this->context->country->id)),
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),
 			'klarna_locale' => Country::getIsoById($this->context->country->id),
-			'checkLocale' => $locale->checkLocale(Country::getIsoById($this->context->country->id),
+			'checkLocale' => $country_logic->checkLocale(Country::getIsoById($this->context->country->id),
 			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code),
 			));
 

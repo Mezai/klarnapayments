@@ -113,4 +113,24 @@ class KlarnaCountryLogic
 		return false;
 	}
 
+	public function checkLocale($country, $currency, $language)
+	{
+		if ($country == 'SE' && $currency == 'SEK' && $language == 'sv')
+			return true;
+		elseif ($country == 'DE' && $currency == 'EUR' && $language == 'de')
+			return true;
+		elseif ($country == 'DK' && $currency == 'DKK' && $language == 'da')
+			return true;
+		elseif ($country == 'NL' && $currency == 'EUR' && $language == 'nl')
+			return true;
+		elseif ($country == 'NO' && $currency == 'NOK' && $language == 'no')
+			return true;
+		elseif ($country == 'FI' && $currency == 'EUR' && $language == 'fi')
+			return true;
+		elseif ($country == 'AT' && $currency == 'EUR' && $language == 'at')
+			return true;
+		else
+			return false;
+	}
+
 }

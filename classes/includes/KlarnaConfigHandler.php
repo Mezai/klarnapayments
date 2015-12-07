@@ -157,7 +157,7 @@ class KlarnaConfigHandler
 		{
 			$klarna_settings = KlarnaConfigHandler::getInstance();
 
-			return $klarna_settings->settings;
+			return (array)$klarna_settings->settings;
 		}
 
 
@@ -166,47 +166,39 @@ class KlarnaConfigHandler
 			if (!is_string($country_iso))
 				return;
 
-			foreach (KlarnaConfigHandler::getSettings() as $key => $value)
+			foreach (self::getSettings() as $key => $value)
 			{
-				if ($key == $country_iso)
+				if ($key === $country)
 				{
-					if ((int)$value['active'] == 1 && $value['klarna_eid'] != '' && $value['klarna_secret'] != '')
+					if ((int)$value['active'] === 1 && $value['klarna_eid'] != '' && $value['klarna_secret'] != '')
 					{
 						if ($type !== null)
-						{	
-							switch ($type)
+						{
+							if ($type == 'part')
 							{
-							case 'part':
 								if ((int)$value['klarna_part'] === 1)
 								{
 									return true;
-								} else {
-									return false;
-								}
-							case 'invoice':
-								if ((int)$value['klarna_invoice'] === 1)
+								}	
+							} elseif ($type == 'invoice') {
+								if ((int)$value['klarna_secret'] === 1)
 								{
 									return true;
-								} else {
-									return false;
 								}
-							case 'checkout':
+							} elseif ($type == 'checkout') {
 								if ((int)$value['klarna_checkout'] === 1)
 								{
 									return true;
-								} else {
-									return false;
-								}	  
+								}
+							} else {
+								return false;
 							}
-							return false;
 						}
 						return true;
 					}
-					return false;
 				}
-				return false;
 			}
-			return false;
+			return false;	
 		}
 
 
@@ -222,17 +214,7 @@ class KlarnaConfigHandler
 			if (!is_string($country))
 				return;
 
-			foreach (KlarnaConfigHandler::getSettings() as $key => $value)
-			{
-				$country = Tools::strtoupper($country);
-				if ($country === $key)
-				{
-					if ((int)$value['active'] == 1)
-						return $value['klarna_eid'];
-
-				}
-			}
-			return null;
+			
 		}
 
 
@@ -371,34 +353,6 @@ class KlarnaConfigHandler
 				return Klarna_Checkout_Connector::BASE_URL;
 			case 'beta':
 				return Klarna_Checkout_Connector::BASE_TEST_URL;
-		}
-	}
-
-
-
-
-	private static function getKlarnaLocaleConfiguration($country_iso)
-	{
-		switch ($country_iso)
-		{
-			case 'SE':
-						$locale = new KlarnaLocalization('SE', 'SV', 'SEK');
-						$currency = $locale->getCurrency();
-						$country = $locale->getCountry();
-						$language = $locale->getLanguage();
-				return array($country, $language, $currency);
-			case 'FI':
-				return array(KlarnaCountry::FI, KlarnaLanguage::FI, KlarnaCurrency::EUR);
-			case 'DE':
-				return array(KlarnaCountry::DE, KlarnaLanguage::DE, KlarnaCurrency::EUR);
-			case 'DK':
-				return array(KlarnaCountry::DK, KlarnaLanguage::DA, KlarnaCurrency::DKK);
-			case 'NO':
-				return array(KlarnaCountry::NO, KlarnaLanguage::NB, KlarnaCurrency::NOK);
-			case 'NL':
-				return array(KlarnaCountry::NL, KlarnaLanguage::NL, KlarnaCurrency::EUR);
-			case 'AT':
-				return array(KlarnaCountry::DE, KlarnaLanguage::DE, KlarnaCurrency::EUR);
 		}
 	}
 }

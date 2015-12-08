@@ -138,7 +138,9 @@ class KlarnaConfigHandler
 
 				'klarna_part' => (int)Configuration::get('KLARNA_PART_AT'),
 
-				'klarna_invoice' => (int)Configuration::get('KLARNA_INVOICE_AT')
+				'klarna_invoice' => (int)Configuration::get('KLARNA_INVOICE_AT'),
+
+				'klarna_checkout' => (int)Configuration::get('KLARNA_CHECKOUT_AT')
 
 
 
@@ -305,7 +307,7 @@ class KlarnaConfigHandler
 
 		public static function returnActiveCountries()
 		{
-			$country_array = array('SE', 'NO', 'DK', 'NL', 'DE', 'FI');
+			$country_array = array('SE', 'NO', 'DK', 'NL', 'DE', 'FI', 'AT');
 			$active_countries = array();
 			foreach (KlarnaConfigHandler::getSettings() as $key => $value)
 			{

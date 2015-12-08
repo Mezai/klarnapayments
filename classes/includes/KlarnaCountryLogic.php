@@ -129,7 +129,7 @@ class KlarnaCountryLogic
 				return true;
 			elseif ($country == 'FI' && $currency == 'EUR' && $language == 'fi')
 				return true;
-			elseif ($country == 'AT' && $currency == 'EUR' && $language == 'at')
+			elseif ($country == 'AT' && $currency == 'EUR' && $language == 'de')
 				return true;
 			elseif ($type == 'checkout' && $country == 'FI' && $currency == 'EUR' && $language == 'sv')
 				return true;

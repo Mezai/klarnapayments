@@ -1205,6 +1205,25 @@ class KlarnaPayments extends PaymentModule
 				),
 				array(
 				'type' => 'radio',
+				'label' => $this->l('Activate klarna checkout'),
+				'tab' => 'austria',
+				'desc' => $this->l('Select if you wish to offer klarna checkout'),
+				'name' => 'KLARNA_CHECKOUT_AT',
+				'values' => array(
+					array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('No')
+						)
+					),	
+				),
+				array(
+				'type' => 'radio',
 				'is_bool' => true,
 				'label' => $this->l('Activate Finland?'),
 				'desc' => $this->l('Select yes to activate Finland'),

@@ -106,8 +106,12 @@ $(document).ready(function(){
 
 	$(document).on('click', '#klarnaCheckoutNormalPayment', showPrestashop);
 
-	init();	
-
+	if (typeof klarnaCheckoutDisplay !== 'undefined' && klarnaCheckoutDisplay != null)
+	{
+		if (klarnaCheckoutDisplay === "1"){
+			init();	
+		}
+	}
 	 $(document).on('click','.cart_quantity_up,.cart_quantity_down,.cart_quantity_delete', 'input[name=submitAddDiscount]', function(){
 	 	window._klarnaCheckout(function (api) {
    			api.suspend();
@@ -115,5 +119,23 @@ $(document).ready(function(){
 		});
 
 	});
+
+	
+	function updateKlarnaCarrier() {
+	
+	setTimeout(function(){ 
+		$(document).on('change', '.delivery_option_radio', function() {
+			window._klarnaCheckout(function (api) {
+			
+   			
+   				api.suspend();
+   				api.resume();
+  		
+			});
+
+		});
+	}, 2000);	 
+	}
+
 
 });

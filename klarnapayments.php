@@ -121,14 +121,20 @@ class KlarnaPayments extends PaymentModule
 		$currency = $this->context->currency->iso_code;
 		$language_iso = $this->context->language->iso_code;
 		$language_code = $this->context->language->language_code;
+		$klarna_language_code = KlarnaLocalization::getCheckoutLocale($country, $language_code);
 		$klarna_locale = new KlarnaCountryLogic(new KlarnaLocalization(Country::getIsoById($get_country)));
 
-		$valid_location = $klarna_locale->checkLocale($country, Tools::strtoupper($currency), $language_iso);
+		$valid_location = $klarna_locale->checkLocale($country, Tools::strtoupper($currency), $language_iso, 'checkout');
+		if ($valid_location === true) {
+			$this->context->smarty->assign('klarna_checkout_display', true);
+		} else {
+			$this->context->smarty->assign('klarna_checkout_display', false);
+		}
 
 		if ($this->context->cart->nbProducts() > 0 && $valid_location === true)
 		{
 			$checkout = new KlarnaCheckoutPresta();
-			$snippet = $checkout->checkout($cart, $country, $currency, $language_code);
+			$snippet = $checkout->checkout($cart, $country, $currency, $klarna_language_code);
 
 			$this->context->smarty->assign(array(
 				'klarna_eid' => KlarnaConfigHandler::getMerchantID($country),
@@ -445,7 +451,7 @@ class KlarnaPayments extends PaymentModule
 			'klarna_placeholder' => KlarnaValidation::getPlaceholder(Country::getIsoById($this->context->country->id)),
 			'klarna_locale' => Country::getIsoById($this->context->country->id),
 			'checkLocale' => $country_logic->checkLocale(Country::getIsoById($this->context->country->id),
-			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code),
+			Tools::strtoupper($currency->iso_code), $this->context->language->iso_code, 'payment'),
 			));
 
 		$this->smarty->assign('validation_url', (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.
@@ -1537,18 +1543,23 @@ class KlarnaPayments extends PaymentModule
 	{
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
 
+		if (empty($active_countries))
+			return;
+
 		foreach ($active_countries as $countries)
 		{
+			
 			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
-			if (file_exists($pclasses_uri))
-			{
 			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries);
-			$fetch_json = Tools::file_get_contents($pclasses_uri);
-			$json_assoc = Tools::jsonDecode($fetch_json, true);
-			$helper_array = $json_assoc[$klarna_merchant_id];
+
+			if (file_exists($pclasses_uri) && isset($klarna_merchant_id))
+			{
+				$fetch_json = Tools::file_get_contents($pclasses_uri);
+				$json_assoc = Tools::jsonDecode($fetch_json, true);
+				$helper_array = $json_assoc[$klarna_merchant_id];
 			}
 		}
-			
+
 
 			$this->fields_list = array(
 				'eid' => array(

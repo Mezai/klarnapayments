@@ -301,5 +301,6 @@
 <script type="text/javascript">
 // <![CDATA[
 var klarnaOnePage = "{$klarna_one_page}";
+var klarnaCheckoutDisplay ="{$klarna_checkout_display}";
 //]]>
 </script>

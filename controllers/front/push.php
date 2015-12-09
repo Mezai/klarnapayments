@@ -71,7 +71,10 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 		$shipping = $klarna_order['shipping_address'];
 		 		$billing = $klarna_order['billing_address'];
 		 		$reservation_number = $klarna_order['reservation'];
-		 		$extra['transaction_id'] = $reference;
+		 		if ($country == 'SE' || $country == 'AT' || $country == 'FI' || $country == 'NO')
+		 		{
+		 			$extra['transaction_id'] = $reference;
+		 		}
 		 		$id_customer = (int)Customer::customerExists($shipping['email'], true, false);
 		 		if ($id_customer > 0)
 		 		{
@@ -83,13 +86,13 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$customer->firstname = $shipping['given_name'];
 					$customer->lastname =  $shipping['family_name'];
 					$customer->email = $shipping['email'];
-					$customer->passwd =  md5(time()._COOKIE_KEY_);
+					$customer->passwd =  Tools::passwdGen(8,'ALPHANUMERIC');
 					$customer->is_guest = 1;
 					$customer->id_default_group = (int)(Configuration::get('PS_GUEST_GROUP', null, $cart->id_shop));
 					$customer->newsletter = 0;
 					$customer->optin = 0;
 					$customer->active = 1;
-					$customer->id_gender = 9;
+					$customer->id_gender = 0;
 					$customer->add();	
 		 		}
 
@@ -99,44 +102,72 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 				$invocie_iso = $country_iso_codes[$billing['country']];
 				$shipping_country_id = Country::getByIso($shipping_iso);
 				$invocie_country_id = Country::getByIso($invocie_iso);
-				
-				foreach($customer->getAddresses($cart->id_lang) as $address)
+				if ($country == 'SE' || $country == 'FI' || $country == 'NO' || $country == 'AT')
 				{
-					if( $address['firstname'] == $shipping['given_name'] AND $address['lastname'] == $shipping['family_name']
-					AND $address['city'] == $shipping['city']
-					AND $address['address2'] == $shipping['care_of'] AND $address['address1'] == $shipping['street_address']
-					AND $address['postcode'] == $shipping['postal_code'] AND $address['phone_mobile'] == $shipping['phone'] AND $address['id_country'] == $shipping_country_id)
-					{
-						//LOAD SHIPPING ADDRESS
-						$cart->id_address_delivery = $address['id_address'];
-						$delivery_address_id = $address['id_address'];
-					}
-					if( $address['firstname'] == $billing['given_name'] AND $address['lastname'] == $billing['family_name'] 
-					AND $address['city'] == $billing['city']
-					AND $address['address2'] == $billing['care_of'] AND $address['address1'] == $billing['street_address']
-					AND $address['postcode'] == $billing['postal_code'] AND $address['phone_mobile'] == $billing['phone'] AND $address['id_country'] == $invocie_country_id)
-					{
-							//LOAD SHIPPING ADDRESS
+					foreach ($customer->getAddresses($cart->id_lang) as $address) {
+
+						if ($address['firstname'] == $shipping['given_name'] && $address['lastname'] == $shipping['family_name'] && $address['city'] == $shipping['city'] && $address['address2'] == $shipping['care_of']
+							&& $address['address1'] == $shipping['street_address'] && $address['postcode'] == $shipping['postal_code'] && $address['phone_mobile'] == $shipping['phone'] && $address['id_country'] == $shipping_country_id)
+						{
+							$cart->id_address_delivery = $address['id_adress'];
+							$delivery_address_id = $address['id_adress'];
+						}
+
+						if ($address['firstname'] == $billing['given_name'] && $address['lastname'] == $billing['family_name'] && $address['city'] == $billing['city'] && $address['address2'] == $billing['care_of']
+							&& $address['address1'] == $billing['street_address'] && $address['postcode'] == $billing['postal_code'] && $address['phone_mobile'] == $billing['phone'] && $address['id_country'] == $shipping_country_id)
+						{
 							$cart->id_address_invoice = $address['id_address'];
 							$invoice_address_id = $address['id_address'];
+						}
 					}
 				}
+
+
+				if ($country == 'DE')
+				{
+					$street_address_shipping_de = $shipping['street_name'] . $shipping['street_number'];
+					$street_address_billing_de = $billing['street_name'] . $billing['street_number'];
+
+					foreach ($customer->getAddresses($cart->id_lang) as $address)
+					{
+						if ($address['firstname'] == $shipping['given_name'] && $address['lastname'] == $shipping['family_name'] && $address['city'] == $shipping['city'] && $address['address2'] == $shipping['care_of']
+							&& $address['address1'] == $street_address_shipping_de && $address['postcode'] == $shipping['postal_code'] && $address['phone_mobile'] == $shipping['phone'] && $address['id_country'] == $shipping_country_id)
+						{
+							$cart->id_address_delivery = $address['id_adress'];
+							$delivery_address_id = $address['id_adress'];
+						}
+
+						if ($address['firstname'] == $billing['given_name'] && $address['lastname'] == $billing['family_name'] && $address['city'] == $billing['city'] && $address['address2'] == $billing['care_of']
+							&& $address['address1'] == $street_address_billing_de && $address['postcode'] == $billing['postal_code'] && $address['phone_mobile'] == $billing['phone'] && $address['id_country'] == $shipping_country_id)
+						{
+							$cart->id_address_invoice = $address['id_address'];
+							$invoice_address_id = $address['id_address'];
+						}
+					}	
+				}
+				
 				if($invoice_address_id==0)
 				{
-					//Create address
 					$address = new Address();
 					$address->firstname = $billing['given_name'];
 					$address->lastname = $billing['family_name'];
-					if(Tools::strlen($billing['care_of'])>0)
-					{
-						$address->address1 = $billing['care_of'];
-						$address->address2 = $billing['street_address'];
+
+					if ($country == 'SE' || $country == 'FI' || $country == 'NO' || $country == 'AT')
+					{ 
+						if (Tools::strlen($billing['care_of']) > 0)
+						{
+							$address->address1 = $billing['care_of'];
+							$address->address2 = $billing['street_address'];
+						} else {
+							$address->address1 = $billing['street_address'];
+
+						}
+
+					} elseif ($country == 'DE') {
+
+						$address->address1 = $street_address_billing_de;
+
 					}
-					else
-					{
-						$address->address1 = $billing['street_address'];
-					}
-					
 					$address->postcode = $billing['postal_code'];
 					$address->phone = $billing['phone'];
 					$address->phone_mobile = $billing['phone'];
@@ -150,21 +181,27 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 				}
 				if($delivery_address_id==0)
 				{
-					//Create address
 					$address = new Address();
 					$address->firstname = $shipping['given_name'];
 					$address->lastname = $shipping['family_name'];
-					
-					if(Tools::strlen($shipping['care_of'])>0)
-					{
-						$address->address1 = $shipping['care_of'];
-						$address->address2 = $shipping['street_address'];
+
+					if ($country == 'SE' || $country == 'FI' || $country == 'NO' || $country == 'AT')
+					{ 
+						if (Tools::strlen($shipping['care_of']) > 0)
+						{
+							$address->address1 = $shipping['care_of'];
+							$address->address2 = $shipping['street_address'];
+						} else {
+							$address->address1 = $shipping['street_address'];
+
+						}
+
+					} elseif ($country == 'DE') {
+
+						$address->address1 = $street_address_shipping_de;
+
 					}
-					else
-					{
-						$address->address1 = $shipping['street_address'];
-					}
-					
+
 					$address->city = $shipping['city'];
 					$address->postcode = $shipping['postal_code'];
 					$address->phone = $shipping['phone'];
@@ -179,25 +216,37 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 				$new_delivery_options[(int)($delivery_address_id)] = $cart->id_carrier.',';
 					$new_delivery_options_serialized = serialize($new_delivery_options);
-					$update_sql = 'UPDATE '._DB_PREFIX_.'cart SET delivery_option=\''.$new_delivery_options_serialized.'\' WHERE id_cart='.$cart->id;
-					Db::getInstance()->execute($update_sql);
+
+					Db::getInstance()->Execute('
+						UPDATE `'._DB_PREFIX_.'cart`
+						SET `delivery_option` = \''.pSQL($new_delivery_options_serialized).'\'
+						WHERE `id_cart` = '.(int)$cart->id);
+
 					if($cart->id_carrier>0)
 						$cart->delivery_option = $new_delivery_options_serialized;
 					else
 						$cart->delivery_option = '';
-					$update_sql = 'UPDATE '._DB_PREFIX_.'cart_product SET id_address_delivery='.$delivery_address_id.' WHERE id_cart='.$cart->id;
-					Db::getInstance()->execute($update_sql);
+
+					Db::getInstance()->Execute('
+						UPDATE `'._DB_PREFIX_.'cart_product`
+						SET `id_address_delivery` = \''.pSQL($delivery_address_id).'\'
+						WHERE `id_cart` = '.(int)$cart->id);
+
 					$flush_cache = $cart->getPackageList(true);
 
 				$cart->id_customer = $customer->id;
 				$cart->secure_key = $customer->secure_key;
 				$cart->save();
 
-				$update_sql1 = 'UPDATE '._DB_PREFIX_.'cart SET id_customer=\''.pSQL($customer->id).'\' WHERE id_cart='.$cart->id;
-				$update_sql2 = 'UPDATE '._DB_PREFIX_.'cart SET secure_key= \''.pSQL($customer->secure_key).'\' WHERE id_cart='.$cart->id;
+				Db::getInstance()->Execute('
+					UPDATE `'._DB_PREFIX_.'cart`
+					SET `id_customer` = \''.pSQL($customer->id).'\'
+					WHERE `id_cart` = '.(int)$cart->id);
+				Db::getInstance()->Execute('
+					UPDATE `'._DB_PREFIX_.'cart`
+					SET `secure_key` = \''.pSQL($customer->secure_key).'\'
+					WHERE `id_cart` = '.(int)$cart->id);
 
-				Db::getInstance()->execute($update_sql1);
-				Db::getInstance()->execute($update_sql2);
 
 				$cache_id = 'objectmodel_cart_'.$cart->id.'_0_0';
 				Cache::clean($cache_id);
@@ -220,7 +269,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 	}
 
 		 } catch (Exception $e) {
-		 	Logger::addLog('Klarna Checkout: '.htmlspecialchars($e->getMessage()), 1, NULL, NULL, NULL, true);
+		 	Logger::addLog('Klarna Checkout: '.htmlspecialchars($e->getMessage()), 1, null, null, null, true);
 		 } 
 
 

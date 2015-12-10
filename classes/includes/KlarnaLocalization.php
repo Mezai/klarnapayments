@@ -200,7 +200,7 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 			return false;
 		if ($country == 'SE' && $language == 'sv-se')
 		{
-			return 'sv_se';
+			return 'sv-se';
 		} elseif ($country == 'FI' && $language == 'sv-se') {
 			return 'sv-fi';
 		} elseif ($country == 'DE' && $language == 'de-de') {

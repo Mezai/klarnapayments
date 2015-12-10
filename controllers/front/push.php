@@ -95,7 +95,9 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					if ($country == 'DE')
 					{
 						($billing['title'] == 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
+
 					} else {
+						
 						$customer->id_gender = 0;
 					}
 					$customer->add();	

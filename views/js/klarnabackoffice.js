@@ -28,4 +28,22 @@ $('document').ready(function() {
   var $inputHidden = $("input[type='hidden'][name='saveBtn'][value='1']");
   $inputHidden.remove();
 
+  $('body').on('change', 'input[name=KLARNA_CHECKOUT_CHECKBOX]', toggleCheckbox);
+
+  	function toggleCheckbox()
+  	{
+
+	  	if ($('input[name=KLARNA_CHECKOUT_CHECKBOX]:checked').val() === '0')
+	  	{
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_REQUIRED]').parents('.form-group').hide();
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_CHECKED]').parents('.form-group').hide();
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_TEXT]').parents('.form-group').hide();
+	  	} else {
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_REQUIRED]').parents('.form-group').show();
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_CHECKED]').parents('.form-group').show();
+	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_TEXT]').parents('.form-group').show();
+	  	}
+  	};
+
+  	toggleCheckbox();
 });

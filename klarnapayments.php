@@ -41,7 +41,8 @@ class KlarnaPayments extends PaymentModule
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
-			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE'),
+			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE', 'KLARNA_CHECKOUT_CHECKBOX_TEXT', 'KLARNA_CHECKOUT_CHECKBOX_CHECKED',
+			'KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -112,12 +113,12 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayShoppingCart()
 	{
-		
+
 		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById(Tools::getCountry(new Address((int)$this->context->cart->id_address_invoice)), 'checkout')))
 			return;
 		$cart = $this->context->cart;
 		$get_country = Tools::getCountry(new Address((int)$cart->id_address_invoice));
-		$country = Country::getIsoById($get_country);		
+		$country = Country::getIsoById($get_country);
 		$currency = $this->context->currency->iso_code;
 		$language_iso = $this->context->language->iso_code;
 		$language_code = $this->context->language->language_code;
@@ -318,7 +319,7 @@ class KlarnaPayments extends PaymentModule
 		if (!$this->active || !KlarnaConfigHandler::isCountryActive(Country::getIsoById($this->context->country->id)))
 			return;
 			$cart = $this->context->cart;
-			$currency = $this->context->currency;	
+			$currency = $this->context->currency;
 
 			$locale = new KlarnaLocalization(Country::getIsoById($this->context->country->id));
 			$country_logic = new KlarnaCountryLogic($locale);
@@ -326,7 +327,7 @@ class KlarnaPayments extends PaymentModule
 
 		if (!$country_logic->isBusinessAllowed() && Tools::strlen($address->company) > 0)
 			return;
-			
+
 			if (Country::getIsoById($this->context->country->id) === 'SE' || Country::getIsoById($this->context->country->id) === 'NO')
 			{
 				$checkout_data = new KlarnaCheckoutService();
@@ -675,7 +676,7 @@ class KlarnaPayments extends PaymentModule
 		$this->html .= $this->context->smarty->fetch($this->local_path.'/views/templates/admin/admin.tpl');
 
 		$this->html .= $this->renderForm();
-		
+
 		$this->html .= $this->renderList();
 
 		return $this->html;
@@ -1220,7 +1221,7 @@ class KlarnaPayments extends PaymentModule
 						'value' => 0,
 						'label' => $this->l('No')
 						)
-					),	
+					),
 				),
 				array(
 				'type' => 'radio',
@@ -1523,7 +1524,72 @@ class KlarnaPayments extends PaymentModule
 					'hint' => $this->l('Only used for Klarna Checkout'),
 					'desc' => $this->l('Select a color for the link'),
 					'tab' => 'general',
-				'name' => 'KLARNA_CHECKOUT_COLOR_LINK'
+					'name' => 'KLARNA_CHECKOUT_COLOR_LINK'
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Activate checkbox'),
+					'desc' => $this->l('Adds a checkbox to klarna checkout'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_CHECKBOX',
+					'values' => array(
+						array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('No')
+							)
+						),
+					),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Checkbox text'),
+					'desc' => $this->l('Adds text to the checkbox'),
+					'tab' => 'general',
+					'class' => 'fixed-width-lg',
+					'name' => 'KLARNA_CHECKOUT_CHECKBOX_TEXT'
+					),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Checkbox checked'),
+					'desc' => $this->l('Default checked checkbox'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_CHECKBOX_CHECKED',
+					'values' => array(
+						array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('No')
+							)
+						),
+					),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Required checkbox'),
+					'desc' => $this->l('Make the checkbox mandatory'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_CHECKBOX_REQUIRED',
+					'values' => array(
+						array(
+						'id' => 'active_on',
+						'value' => 1,
+						'label' => $this->l('Yes')
+					),
+					array(
+						'id' => 'active_off',
+						'value' => 0,
+						'label' => $this->l('No')
+							)
+						),
 					),
 				),
 				'submit' => array(
@@ -1567,7 +1633,7 @@ class KlarnaPayments extends PaymentModule
 
 		foreach ($active_countries as $countries)
 		{
-			
+
 			$pclasses_uri = dirname(__FILE__).'/pclasses/pclasses'.Tools::strtolower($countries).'.json';
 			$klarna_merchant_id = KlarnaConfigHandler::getMerchantID($countries);
 

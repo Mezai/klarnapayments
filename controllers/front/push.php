@@ -322,8 +322,8 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		 		$update['status'] = 'created';  
 				$update['merchant_reference'] = array(  
-					'orderid1' => ''.$cart->id,
-					'orderid2' => ''.$reference_ps
+					'orderid1' => (String)$cart->id,
+					'orderid2' => (String)$reference_ps
 				);  
 				$klarna_order->update($update);  
 		 	}

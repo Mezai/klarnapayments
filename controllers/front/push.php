@@ -79,6 +79,34 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 		if ($id_customer > 0)
 		 		{
 		 			$customer = new Customer($id_customer);
+		 			if ($country === 'DE')
+					{
+						($billing['title'] === 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
+					
+					} else {
+						
+						if ($klarna_order['customer']['gender'] === 'male')
+						{
+							$customer->id_gender = 1;
+							
+						} else {
+							$customer->id_gender = 0;
+						
+						}
+					}
+					
+					$date_of_birth = $klarna_order['customer']['date_of_birth'];
+					
+					$match_date = preg_match('/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})$/', $date_of_birth, $match);
+					
+					if ((Bool)$match_date === true)
+					{
+						$customer->years = $match[1];
+						$customer->months = $match[2];
+						$customer->days = $match[3];
+					
+					} 
+					$customer->update();
 
 		 		} else {
 		 			
@@ -89,17 +117,42 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$customer->passwd =  Tools::passwdGen(8,'ALPHANUMERIC');
 					$customer->is_guest = 1;
 					$customer->id_default_group = (int)(Configuration::get('PS_GUEST_GROUP', null, $cart->id_shop));
-					$customer->newsletter = 0;
+					if ($klarna_order['merchant_requested']['additional_checkbox'] === true)
+                    {
+                        $customer->newsletter = 1;
+                        } else {
+                        $customer->newsletter = 0;
+					}
 					$customer->optin = 0;
 					$customer->active = 1;
-					if ($country == 'DE')
+					if ($country === 'DE')
 					{
-						($billing['title'] == 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
-
+						($billing['title'] === 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
+					
 					} else {
 						
-						$customer->id_gender = 0;
+						if ($klarna_order['customer']['gender'] == 'male')
+						{
+							$customer->id_gender = 1;
+							
+						} else {
+							$customer->id_gender = 0;
+						
+						}
+							
 					}
+					
+					$date_of_birth = $klarna_order['customer']['date_of_birth'];
+					
+					$match_date = preg_match('/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})$/', $date_of_birth, $match);
+					
+					if ((Bool)$match_date === true)
+					{
+						$customer->years = $match[1];
+						$customer->months = $match[2];
+						$customer->days = $match[3];
+					
+					} 
 					$customer->add();	
 		 		}
 

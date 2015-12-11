@@ -155,7 +155,7 @@ class KlarnaCheckoutPresta
 		    $create['merchant']['checkout_uri'] = $checkout_uri;
 		    $create['merchant']['confirmation_uri'] = $confirmation_uri;
 		    $create['merchant']['push_uri'] = $pushPage;
-		    $create['merchant_reference']['orderid1'] = "".(int)$this->context->cart->id;
+		    $create['merchant_reference']['orderid1'] = (String)$this->context->cart->id;
 
 		    $update['cart']['items'] = array();
 		    foreach ($checkoutcart as $item) {

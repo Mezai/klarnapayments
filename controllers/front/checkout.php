@@ -67,7 +67,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 
 
 		} catch (Klarna_Exception $e) {
-
+			Logger::addLog('Klarna module: '.htmlspecialchars($e->getMessage()));
 		}
 		$this->setTemplate('checkout-confirmation.tpl');
 	}

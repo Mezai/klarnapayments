@@ -54,9 +54,25 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		try {
 			session_start();
+			
 			$country = Tools::strtoupper(Tools::getValue('country'));
-			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_'.$country.''),
-			(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL);
+			$sharedSecret = Configuration::get('KLARNA_SECRET_'.$country.'');
+
+			$curlhandle = new Klarna_Checkout_HTTP_CURLHandle();
+
+			$curlhandle->setOption(CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.klarna.checkout.aggregated-order-v2+json'
+			,'Accept: application/vnd.klarna.checkout.aggregated-order-v2+json '));
+			
+			$curlhandle->setOption(CURLOPT_CAINFO, _PS_CONFIG_DIR_.'/ssl/cacert.pem');
+
+			
+			if ((String)Configuration::get('KLARNA_ENVIRONMENT') === 'live')
+			{
+				$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_URL);
+		
+			} else {
+				$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_TEST_URL);
+			}
 
 			@$orderID = Tools::getValue('klarna_order');
 			$klarna_order = new Klarna_Checkout_Order($connector, $orderID);
@@ -66,6 +82,21 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 	{
 		 		$id_cart = $klarna_order['merchant_reference']['orderid1'];
 		 		$cart = new Cart((int)$id_cart);
+
+		 		if ($cart->OrderExists())
+		 		{
+		 			$reference_ps = Order::getUniqReferenceOf((int)$cart->id);
+		 			//Already created, send create
+					$update['status'] = 'created';  
+					$update['merchant_reference'] = array(  
+							'orderid1' => (String)$cart->id,
+							'orderid2' => (String)$reference_ps
+					);  
+					$klarna_order->update($update);
+					Logger::addLog('Klarna module: create sent for order with cart id'.$cart->id);
+						die;
+		 		}
+
 		 		$amount = (int)($klarna_order['cart']['total_price_including_tax']);
 		 		$amount = (float)($amount/100);
 		 		$shipping = $klarna_order['shipping_address'];
@@ -79,7 +110,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		 		if ($id_customer > 0)
 		 		{
 		 			$customer = new Customer($id_customer);
-		 			if ($country === 'DE')
+					if ($country === 'DE')
 					{
 						($billing['title'] === 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
 					
@@ -107,6 +138,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					
 					} 
 					$customer->update();
+					
 
 		 		} else {
 		 			
@@ -117,7 +149,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$customer->passwd =  Tools::passwdGen(8,'ALPHANUMERIC');
 					$customer->is_guest = 1;
 					$customer->id_default_group = (int)(Configuration::get('PS_GUEST_GROUP', null, $cart->id_shop));
-					if ($klarna_order['merchant_requested']['additional_checkbox'] === true)
+                    if ($klarna_order['merchant_requested']['additional_checkbox'] === true)
                     {
                         $customer->newsletter = 1;
                         } else {
@@ -125,6 +157,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					}
 					$customer->optin = 0;
 					$customer->active = 1;
+					
 					if ($country === 'DE')
 					{
 						($billing['title'] === 'Herr') ? $customer->id_gender = 1 : $customer->id_gender = 0;
@@ -153,6 +186,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 						$customer->days = $match[3];
 					
 					} 
+					
 					$customer->add();	
 		 		}
 
@@ -313,7 +347,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 		 		$cart = new Cart($cart->id);
 		 		$klarnapayments = new KlarnaPayments();
-		 		$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_CHECKOUT'), number_format($amount, 2, '.', ''), $this->module->displayName, $reservation_number, $extra, NULL,false,$customer->secure_key);
+		 		$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_CHECKOUT'), $amount, $this->module->displayName, $reservation_number, $extra, NULL,false,$customer->secure_key);
 		 		Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
 				VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($billing['given_name']).'\', \''.pSQL($billing['family_name']).'\', \''.pSQL($klarna_order['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');
@@ -334,4 +368,4 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 
 
 	}
-}	
+}		

@@ -1,9 +1,9 @@
-.klarnaCheckoutPaymentOption.current {
+.KlarnaCheckoutPaymentOption.current {
 	border: 1px solid #CCC;
 	background-color: #f5f5f5;
 }
 
-.klarnaCheckoutPaymentOption, .KlarnaCheckoutPaymentOption.current {
+.KlarnaCheckoutPaymentOption, .KlarnaCheckoutPaymentOption.current {
 	display: inline-block;
 	width: 43%;
 	padding: 0 10px 10px 10px;

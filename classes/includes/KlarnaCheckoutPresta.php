@@ -2,9 +2,9 @@
 require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
 class KlarnaCheckoutPresta
 {
-
+	
 	public function __construct()
-	{
+	{	
 		$this->context = Context::getContext();
 
 	}
@@ -16,23 +16,45 @@ class KlarnaCheckoutPresta
 		session_start();
 
 		$order = null;
-		$sharedSecret = (String)KlarnaConfigHandler::getKlarnaSecret($country);
+		$sharedSecret = KlarnaConfigHandler::getKlarnaSecret($country);
 		$eid = KlarnaConfigHandler::getMerchantID($country);
 
-		$products = $cart->getProducts();
+		$curlhandle = new Klarna_Checkout_HTTP_CURLHandle();
 
-		$connector = Klarna_Checkout_Connector::create(
-    	$sharedSecret,
-		(Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL
-		);
+		$curlhandle->setOption(CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.klarna.checkout.aggregated-order-v2+json'
+		,'Accept: application/vnd.klarna.checkout.aggregated-order-v2+json '));
+
+		$curlhandle->setOption(CURLOPT_CAINFO, _PS_CONFIG_DIR_.'/ssl/cacert.pem');
+			
+		$products = $cart->getProducts();
+		
+		if ((String)Configuration::get('KLARNA_ENVIRONMENT') === 'live')
+		{
+			$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_URL);
+		
+		} else {
+			$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_TEST_URL);
+		}
+		
+		$is_ssl = Tools::usingSecureMode();
+		$cms = new CMS((int)(Configuration::get('PS_CONDITIONS_CMS_ID')), (int)($this->context->cookie->id_lang));
+		$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
+		$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
+		$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
+		$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.$country.'&fc=module&module=klarnapayments&controller=checkout';
+		$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.$country.'&fc=module&module=klarnapayments&controller=push';
+		$terms_uri = $link_conditions;
+		$klarnapayments = new KlarnaPayments();
+		
+		
 		//products
 		foreach ($products as $product) {
 			$price = Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
 			$price = (int)($price * 100);
-
+			
 			$product_img = $this->context->link->getImageLink($product["link_rewrite"], $product['id_image']);
 			$product_uri = $this->context->link->getProductLink(new Product($product['id_product']));
-
+			
 			$checkoutcart[] = array(
 		   'reference' => $product['reference'],
 		   'name' => $product['name'],
@@ -43,7 +65,7 @@ class KlarnaCheckoutPresta
 		   'unit_price' => $price,
 		   'discount_rate' => 0,
 		   'tax_rate' => (int)$product['rate'] * 100
-		   );
+		   ); 	
 		}
 
 		//shipping
@@ -54,12 +76,12 @@ class KlarnaCheckoutPresta
 
 		$shipping_tax = Tax::getCarrierTaxRate($cart->id_carrier, $cart->id_address_invoice);
 
-
 		$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
+
 		$shipping_price = (int)($shipping_price * 100);
 
 		$checkoutcart[] = array(
-			'type' => 'shipping_fee',
+			'type' => 'shipping_fee',	
 			'reference' => (String)$carrier->id_reference,
 			'name' => (String)$carrier->name,
 			'quantity' => 1,
@@ -73,21 +95,21 @@ class KlarnaCheckoutPresta
 		{
 			foreach ($discounts as $discount) {
 				$tax_discount = (int)round((($discount['value_real'] / $discount['value_tax_exc']) - 1.0) *100);
-
+				
 				$price = $discount['value_real'];
 				$price = Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_);
+
 				$checkoutcart[] = array(
 				'type' => 'discount',
 				'reference' => $discount['name'],
 				'name' => $discount['name'],
 				'quantity' => 1,
 				'unit_price' => -($price * 100),
-				'tax_rate' => $tax_discount * 100
+				'tax_rate' => $tax_discount * 100	
 
 				);
 			}
-		}
-
+		}	
 
 
 		if (array_key_exists('klarna_order_id', $_SESSION)) {
@@ -96,75 +118,85 @@ class KlarnaCheckoutPresta
 		        $connector,
 		        $_SESSION['klarna_order_id']
 		    );
+		
 		    try {
 		        $order->fetch();
 		        // Reset cart
 		        $update['cart']['items'] = array();
+				$update['merchant']['id'] = (String)$eid;
+				$update['merchant']['terms_uri'] = (String)$terms_uri;
+				$update['merchant']['checkout_uri'] = (String)$checkout_uri;
+				$update['merchant']['confirmation_uri'] = (String)$confirmation_uri;
+				$update['merchant']['push_uri'] = (String)$pushPage;			
+				$update['merchant_reference']['orderid1'] = (String)$this->context->cart->id;
+				$update['purchase_country'] = (String)$country;
+				$update['purchase_currency'] = (String)$currency;
+				$update['locale'] = (String)$locale;
+
 		        foreach ($checkoutcart as $item) {
 		            $update['cart']['items'][] = $item;
 		        }
 		        $order->update($update);
-		    } catch (Exception $e) {
+			 } catch (Exception $e) {
 		        // Reset session
 		        $order = null;
 		        unset($_SESSION['klarna_order_id']);
 		    }
 		}
-		if ($order == null)
+		if ($order === null) 
 		{
-			$is_ssl = Tools::usingSecureMode();
-			$cms = new CMS((int)(Configuration::get('KLARNA_CHECKOUT_TERMS')), (int)($this->context->cookie->id_lang));
-			$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, $is_ssl);
-			$check_checkout = ((int)Configuration::get('PS_ORDER_PROCESS_TYPE') === 1) ? 'order-opc' : 'order';
-			$checkout_uri = $this->context->link->getPageLink($check_checkout, $is_ssl);
-			$confirmation_uri = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.$country.'&fc=module&module=klarnapayments&controller=checkout';
-			$pushPage = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php' .'?klarna_order={checkout.order.id}' . '&country='.$country.'&fc=module&module=klarnapayments&controller=push';
-			$terms_uri = $link_conditions;
-			$klarnapayments = new KlarnaPayments();
-
-		    $create['purchase_country'] = $country;
-		    $create['purchase_currency'] = $currency;
-		    $create['locale'] = $locale;
-		    $create['gui']['layout'] = $klarnapayments->checkMobile();
-
+		    $create['purchase_country'] = (String)$country;
+		    $create['purchase_currency'] = (String)$currency;
+		    $create['locale'] = (String)$locale;
+		    $create['gui']['layout'] = (String)$klarnapayments->checkMobile();
+		    
 		    if (Tools::strlen(Configuration::get('KLARNA_CHECKOUT_SHIPPING_DETAILS')) > 0)
 		    $create['options']['shipping_details'] = Configuration::get('KLARNA_CHECKOUT_SHIPPING_DETAILS');
-
+		    
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON')))
-		    $create['options']['color_button'] = Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON');
+		    $create['options']['color_button'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT')))
-		    $create['options']['color_button_text'] = Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT');
+		    $create['options']['color_button_text'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_BUTTON_TEXT');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX')))
-		    $create['options']['color_checkbox'] = Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX');
+		    $create['options']['color_checkbox'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK')))
-		    $create['options']['color_checkbox_checkmark'] = Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK');
+		    $create['options']['color_checkbox_checkmark'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER')))
-		    $create['options']['color_header'] = Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER');
+		    $create['options']['color_header'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_HEADER');
 		    if (!is_null(Configuration::get('KLARNA_CHECKOUT_COLOR_LINK')))
-		    $create['options']['color_link'] = Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
+		    $create['options']['color_link'] = (String)Configuration::get('KLARNA_CHECKOUT_COLOR_LINK');
 
-				if ((int)Configuration::get('KLARNA_CHECKOUT_CHECKBOX') === 1)
-				{
+			if ((int)Configuration::get('KLARNA_CHECKOUT_CHECKBOX') === 1)
+			{
 				$create['options']['additional_checkbox']['text'] = (String)Configuration::get('KLARNA_CHECKOUT_CHECKBOX_TEXT');
 				$create['options']['additional_checkbox']['checked'] = (Bool)Configuration::get('KLARNA_CHECKOUT_CHECKBOX_CHECKED');
 				$create['options']['additional_checkbox']['required'] = (Bool)Configuration::get('KLARNA_CHECKOUT_CHECKBOX_REQUIRED');
-				}	
-
+			}
+			
+			$create['external_checkouts'][] = [
+				'name' => 'PayPal',
+				'redirect_uri' => 'https://api.sandbox.paypal.com',
+				'image_uri' => 'https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png',
+				'fee' => 0
+				];
 		    $create['merchant']['id'] = (String)$eid;
-		    $create['merchant']['terms_uri'] = $terms_uri;
-		    $create['merchant']['checkout_uri'] = $checkout_uri;
-		    $create['merchant']['confirmation_uri'] = $confirmation_uri;
-		    $create['merchant']['push_uri'] = $pushPage;
+		    $create['merchant']['terms_uri'] = (String)$terms_uri;
+		    $create['merchant']['checkout_uri'] = (String)$checkout_uri;
+		    $create['merchant']['confirmation_uri'] = (String)$confirmation_uri;
+		    $create['merchant']['push_uri'] = (String)$pushPage;			
 		    $create['merchant_reference']['orderid1'] = (String)$this->context->cart->id;
 
 		    $update['cart']['items'] = array();
 		    foreach ($checkoutcart as $item) {
 		        $create['cart']['items'][] = $item;
 		    }
+
 		    $order = new Klarna_Checkout_Order($connector);
+
 		    try {
 		        $order->create($create);
 		        $order->fetch();
+
 		    } catch (Klarna_Checkout_ApiErrorException $e) {
 		    	Logger::addLog('Klarna module: failed creating checkout with message: '.$e->getMessage().' and payload :'.print_r($e->getPayload()).'');
 		    }
@@ -177,5 +209,6 @@ class KlarnaCheckoutPresta
 		   return $snippet;
 		}
 	}
-
-}
+	
+}			
+	

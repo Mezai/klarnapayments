@@ -41,10 +41,23 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 		try
 		{
 			$country = Tools::strtoupper(Tools::getValue('country'));
-			$connector = Klarna_Checkout_Connector::create(Configuration::get('KLARNA_SECRET_'.$country.''),
-			 (Configuration::get('KLARNA_ENVIRONMENT') == 'live') ? Klarna_Checkout_Connector::BASE_URL : Klarna_Checkout_Connector::BASE_TEST_URL); 
+			$sharedSecret = Configuration::get('KLARNA_SECRET_'.$country.'');
 
+			$curlhandle = new Klarna_Checkout_HTTP_CURLHandle();
+
+			$curlhandle->setOption(CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.klarna.checkout.aggregated-order-v2+json'
+			,'Accept: application/vnd.klarna.checkout.aggregated-order-v2+json '));
 			
+			$curlhandle->setOption(CURLOPT_CAINFO, _PS_CONFIG_DIR_.'/ssl/cacert.pem');
+			
+			if ((String)Configuration::get('KLARNA_ENVIRONMENT') === 'live')
+			{
+				$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_URL);
+			
+			} else {
+				$connector = Klarna_Checkout_Connector::create((String)$sharedSecret, Klarna_Checkout_Connector::BASE_TEST_URL);
+			}
+				
 
 			$checkout_id = $_SESSION['klarna_order_id'];
 			$klarnaorder = new Klarna_Checkout_Order($connector, $checkout_id);  
@@ -61,13 +74,16 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			$this->context->smarty->assign(array(
 					'klarna_html' => $snippet,
 					'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation((int)($result['id_order']))
-				));
+
+			));
+			
 			unset($_SESSION['klarna_order_id']);  
 
 
 
-		} catch (Klarna_Exception $e) {
+		} catch (Klarna_Checkout_ApiErrorException $e) {
 			Logger::addLog('Klarna module: '.htmlspecialchars($e->getMessage()));
+
 		}
 		$this->setTemplate('checkout-confirmation.tpl');
 	}

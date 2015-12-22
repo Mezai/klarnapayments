@@ -39,7 +39,7 @@
 		<ul class="klarna-list">
 			<li>Klarna invoice payments</li>
 			<li>Klarna part payments</li>
-			<li style="font-weight:bold;">The checkout option is currently not available but will be in a future release</li>
+			<li>Klarna checkout</li>
 		</ul>
 		</p>
 	</div>
@@ -76,6 +76,11 @@
 			<li>{l s='Make sure you have set the quantity for the invoice fee and preferably when out of stock to : allow orders' mod='klarnapayments'}</li>
 			<li>{l s='The invoice fee is created for you upon installation, do not edit the reference for this product' mod='klarnapayments'}</li>
 			<li>{l s='To inactivate the invoice fee: simply set the price to 0' mod='klarnapayments'}</li>
+		</ol>
+		<h2>{l s='To activate klarna checkout please check below settings in prestashop'}</h2>
+		<ol class="klarna-list">
+			<li>{l s='Make sure that guest checkout is enabled and for best customer experience activate the one page checkout' mod='klarnapayments'}</li>
+			<li>{l s='To activate your payments this can be done from the Klarna payments tab here in backoffice' mod='klarnapayments'}</li>
 		</ol>			
 	</div>	
 	<div style="clear:both;"></div>

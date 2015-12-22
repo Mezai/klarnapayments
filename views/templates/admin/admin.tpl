@@ -77,7 +77,7 @@
 			<li>{l s='The invoice fee is created for you upon installation, do not edit the reference for this product' mod='klarnapayments'}</li>
 			<li>{l s='To inactivate the invoice fee: simply set the price to 0' mod='klarnapayments'}</li>
 		</ol>
-		<h2>{l s='To activate klarna checkout please check below settings in prestashop'}</h2>
+		<h2>{l s='To activate klarna checkout please check below settings in prestashop' mod='klarnapayments'}</h2>
 		<ol class="klarna-list">
 			<li>{l s='Make sure that guest checkout is enabled and for best customer experience activate the one page checkout' mod='klarnapayments'}</li>
 			<li>{l s='To activate your payments this can be done from the Klarna payments tab here in backoffice' mod='klarnapayments'}</li>

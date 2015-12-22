@@ -42,7 +42,7 @@ class KlarnaPayments extends PaymentModule
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
 			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE', 'KLARNA_CHECKOUT_CHECKBOX_TEXT', 'KLARNA_CHECKOUT_CHECKBOX_CHECKED',
-			'KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX'),
+			'KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_ACTIVE'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -1477,6 +1477,26 @@ class KlarnaPayments extends PaymentModule
 						'label' => $this->l('No')
 						)
 					),
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Activate colors in checkout'),
+					'desc' => $this->l('Lets you choose colors for Klarna Checkout'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_COLOR_ACTIVE',
+					'values' => array(
+						array(
+							'id' => 'active_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'active_off',
+							'value' => 0,
+							'label' => $this->l('No')
+
+							)
+						),
 				),
 				array(
 					'type' => 'color',

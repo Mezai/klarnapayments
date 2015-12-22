@@ -29,21 +29,55 @@ $('document').ready(function() {
   $inputHidden.remove();
 
   $('body').on('change', 'input[name=KLARNA_CHECKOUT_CHECKBOX]', toggleCheckbox);
+  $('body').on('change', 'input[name=KLARNA_CHECKOUT_COLOR_ACTIVE]', toggleColorsActive);
 
   	function toggleCheckbox()
   	{
-
+  		var checkBoxes = ['KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX_CHECKED', 'KLARNA_CHECKOUT_CHECKBOX_TEXT'];
 	  	if ($('input[name=KLARNA_CHECKOUT_CHECKBOX]:checked').val() === '0')
 	  	{
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_REQUIRED]').parents('.form-group').hide();
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_CHECKED]').parents('.form-group').hide();
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_TEXT]').parents('.form-group').hide();
+	  		for (var i = 0; i < checkBoxes.length; i++) {
+	  			var name = checkBoxes[i];
+	  			$("input[name="+name+"]").parents('.form-group').hide();
+	  		};
+
 	  	} else {
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_REQUIRED]').parents('.form-group').show();
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_CHECKED]').parents('.form-group').show();
-	  		$('input[name=KLARNA_CHECKOUT_CHECKBOX_TEXT]').parents('.form-group').show();
+	  		 
+	  		for (var i = 0; i < checkBoxes.length; i++) {
+	  			var name = checkBoxes[i];
+	  			$("input[name="+name+"]").parents('.form-group').show();
+	  		};
 	  	}
   	};
 
+  	function toggleColorsActive()
+  	{
+		var colorsArr =  ['KLARNA_CHECKOUT_COLOR_BUTTON', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_LINK'];
+
+  		if ($('input[name=KLARNA_CHECKOUT_COLOR_ACTIVE]:checked').val() === '0')
+  		{
+  			
+  			for (var i = 0; i < colorsArr.length; i++) {
+  				
+  				var name = colorsArr[i];
+				
+				$("input[name="+name+"]").parents('.form-group').hide();	  					
+
+  			};
+
+  		} else {
+  			for (var i = 0; i < colorsArr.length; i++) {
+  				
+  				var name = colorsArr[i];
+				
+				$("input[name="+name+"]").parents('.form-group').show();	  					
+
+  			};
+
+
+  		}
+  	}
+
+  	toggleColorsActive();
   	toggleCheckbox();
 });

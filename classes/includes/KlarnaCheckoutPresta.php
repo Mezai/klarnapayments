@@ -18,13 +18,6 @@ class KlarnaCheckoutPresta
 		$order = null;
 		$sharedSecret = KlarnaConfigHandler::getKlarnaSecret($country);
 		$eid = KlarnaConfigHandler::getMerchantID($country);
-
-		$curlhandle = new Klarna_Checkout_HTTP_CURLHandle();
-
-		$curlhandle->setOption(CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.klarna.checkout.aggregated-order-v2+json'
-		,'Accept: application/vnd.klarna.checkout.aggregated-order-v2+json '));
-
-		$curlhandle->setOption(CURLOPT_CAINFO, _PS_CONFIG_DIR_.'/ssl/cacert.pem');
 			
 		$products = $cart->getProducts();
 		

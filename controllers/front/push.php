@@ -57,14 +57,6 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 			
 			$country = Tools::strtoupper(Tools::getValue('country'));
 			$sharedSecret = Configuration::get('KLARNA_SECRET_'.$country.'');
-
-			$curlhandle = new Klarna_Checkout_HTTP_CURLHandle();
-
-			$curlhandle->setOption(CURLOPT_HTTPHEADER, array('Content-Type: application/vnd.klarna.checkout.aggregated-order-v2+json'
-			,'Accept: application/vnd.klarna.checkout.aggregated-order-v2+json '));
-			
-			$curlhandle->setOption(CURLOPT_CAINFO, _PS_CONFIG_DIR_.'/ssl/cacert.pem');
-
 			
 			if ((String)Configuration::get('KLARNA_ENVIRONMENT') === 'live')
 			{

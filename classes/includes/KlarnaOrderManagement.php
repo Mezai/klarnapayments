@@ -85,7 +85,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 	}
 
 	public function refundAll($invoicenumber)
-	{	
+	{
 		if (!is_string($invoicenumber))
 			return;
 
@@ -108,7 +108,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 	}
 
 	public function refundPart($invoicenumber, $quantity, $article_number)
-	{	
+	{
 		if (!is_string($invoicenumber) || !is_int($quantity) || !is_string($article_number))
 			return;
 
@@ -124,11 +124,11 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 			$config->klarna->creditPart(KlarnaPrestaEncoding::encode($invoicenumber));
 			return true;
-			} catch (Exception $e) {
+		} catch (Exception $e) {
 			Logger::addLog('Klarna module: failed refunding invoicenumber '.$invoicenumber.' with code: '.$e->getCode().' and message: '.$e->getMessage());
-			return false;	
+			return false;
 
-			}
+		}
 
 	}
 
@@ -148,7 +148,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 			return true;
 		} catch (Exception $e) {
 			Logger::addLog('Klarna module: failed refunding invoicenumber '.$invoicenumber.' with code: '.$e->getCode().' and message: '.$e->getMessage());
-			return false;	
+			return false;
 		}
 
 	}
@@ -160,7 +160,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		if (!is_string($id_reservation))
 			return;
 
-		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($id_reservation);	 	
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($id_reservation);
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
 		$config = new KlarnaPrestaConfig();
 		$config->setKlarnaConfig($country, true);
@@ -222,7 +222,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		if (!is_string($reservation_id) || !is_int($id_product) || !is_int($quantity) || !is_string($id1) || !is_string($id2))
 			return;
 
-		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($reservation_id);	 	
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByReservation($reservation_id);
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
 
 		$config = new KlarnaPrestaConfig();
@@ -236,7 +236,6 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 
 			if (isset($addproduct['attributes']))
 				$attributes = $addproduct['attributes'];
-
 
 			if (empty($addproduct['rate']))
 			{
@@ -258,9 +257,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 					$rate,
 					0,
 					KlarnaFlags::INC_VAT
-					
 				);
-		
 		}
 
 		$config->klarna->setEstoreInfo($id1, $id2, '');
@@ -272,7 +269,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		} catch (Exception $e) {
 			Logger::addLog('Failed updating invoice with reservation with code: '.$e->getCode().' and message: '.$e->getMessage());
 			return false;
-		}	
+		}
 
 	}
 
@@ -281,7 +278,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		if (!is_string($invoicenumber) || !is_string($type))
 			return;
 
-		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);	 	
+		$order_number = KlarnaInvoiceFeeHandler::getOrderNumberByInvoice($invoicenumber);
 		$country = KlarnaInvoiceFeeHandler::getInvoiceCountry($order_number);
 
 		$config = new KlarnaPrestaConfig();
@@ -300,7 +297,7 @@ class KlarnaOrderManagement extends KlarnaPrestaConfig
 		} elseif ($type === 'Post')
 		{
 			try {
-				
+
 				$config->klarna->sendInvoice(KlarnaPrestaEncoding::encode($invoicenumber));
 				return true;
 			} catch (Exception $e) {

@@ -41,8 +41,8 @@ class KlarnaPayments extends PaymentModule
 			'KLARNA_EID_', 'KLARNA_SECRET_', 'ACTIVE_', 'KLARNA_PART_', 'KLARNA_INVOICE_', 'KLARNA_CHECKOUT_'),
 		'GENERAL' => array('KLARNA_ENVIRONMENT', 'KLARNA_INVOICE_FEE_TAX', 'KLARNA_CHECKOUT_COLOR_LINK', 'KLARNA_CHECKOUT_COLOR_BUTTON',
 			'KLARNA_CHECKOUT_COLOR_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_HEADER', 'KLARNA_CHECKOUT_COLOR_BUTTON_TEXT', 'KLARNA_CHECKOUT_COLOR_CHECKBOX_CHECKMARK',
-			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE', 'KLARNA_CHECKOUT_CHECKBOX_TEXT', 'KLARNA_CHECKOUT_CHECKBOX_CHECKED',
-			'KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_ACTIVE'),
+			'KLARNA_INVOICE_PRICE', 'KLARNA_CHECKOUT_SHIPPING_DETAILS', 'KLARNA_CHECKOUT_ONEPAGE', 'KLARNA_CHECKOUT_CHECKBOX_TEXT',
+			'KLARNA_CHECKOUT_CHECKBOX_CHECKED', 'KLARNA_CHECKOUT_CHECKBOX_REQUIRED', 'KLARNA_CHECKOUT_CHECKBOX', 'KLARNA_CHECKOUT_COLOR_ACTIVE'),
 		);
 
 	const INVOICE_REF = 'invoicefee';
@@ -113,7 +113,6 @@ class KlarnaPayments extends PaymentModule
 
 	public function hookDisplayShoppingCart()
 	{
-
 		if (!$this->active || !KlarnaConfigHandler::checkConfigurationByLocale(Country::getIsoById(Tools::getCountry(new Address((int)$this->context->cart->id_address_invoice)), 'checkout')))
 			return;
 		$cart = $this->context->cart;
@@ -126,11 +125,10 @@ class KlarnaPayments extends PaymentModule
 		$klarna_locale = new KlarnaCountryLogic(new KlarnaLocalization(Country::getIsoById($get_country)));
 
 		$valid_location = $klarna_locale->checkLocale($country, Tools::strtoupper($currency), $language_iso, 'checkout');
-		if ($valid_location === true) {
+		if ($valid_location === true)
 			$this->context->smarty->assign('klarna_checkout_display', true);
-		} else {
+		else
 			$this->context->smarty->assign('klarna_checkout_display', false);
-		}
 
 		if ($this->context->cart->nbProducts() > 0 && $valid_location === true)
 		{
@@ -148,8 +146,6 @@ class KlarnaPayments extends PaymentModule
 				'recyclablePackAllowed' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
 				'checkedTOS' => (int)$this->context->cookie->checkedTOS,
 				));
-
-
 
 			return $this->display(__FILE__, 'klarnacheckout.tpl');
 		}
@@ -669,7 +665,8 @@ class KlarnaPayments extends PaymentModule
 		$this->html .= '<br />';
 		//setting the admin template
 		$this->context->smarty->assign(array('module_dir' => $this->_path,
-			'klarna_cron' => _PS_BASE_URL_._MODULE_DIR_.'klarnapayments/klarna_cron.php?token='.Tools::substr(Tools::encrypt('klarnapayments/cron'), 0, 10).''));
+			'klarna_cron' => _PS_BASE_URL_._MODULE_DIR_.'klarnapayments/klarna_cron.php?token='.
+			Tools::substr(Tools::encrypt('klarnapayments/cron'), 0, 10).''));
 
 		$this->context->controller->addJS($this->_path.'views/js/klarnabackoffice.js');
 
@@ -1452,13 +1449,13 @@ class KlarnaPayments extends PaymentModule
 						)
 				),
 				array(
-		                    'type' => 'text',
-		                    'label' => $this->l('Checkout description'),
-		                    'desc' => $this->l('Displayed for the customer on success page'),
-		                    'tab' => 'general',
-		                    'name' => 'KLARNA_CHECKOUT_SHIPPING_DETAILS',
-		                    'maxchar' => 70
-		                ),
+					'type' => 'text',
+					'label' => $this->l('Checkout description'),
+					'desc' => $this->l('Displayed for the customer on success page'),
+					'tab' => 'general',
+					'name' => 'KLARNA_CHECKOUT_SHIPPING_DETAILS',
+					'maxchar' => 70
+				),
 				array(
 					'type' => 'radio',
 					'label' => $this->l('One page checkout'),

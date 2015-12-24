@@ -38,7 +38,6 @@ class KlarnaPaymentsCarrierModuleFrontController extends ModuleFrontController
 				$this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
 			if (!$this->context->cart->update())
 				$this->context->smarty->assign('klarna_carrier_error', Tools::displayError('Could not save carrier selection'));
-			
 		}
 		CartRule::autoRemoveFromCart($this->context);
 		CartRule::autoAddToCart($this->context);
@@ -50,13 +49,12 @@ class KlarnaPaymentsCarrierModuleFrontController extends ModuleFrontController
 	{
 		if (!is_array($delivery_option))
 			return false;
-
-		foreach ($delivery_option as $option) {
+		foreach ($delivery_option as $option)
+		{
 			if (!preg_match('/(\d+,)?\d+/', $option))
 		
 		return false;
 		}
 		return true;
 	}
-
 }

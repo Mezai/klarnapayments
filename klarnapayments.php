@@ -121,7 +121,7 @@ class KlarnaPayments extends PaymentModule
 		$currency = $this->context->currency->iso_code;
 		$language_iso = $this->context->language->iso_code;
 		$language_code = $this->context->language->language_code;
-		$klarna_language_code = KlarnaLocalization::getCheckoutLocale($country, $language_code);
+		$klarna_language_code = new KlarnaLocalization::getCheckoutLocale($country, $language_code);
 		$klarna_locale = new KlarnaCountryLogic(new KlarnaLocalization(Country::getIsoById($get_country)));
 
 		$valid_location = $klarna_locale->checkLocale($country, Tools::strtoupper($currency), $language_iso, 'checkout');

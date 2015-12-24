@@ -35,7 +35,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 	{
 		parent::initContent();
 		require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
-		if (!isset($_SESSION['klarna_order_id']))
+		if (!$this->context->cookie->__isset('klarna_order_id'))
 			Tools::redirect('index.php');
 
 		$country_iso_codes = array(

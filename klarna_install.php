@@ -159,8 +159,8 @@ class KlarnaInstall extends KlarnaPayments
 			$order_state_checkout = new OrderState();
 			$order_state_checkout->name = array();
 
-			foreach (Language::getLanguages() as $language) {
-				
+			foreach (Language::getLanguages() as $language)
+			{
 				$order_state_checkout->name[$language['id_lang']] = 'Klarna checkout';
 			}
 
@@ -176,7 +176,6 @@ class KlarnaInstall extends KlarnaPayments
 			$destination = _PS_IMG_DIR_.'os/'.(int)$order_state_checkout->id.'.gif';
 
 			if (version_compare(_PS_VERSION_, '1.5.5', '<'))
-
 				copy($source, $destination);
 			else 
 				Tools::copy($source, $destination);

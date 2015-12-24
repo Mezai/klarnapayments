@@ -210,6 +210,5 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 			return 'fi-fi';
 		elseif ($country == 'NO' && $language == 'no-no')
 			return 'nb-no';
-		}
 	}
 }

@@ -179,28 +179,32 @@ class KlarnaConfigHandler
 							if ($type == 'part')
 							{
 								if ((int)$value['klarna_part'] === 1)
-								{
+
 									return true;
-								}	
-							} elseif ($type == 'invoice') {
+
+							} elseif ($type == 'invoice')
+							{
 								if ((int)$value['klarna_secret'] === 1)
-								{
+
 									return true;
-								}
-							} elseif ($type == 'checkout') {
+
+							} elseif ($type == 'checkout')
+							{
 								if ((int)$value['klarna_checkout'] === 1)
-								{
+
 									return true;
-								}
-							} else {
-								return false;
+
 							}
+							else
+
+								return false;
+
 						}
 						return true;
 					}
 				}
 			}
-			return false;	
+			return false;
 		}
 
 
@@ -225,8 +229,6 @@ class KlarnaConfigHandler
 				}
 			}
 			return null;
-
-			
 		}
 
 
@@ -368,4 +370,3 @@ class KlarnaConfigHandler
 		}
 	}
 }
-

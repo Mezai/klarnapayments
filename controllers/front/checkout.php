@@ -319,7 +319,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 						SET `id_address_delivery` = \''.pSQL($delivery_address_id).'\'
 						WHERE `id_cart` = '.(int)$cart->id);
 
-					$flush_cache = $cart->getPackageList(true);
+					$cart->getPackageList(true);
 
 				$cart->id_customer = $customer->id;
 				$cart->secure_key = $customer->secure_key;
@@ -345,7 +345,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 				INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`,
 				`customer_lastname`, `payment_status`, `customer_country`)
 				VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($billing['given_name']).'\', \''.
-				pSQL($billing['family_name']).'\', \''.pSQL($klarna_order['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');
+				pSQL($billing['family_name']).'\', \''.pSQL($klarnaorder['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');
 
 				$reference_ps = Order::getUniqReferenceOf((int)$this->module->currentOrder);
 

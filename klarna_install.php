@@ -160,9 +160,8 @@ class KlarnaInstall extends KlarnaPayments
 			$order_state_checkout->name = array();
 
 			foreach (Language::getLanguages() as $language)
-			{
 				$order_state_checkout->name[$language['id_lang']] = 'Klarna checkout';
-			}
+
 
 			$order_state_checkout->send_email = false;
 			$order_state_checkout->color = '#0072cc';
@@ -177,7 +176,7 @@ class KlarnaInstall extends KlarnaPayments
 
 			if (version_compare(_PS_VERSION_, '1.5.5', '<'))
 				copy($source, $destination);
-			else 
+			else
 				Tools::copy($source, $destination);
 
 			Configuration::updateValue('KLARNA_OS_CHECKOUT', (int)$order_state_checkout->id);

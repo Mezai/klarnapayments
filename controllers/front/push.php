@@ -52,8 +52,6 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 		);
 
 		try {
-			session_start();
-
 			$country = Tools::strtoupper(Tools::getValue('country'));
 			$shared_secret = Configuration::get('KLARNA_SECRET_'.$country.'');
 
@@ -335,7 +333,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 						SET `id_address_delivery` = \''.pSQL($delivery_address_id).'\'
 						WHERE `id_cart` = '.(int)$cart->id);
 
-					$flush_cache = $cart->getPackageList(true);
+					$cart->getPackageList(true);
 
 				$cart->id_customer = $customer->id;
 				$cart->secure_key = $customer->secure_key;

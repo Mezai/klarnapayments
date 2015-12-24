@@ -35,7 +35,6 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 	{
 		parent::initContent();
 		require_once KLARNA_DIRECTORY.'/libs/checkout/Checkout.php';
-		session_start();
 		if (!isset($_SESSION['klarna_order_id']))
 			Tools::redirect('index.php');
 
@@ -64,7 +63,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 			else
 				$connector = Klarna_Checkout_Connector::create((String)$shared_secret, Klarna_Checkout_Connector::BASE_TEST_URL);
 
-			$checkout_id = $_SESSION['klarna_order_id'];
+			$checkout_id = $this->context->cookie->__get('klarna_order_id');
 			$klarnaorder = new Klarna_Checkout_Order($connector, $checkout_id);
 			$klarnaorder->fetch();
 
@@ -368,7 +367,7 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 
 			));
 
-			unset($_SESSION['klarna_order_id']);
+			$this->context->cookie->__unset('klarna_order_id');
 
 		} catch (Klarna_Checkout_ApiErrorException $e) {
 			Logger::addLog('Klarna module: '.htmlspecialchars($e->getMessage()));

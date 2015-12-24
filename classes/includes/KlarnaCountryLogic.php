@@ -121,7 +121,7 @@ class KlarnaCountryLogic
 				return true;
 			elseif ($country == 'DE' && $currency == 'EUR' && $language == 'de')
 				return true;
-			elseif ($country == 'DK' && $currency == 'DKK' && $language == 'da' )
+			elseif ($country == 'DK' && $currency == 'DKK' && $language == 'da')
 				return true;
 			elseif ($country == 'NL' && $currency == 'EUR' && $language == 'nl')
 				return true;

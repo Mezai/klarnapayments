@@ -37,8 +37,6 @@ class KlarnaCheckoutPresta
 
 	public function checkout($cart, $country, $currency, $locale)
 	{
-		session_start();
-
 		$order = null;
 		$shared_secret = KlarnaConfigHandler::getKlarnaSecret($country);
 		$eid = KlarnaConfigHandler::getMerchantID($country);
@@ -126,7 +124,7 @@ class KlarnaCheckoutPresta
 			}
 		}
 
-		if (array_key_exists('klarna_order_id', $_SESSION))
+		if ($this->context->cookie->__isset('klarna_order_id'))
 		{
 			$order = new Klarna_Checkout_Order($connector, $_SESSION['klarna_order_id']);
 
@@ -149,7 +147,7 @@ class KlarnaCheckoutPresta
 				$order->update($update);
 				} catch (Exception $e) {
 				$order = null;
-				unset($_SESSION['klarna_order_id']);
+				$this->context->cookie->__unset('klarna_order_id');
 				}
 		}
 		if ($order === null)
@@ -204,7 +202,7 @@ class KlarnaCheckoutPresta
 			}
 		}
 		// Store location of checkout session
-		$_SESSION['klarna_order_id'] = $sessionID = $order['id'];
+		$this->context->cookie->__set('klarna_order_id', $order['id']);
 		if (isset($order['gui']['snippet']))
 		{
 			// Display checkout

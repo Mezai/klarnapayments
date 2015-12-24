@@ -126,7 +126,7 @@ class KlarnaCheckoutPresta
 
 		if ($this->context->cookie->__isset('klarna_order_id'))
 		{
-			$order = new Klarna_Checkout_Order($connector, $_SESSION['klarna_order_id']);
+			$order = new Klarna_Checkout_Order($connector, $this->context->cookie->__get('klarna_order_id'));
 
 				try {
 				$order->fetch();

@@ -199,19 +199,17 @@ class KlarnaLocalization extends KlarnaPrestaConfig
 		if (!is_string($country) || !is_string($language))
 			return false;
 		if ($country == 'SE' && $language == 'sv-se')
-		{
 			return 'sv-se';
-		} elseif ($country == 'FI' && $language == 'sv-se') {
+		elseif ($country == 'FI' && $language == 'sv-se')
 			return 'sv-fi';
-		} elseif ($country == 'DE' && $language == 'de-de') {
+		elseif ($country == 'DE' && $language == 'de-de')
 			return 'de-de';
-		} elseif ($country == 'AT' && $language == 'de-de') {
+		elseif ($country == 'AT' && $language == 'de-de')
 			return 'de-at';
-		} elseif ($country == 'FI' && $language == 'fi-fi') {
+		elseif ($country == 'FI' && $language == 'fi-fi')
 			return 'fi-fi';
-		} elseif ($country == 'NO' && $language == 'no-no') {
+		elseif ($country == 'NO' && $language == 'no-no')
 			return 'nb-no';
 		}
 	}
-
 }

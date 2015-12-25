@@ -42,7 +42,7 @@
           {foreach $delivery_option_list as $id_address => $option_list}
             <p class="carrier_title">
               {if isset($address_collection[$id_address])}
-                {l s='Choose a shipping option for this address:' mod='klarnapayments'} {$address_collection[$id_address]->alias}
+                {l s='Choose a shipping option for this address:' mod='klarnapayments'} {$address_collection[$id_address]->alias|escape:'htmlall':'UTF-8'}
               {else}
                 {l s='Choose a shipping option' mod='klarnapayments'}
               {/if}
@@ -167,7 +167,7 @@
                               {/foreach}
                             {/if}
                           </td>
-                          <td rowspan="{$option.carrier_list|@count}" class="delivery_option_price">
+                          <td rowspan="{$option.carrier_list|@count|escape:'htmlall':'UTF-8'}" class="delivery_option_price">
                             <div class="delivery_option_price">
                               {if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
                                 {if $use_taxes == 1}
@@ -300,7 +300,7 @@
 
 <script type="text/javascript">
 // <![CDATA[
-var klarnaOnePage = "{$klarna_one_page}";
-var klarnaCheckoutDisplay ="{$klarna_checkout_display}";
+var klarnaOnePage = "{$klarna_one_page|escape:'htmlall':'UTF-8'}";
+var klarnaCheckoutDisplay ="{$klarna_checkout_display|escape:'htmlall':'UTF-8'}";
 //]]>
 </script>

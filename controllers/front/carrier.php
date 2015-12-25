@@ -52,7 +52,7 @@ class KlarnaPaymentsCarrierModuleFrontController extends ModuleFrontController
 		foreach ($delivery_option as $option)
 		{
 			if (!preg_match('/(\d+,)?\d+/', $option))
-		
+
 		return false;
 		}
 		return true;

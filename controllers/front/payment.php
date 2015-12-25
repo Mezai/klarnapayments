@@ -111,8 +111,11 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 			$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_AUTHORIZED'), $amount, $this->module->displayName, 'Status:'.
 			$status.'; Reservation id:'.$reservation_number.'; Type:'.$type, array(), (int)$currency->id, false, $customer->secure_key);
 			Db::getInstance()->Execute('
-			INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
-			VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\', \''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
+			INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`,
+			`payment_status`, `customer_country`)
+			
+			VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\',
+			 \''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
 			Tools::redirect('index.php?controller=order-confirmation&id_cart='.
 			$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
 
@@ -124,8 +127,11 @@ class KlarnaPaymentsPaymentModuleFrontController extends ModuleFrontController
 			$this->module->validateOrder($cart->id, Configuration::get('KLARNA_OS_PENDING'), $amount, $this->module->displayName, 'Status:'.
 			$status.'; Reservation id:'.$reservation_number.'; Type:'.$type, array(), (int)$currency->id, false, $customer->secure_key);
 			Db::getInstance()->Execute('
-			INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`, `payment_status`, `customer_country`)
-			VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\', \''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
+			INSERT INTO `'._DB_PREFIX_.'klarna_orders` (`id_order`, `id_reservation`, `customer_firstname`, `customer_lastname`,
+			`payment_status`, `customer_country`)
+			
+			VALUES ('.(int)$this->module->currentOrder.', \''.pSQL($reservation_number).'\', \''.pSQL($address->firstname).'\',
+			\''.pSQL($address->lastname).'\', \''.pSQL($status).'\', \''.pSQL($country_iso).'\')');
 			Tools::redirect('index.php?controller=order-confirmation&id_cart='.
 			$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
 

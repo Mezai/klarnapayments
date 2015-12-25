@@ -113,7 +113,7 @@
                         <tr>
                           {if !$option.unique_carrier}
                             <td rowspan="{$option.carrier_list|@count|escape:'htmlall':'UTF-8'}" class="delivery_option_radio first_item">
-                              <input id="delivery_option_{$id_address|intval|escape:'htmlall':'UTF-8'}_{$option@index|escape:'htmlall':'UTF-8'}" class="delivery_option_radio" type="radio" name="delivery_option[{$id_address|intval}]" data-key="{$key}" data-id_address="{$id_address|intval}" value="{$key}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} />
+                              <input id="delivery_option_{$id_address|intval|escape:'htmlall':'UTF-8'}_{$option@index|escape:'htmlall':'UTF-8'}" class="delivery_option_radio" type="radio" name="delivery_option[{$id_address|intval}]" data-key="{$key|escape:'htmlall':'UTF-8'}" data-id_address="{$id_address|intval}" value="{$key|escape:'htmlall':'UTF-8'}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} />
                             </td>
                           {/if}
                           {assign var="first" value=current($option.carrier_list)}

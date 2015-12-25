@@ -106,8 +106,6 @@ class KlarnaConfigHandler
 
 				'klarna_invoice' => (int)Configuration::get('KLARNA_INVOICE_NL')
 
-
-
 				),
 
 				'DE'  => array(
@@ -124,8 +122,6 @@ class KlarnaConfigHandler
 
 				'klarna_checkout' => (int)Configuration::get('KLARNA_CHECKOUT_DE')
 
-
-
 				),
 
 				'AT'  => array(
@@ -141,8 +137,6 @@ class KlarnaConfigHandler
 				'klarna_invoice' => (int)Configuration::get('KLARNA_INVOICE_AT'),
 
 				'klarna_checkout' => (int)Configuration::get('KLARNA_CHECKOUT_AT')
-
-
 
 				),
 

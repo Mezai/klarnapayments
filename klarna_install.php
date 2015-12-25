@@ -162,7 +162,6 @@ class KlarnaInstall extends KlarnaPayments
 			foreach (Language::getLanguages() as $language)
 				$order_state_checkout->name[$language['id_lang']] = 'Klarna checkout';
 
-
 			$order_state_checkout->send_email = false;
 			$order_state_checkout->color = '#0072cc';
 			$order_state_checkout->hidden = false;

@@ -1662,7 +1662,6 @@ class KlarnaPayments extends PaymentModule
 			}
 		}
 
-
 			$this->fields_list = array(
 				'eid' => array(
 								'title' => $this->l('Merchant eid'),

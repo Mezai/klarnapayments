@@ -73,6 +73,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 				{
 					$reference_ps = Order::getUniqReferenceOf((int)$cart->id);
 					//Already created, send create
+					$update = array();
 					$update['status'] = 'created';
 					$update['merchant_reference'] = array(
 							'orderid1' => (String)$cart->id,
@@ -89,8 +90,11 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 				$billing = $klarna_order['billing_address'];
 				$reservation_number = $klarna_order['reservation'];
 				if ($country == 'SE' || $country == 'AT' || $country == 'FI' || $country == 'NO')
-					$extra['transaction_id'] = $reference;
-
+				{
+					$extra = array();
+					$extra['transaction_id'] = $reservation_number;
+				}
+					
 				$id_customer = (int)Customer::customerExists($shipping['email'], true, false);
 				if ($id_customer > 0)
 				{
@@ -315,8 +319,9 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 					$delivery_address_id = $address->id;
 				}
 
+				$new_delivery_options = array();	
 				$new_delivery_options[(int)$delivery_address_id] = $cart->id_carrier.',';
-					$new_delivery_options_serialized = serialize($new_delivery_options);
+				$new_delivery_options_serialized = serialize($new_delivery_options);
 
 					Db::getInstance()->Execute('
 						UPDATE `'._DB_PREFIX_.'cart`
@@ -362,7 +367,7 @@ class KlarnaPaymentsPushModuleFrontController extends ModuleFrontController
 				pSQL($billing['family_name']).'\', \''.pSQL($klarna_order['status']).'\', \''.pSQL(Tools::strtoupper($shipping['country'])).'\')');
 
 				$reference_ps = Order::getUniqReferenceOf((int)$this->module->currentOrder);
-
+				$update = array();
 				$update['status'] = 'created';
 				$update['merchant_reference'] = array(
 					'orderid1' => (String)$cart->id,

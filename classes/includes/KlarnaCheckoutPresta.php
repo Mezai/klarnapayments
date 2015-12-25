@@ -58,6 +58,8 @@ class KlarnaCheckoutPresta
 		$terms_uri = $link_conditions;
 		$klarnapayments = new KlarnaPayments();
 		$checkoutcart = array();
+		$update = array();
+		$create = array();
 
 		//products
 		foreach ($products as $product)

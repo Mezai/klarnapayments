@@ -47,7 +47,7 @@ class KlarnaPrestaPclasses extends KlarnaPrestaConfig
 	{
 		$config = new KlarnaPrestaConfig();
 		$config->setKlarnaConfig($country);
-		
+
 		try {
 			$config->klarna->clearPClasses();
 			return true;
@@ -69,6 +69,6 @@ class KlarnaPrestaPclasses extends KlarnaPrestaConfig
 		} catch (Exception $e) {
 			Logger::addLog('Failed retreiving pclasses for country '.$country);
 			return false;
-		}		
+		}
 	}
 }

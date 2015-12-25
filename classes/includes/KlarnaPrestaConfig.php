@@ -31,7 +31,7 @@ class KlarnaPrestaConfig
 		$this->klarna = null;
 		$this->country = null;
 	}
-	
+
 
 	public function setKlarnaConfig($country = null, $locale = false)
 	{
@@ -49,7 +49,7 @@ class KlarnaPrestaConfig
 
 			}
 		}
-		
+
 		$storage_file = dirname(dirname(dirname(__FILE__))).'/pclasses/config'.Tools::strtolower($country).'.json';
 		$this->kconfig = new KlarnaConfig($storage_file);
 
@@ -60,10 +60,10 @@ class KlarnaPrestaConfig
 			$localization = new KlarnaLocalization($country);
 			$klarna = new KlarnaPrestaApi();
 			$klarna_locale = $klarna->getLocale($localization->getCountry(), $localization->getLanguage(), $localization->getCurrency());
-			
+
 		$this->kconfig['country'] = $klarna_locale['country'];
 		$this->kconfig['language'] = $klarna_locale['language'];
-		$this->kconfig['currency'] = $klarna_locale['currency'];    
+		$this->kconfig['currency'] = $klarna_locale['currency'];
 		}
 
 		$this->kconfig['mode'] = KlarnaConfigHandler::mode();

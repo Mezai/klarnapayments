@@ -26,19 +26,19 @@
 
 class KlarnaPrestaEncoding
 {
-	public static $prestaEncoding = 'UTF-8';
+	public static $presta_encoding = 'UTF-8';
 
-	public static $klarnaEncoding = 'ISO-8859-1';
+	public static $klarna_encoding = 'ISO-8859-1';
 
 	public static function encode($str, $from = null, $to = null)
 	{
 		if ($from === null)
 
-			$from = self::$prestaEncoding;
+			$from = self::$presta_encoding;
 
 		if ($to === null)
 
-			$to = self::$klarnaEncoding;
+			$to = self::$klarna_encoding;
 
 		return iconv($from, $to, $str);
 	}
@@ -47,12 +47,12 @@ class KlarnaPrestaEncoding
 	{
 		if ($from === null)
 
-			$from = self::$klarnaEncoding;
+			$from = self::$klarna_encoding;
 
 		if ($to === null)
 
-			$to = self::$prestaEncoding;
+			$to = self::$presta_encoding;
 
-		return iconv($from, $to, $str);	
+		return iconv($from, $to, $str);
 	}
 }

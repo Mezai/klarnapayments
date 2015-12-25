@@ -37,7 +37,7 @@ class KlarnaCalculate
 	public function klarnaCalculateMonthlyCost($amount, $type, $id)
 	{
 		$k = KlarnaConfigHandler::setConfigurationByLocale($this->country, $this->environment, $this->klarna_settings);
-		
+
 		$pclass = $k->getPClass($id);
 
 		if ($pclass)

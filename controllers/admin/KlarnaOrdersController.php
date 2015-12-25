@@ -617,7 +617,7 @@ class KlarnaOrdersController extends ModuleAdminController
 			$this->displayWarning('Invalid input please check your invoice id');
 			return;
 			}
-			
+
 			$klarna_order = new KlarnaOrderManagement();
 
 			if ($klarna_order->refundGoodwill($id_invoicenumber, $description, (float)$amount, (float)$tax))

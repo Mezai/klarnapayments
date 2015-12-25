@@ -65,12 +65,12 @@ class KlarnaCheckoutPresta
 		foreach ($products as $product)
 		{
 			$price = Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
-			$price = (int)$price * 100;
+			$price = (int)($price * 100);
 
 			$product_img = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image']);
 			$product_uri = $this->context->link->getProductLink(new Product($product['id_product']));
 
-			$checkoutcart = array(
+			$checkoutcart[] = array(
 			'reference' => $product['reference'],
 			'name' => $product['name'],
 			'quantity' => (int)$product['cart_quantity'],
@@ -93,9 +93,9 @@ class KlarnaCheckoutPresta
 
 		$shipping_price = Tools::ps_round($shipping, _PS_PRICE_DISPLAY_PRECISION_);
 
-		$shipping_price = (int)$shipping_price * 100;
+		$shipping_price = (int)($shipping_price * 100);
 
-		$checkoutcart = array(
+		$checkoutcart[] = array(
 			'type' => 'shipping_fee',
 			'reference' => (String)$carrier->id_reference,
 			'name' => (String)$carrier->name,
@@ -115,7 +115,7 @@ class KlarnaCheckoutPresta
 				$price = $discount['value_real'];
 				$price = Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_);
 
-				$checkoutcart = array(
+				$checkoutcart[] = array(
 				'type' => 'discount',
 				'reference' => $discount['name'],
 				'name' => $discount['name'],

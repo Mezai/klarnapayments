@@ -1644,6 +1644,7 @@ class KlarnaPayments extends PaymentModule
 	public function renderList()
 	{
 		$active_countries = KlarnaConfigHandler::returnActiveCountries();
+		$helper_array = array();
 
 		if (empty($active_countries))
 			return;

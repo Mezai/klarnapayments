@@ -53,7 +53,7 @@ class KlarnaPayments extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
 		$this->module_key = '9ba314b95673c695df2051398019734c';
-		$this->version = '1.0.2';
+		$this->version = '1.0.3';
 		$this->author = 'JET';
 		$this->need_instance = 1;
 		$this->bootstrap = true;

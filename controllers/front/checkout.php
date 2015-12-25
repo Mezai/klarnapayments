@@ -38,21 +38,6 @@ class KlarnaPaymentsCheckoutModuleFrontController extends ModuleFrontController
 		if (!$this->context->cookie->__isset('klarna_order_id'))
 			Tools::redirect('index.php');
 
-		$country_iso_codes = array(
-			'SWE' => 'SE',
-			'NOR' => 'NO',
-			'FIN' => 'FI',
-			'DNK' => 'DK',
-			'DEU' => 'DE',
-			'NLD' => 'NL',
-			'se' => 'SE',
-			'no' => 'NO',
-			'fi' => 'FI',
-			'dk' => 'DK',
-			'de' => 'DE',
-			'nl' => 'NL',
-			);
-
 		try
 		{
 			$country = Tools::strtoupper(Tools::getValue('country'));

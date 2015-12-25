@@ -55,7 +55,7 @@
                     <table class="resume table table-bordered{if !$option.unique_carrier} hide{/if}">
                       <tr>
                         <td class="delivery_option_radio" style="width:162px;">
-                          <button id="delivery_option_{$id_address|intval|escape:'htmlall':'UTF-8'}_{$option@index|escape:'htmlall':'UTF-8'}" class="btn btn-primary btn-md" type="submit" name="delivery_option[{$id_address|intval}]" data-key="{$key}" data-id_address="{$id_address|intval}" value="{$key}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} >{l s='Select' mod='klarnapayments'}</button>
+                          <button id="delivery_option_{$id_address|intval|escape:'htmlall':'UTF-8'}_{$option@index|escape:'htmlall':'UTF-8'}" class="btn btn-primary btn-md" type="submit" name="delivery_option[{$id_address|intval}]" data-key="{$key|escape:'htmlall':'UTF-8'}" data-id_address="{$id_address|intval}" value="{$key|escape:'htmlall':'UTF-8'}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} >{l s='Select' mod='klarnapayments'}</button>
                         </td>
                         <td class="delivery_option_logo">
                           {foreach $option.carrier_list as $carrier}

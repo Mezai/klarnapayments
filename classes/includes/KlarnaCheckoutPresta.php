@@ -57,6 +57,7 @@ class KlarnaCheckoutPresta
 		$push_page = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php'.'?klarna_order={checkout.order.id}'.'&country='.$country.'&fc=module&module=klarnapayments&controller=push';
 		$terms_uri = $link_conditions;
 		$klarnapayments = new KlarnaPayments();
+		$checkoutcart = array();
 
 		//products
 		foreach ($products as $product)
@@ -67,7 +68,7 @@ class KlarnaCheckoutPresta
 			$product_img = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image']);
 			$product_uri = $this->context->link->getProductLink(new Product($product['id_product']));
 
-			$checkoutcart[] = array(
+			$checkoutcart = array(
 			'reference' => $product['reference'],
 			'name' => $product['name'],
 			'quantity' => (int)$product['cart_quantity'],
@@ -92,7 +93,7 @@ class KlarnaCheckoutPresta
 
 		$shipping_price = (int)$shipping_price * 100;
 
-		$checkoutcart[] = array(
+		$checkoutcart = array(
 			'type' => 'shipping_fee',
 			'reference' => (String)$carrier->id_reference,
 			'name' => (String)$carrier->name,
@@ -112,7 +113,7 @@ class KlarnaCheckoutPresta
 				$price = $discount['value_real'];
 				$price = Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_);
 
-				$checkoutcart[] = array(
+				$checkoutcart = array(
 				'type' => 'discount',
 				'reference' => $discount['name'],
 				'name' => $discount['name'],

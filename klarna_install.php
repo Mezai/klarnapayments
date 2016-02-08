@@ -432,7 +432,7 @@ class KlarnaInstall extends KlarnaPayments
 
 					$order_state_refunded->name[$language['id_lang']] = 'Klarna kreditert';
 
-				elseif (Tools::strtolower($language['id_lang']) == 'da')
+				elseif (Tools::strtolower($language['iso_code']) == 'da')
 
 					$order_state_refunded->name[$language['id_lang']] = 'Klarna krediteret';
 
@@ -442,7 +442,7 @@ class KlarnaInstall extends KlarnaPayments
 
 				elseif (Tools::strtolower($language['iso_code']) == 'de')
 
-					$order_state_refunded->name[$language['id_order']] = 'Klarna gutschrift';
+					$order_state_refunded->name[$language['id_lang']] = 'Klarna gutschrift';
 
 				elseif (Tools::strtolower($language['iso_code']) == 'nl')
 
